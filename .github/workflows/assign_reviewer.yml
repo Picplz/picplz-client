@@ -1,0 +1,20 @@
+name: Assign Reviewers
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  assign-reviewer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set reviewer
+        run: |
+          if [[ "${{ github.event.pull_request.user.login }}" == "ldhldh07" ]]; then
+            gh pr edit ${{ github.event.pull_request.number }} --add-reviewer 'Going777'
+          elif [[ "${{ github.event.pull_request.user.login }}" == "Going777" ]]; then
+            gh pr edit ${{ github.event.pull_request.number }} --add-reviewer 'ldhldh07'
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
