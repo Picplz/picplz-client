@@ -1,20 +1,25 @@
-name: Assign Reviewers
+name: Review Assign
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, ready_for_review]
 
 jobs:
-  assign-reviewer:
+  assign:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set reviewer
+      - name: Determine reviewer
+        id: determine-reviewer
         run: |
-          if [[ "${{ github.event.pull_request.user.login }}" == "ldhldh07" ]]; then
-            gh pr edit ${{ github.event.pull_request.number }} --add-reviewer 'Going777'
-          elif [[ "${{ github.event.pull_request.user.login }}" == "Going777" ]]; then
-            gh pr edit ${{ github.event.pull_request.number }} --add-reviewer 'ldhldh07'
+          if [ "${{ github.event.pull_request.user.login }}" == "ldhldh07" ]; then
+            echo "REVIEWER=Going777" >> $GITHUB_ENV
+          elif [ "${{ github.event.pull_request.user.login }}" == "Going777" ]; then
+            echo "REVIEWER=ldhldh07" >> $GITHUB_ENV
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Assign reviewer and assignee
+        uses: hkusu/review-assign-action@v1
+        with:
+          assignees: ${{ github.actor }}
+          reviewers: ${{ env.REVIEWER }}
