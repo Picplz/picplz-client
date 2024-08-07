@@ -24,4 +24,4 @@ jobs:
           assignees: ${{ github.actor }}
           reviewers: ${{ env.REVIEWER }}
         env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
