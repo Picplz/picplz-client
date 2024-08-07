@@ -23,3 +23,5 @@ jobs:
         with:
           assignees: ${{ github.actor }}
           reviewers: ${{ env.REVIEWER }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
