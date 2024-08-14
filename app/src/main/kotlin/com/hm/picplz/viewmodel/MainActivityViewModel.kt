@@ -21,7 +21,6 @@ class MainActivityViewModel @Inject constructor(
     private val mainRepository: MainRepository,
 ) : ViewModel() {
     val uiState: StateFlow<MainActivityUiState> = mainRepository.userData.map {
-        Log.d("MainActivityViewModel", "스테이트 매핑: $it")
         Success(it)
     }.stateIn(
         scope = viewModelScope,

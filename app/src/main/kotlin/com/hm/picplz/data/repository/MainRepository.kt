@@ -21,10 +21,8 @@ class MainRepository @Inject constructor(
 
 
     suspend fun fetchUserData() {
-        Log.d("MainRepository", "Fetching user data...")
         val fetchedUserData = userDataSource.getUserData()
         _userData.emit(fetchedUserData)
-        Log.d("MainRepository", "User data emitted: $fetchedUserData")
     }
 
     companion object {
