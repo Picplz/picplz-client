@@ -27,10 +27,11 @@ app/
 │                       │   ├── component.login_screen/
 │                       │   ├── screen/
 │                       │   └── theme/
-│                       └── viewmodel/
-│                           ├── LoginViewModel.kt
-│                           ├── Application.kt
-│                           └── MainActivity.kt
+│                       ├── viewmodel/
+│                       │   ├── MainActivityViewModel.kt
+│                       │   └── LoginViewModel.kt
+│                       ├── Application.kt
+│                       └── MainActivity.kt
 ```
 
 
