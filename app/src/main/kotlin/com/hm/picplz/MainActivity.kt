@@ -9,9 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,9 +22,10 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.hm.picplz.ui.screen.login.LoginScreen
+import com.hm.picplz.ui.screen.main.MainScreen
 import com.hm.picplz.viewmodel.MainActivityUiState
-import com.hm.picplz.viewmodel.MainActivityUiState.Loading
-import com.hm.picplz.viewmodel.MainActivityUiState.Success
+import com.hm.picplz.viewmodel.MainActivityUiState.*
 import com.hm.picplz.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
@@ -60,8 +58,8 @@ class MainActivity : ComponentActivity() {
         splashScreen.apply {
             setKeepOnScreenCondition {
                 when (uiState) {
-                    Loading -> true
-                    is Success -> false
+                    is Loading -> true
+                    else -> false
                 }
             }
             setOnExitAnimationListener{ screen ->
@@ -83,11 +81,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PicplzTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                when (uiState) {
+                    is Unauthenticated -> LoginScreen()
+                    else -> MainScreen()
                 }
             }
         }
