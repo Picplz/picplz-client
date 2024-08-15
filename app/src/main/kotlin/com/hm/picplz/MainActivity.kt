@@ -1,5 +1,6 @@
 package com.hm.picplz
 
+import LoginScreen
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
@@ -22,7 +23,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.hm.picplz.ui.screen.login.LoginScreen
 import com.hm.picplz.ui.screen.main.MainScreen
 import com.hm.picplz.viewmodel.MainActivityUiState
 import com.hm.picplz.viewmodel.MainActivityUiState.*
@@ -87,21 +87,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PicplzTheme {
-        Greeting("Android")
     }
 }
