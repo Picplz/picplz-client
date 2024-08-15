@@ -8,8 +8,7 @@ import com.hm.picplz.data.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
-import com.hm.picplz.viewmodel.MainActivityUiState.Loading
-import com.hm.picplz.viewmodel.MainActivityUiState.Success
+import com.hm.picplz.viewmodel.MainActivityUiState.*
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -20,8 +19,8 @@ import kotlinx.coroutines.launch
 class MainActivityViewModel @Inject constructor(
     private val mainRepository: MainRepository,
 ) : ViewModel() {
-    val uiState: StateFlow<MainActivityUiState> = mainRepository.userData.map {
-        Success(it)
+    val uiState: StateFlow<MainActivityUiState> = mainRepository.userData.map { user ->
+        if(user.id == 0) { Unauthenticated } else { Success(user) }
     }.stateIn(
         scope = viewModelScope,
         initialValue = Loading,
@@ -46,4 +45,5 @@ class MainActivityViewModel @Inject constructor(
 sealed interface MainActivityUiState {
     data object Loading : MainActivityUiState
     data class Success(val userData: User) : MainActivityUiState
+    data object Unauthenticated : MainActivityUiState
 }
