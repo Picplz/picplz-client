@@ -8,8 +8,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow<LoginState>(LoginState.Idle)
-    val uiState: StateFlow<LoginState> = _uiState
+    private val _state = MutableStateFlow<LoginState>(LoginState.Idle)
+    val state: StateFlow<LoginState> get() = _state
 
     fun handleIntent(intent: LoginIntent) {
         when (intent) {
