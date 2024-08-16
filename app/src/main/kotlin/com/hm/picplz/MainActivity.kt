@@ -1,6 +1,5 @@
 package com.hm.picplz
 
-import LoginScreen
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
@@ -10,20 +9,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.animation.doOnEnd
 import com.hm.picplz.ui.theme.PicplzTheme
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.hm.picplz.ui.screen.main.MainScreen
+import androidx.navigation.compose.rememberNavController
+import com.hm.picplz.navigation.AppNavHost
 import com.hm.picplz.viewmodel.MainActivityUiState
 import com.hm.picplz.viewmodel.MainActivityUiState.*
 import com.hm.picplz.viewmodel.MainActivityViewModel
@@ -81,10 +77,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PicplzTheme {
-                when (uiState) {
-                    is Unauthenticated -> LoginScreen()
-                    else -> MainScreen()
-                }
+                val navController = rememberNavController()
+                AppNavHost(
+                    navController = navController,
+                    uiState = uiState
+                )
             }
         }
     }
