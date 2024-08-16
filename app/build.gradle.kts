@@ -82,7 +82,8 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.compiler)
 
-
+   // Navigation
+    implementation(libs.androidx.navigation.compose.v260)
 }
 
 apply(plugin = "dagger.hilt.android.plugin")
