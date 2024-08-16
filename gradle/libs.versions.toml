@@ -13,6 +13,8 @@ activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 coreSplashscreen = "1.0.1"
 material3 = "1.2.1"
+navigationCompose = "2.7.7"
+navigationComposeVersion = "2.6.0"
 ui = "1.6.8"
 
 [libraries]
@@ -20,6 +22,8 @@ androidx-activity-compose-v131 = { module = "androidx.activity:activity-compose"
 androidx-activity-compose-v172 = { module = "androidx.activity:activity-compose", version.ref = "androidxActivityCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation-compose-v260 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
