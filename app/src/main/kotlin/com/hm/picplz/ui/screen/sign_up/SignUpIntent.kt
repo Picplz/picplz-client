@@ -5,5 +5,6 @@ sealed class SignUpIntent {
 }
 
 enum class UserType {
-    USER, PHOTOGRAPHER
+    User,
+    Photographer
 }
