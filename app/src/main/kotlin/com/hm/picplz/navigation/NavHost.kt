@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.hm.picplz.ui.screen.main.MainScreen
 import com.hm.picplz.ui.screen.sign_up.SignUpScreen
+import com.hm.picplz.ui.screen.sign_up_client.SignUpClentScreen
+import com.hm.picplz.ui.screen.sign_up_client.SignUpPhtographerScreen
 import com.hm.picplz.viewmodel.MainActivityUiState
 
 @Composable
@@ -29,5 +31,7 @@ fun AppNavHost(
         composable("login") { LoginScreen(navController = navController) }
         composable("main") { MainScreen(navController = navController) }
         composable("sign-up") { SignUpScreen(navController = navController)}
+        composable("sign-up-client") { SignUpClentScreen(navController = navController)}
+        composable("sign-up-photographer") { SignUpPhtographerScreen(navController = navController) }
     }
 }
