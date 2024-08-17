@@ -156,4 +156,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin
 
 # macOS 시스템 파일 무시
-.DS_Store
+#.DS_Store
