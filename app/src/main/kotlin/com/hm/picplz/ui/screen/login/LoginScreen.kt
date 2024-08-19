@@ -67,7 +67,13 @@ fun LoginScreen(
                      */
                     Toast.makeText(context, "카카오 로그인", Toast.LENGTH_LONG).show()
                     Handler(Looper.getMainLooper()).postDelayed({
-                        navController.navigate("sign-up")
+                        navController.navigate("sign-up") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }, 500)
                 }
             }
