@@ -1,11 +1,9 @@
 package com.hm.picplz.ui.screen.sign_up
 
-sealed class SignUpIntent {
-    data class SelectUserType(val userType : UserType) : SignUpIntent()
-    object NavigateToPrev : SignUpIntent()
-}
+import com.hm.picplz.data.model.UserType
 
-enum class UserType {
-    User,
-    Photographer
+sealed class SignUpIntent {
+    object NavigateToPrev : SignUpIntent()
+    data class SelectUserType(val userType : UserType) : SignUpIntent()
+    object NavigateToSelected : SignUpIntent()
 }

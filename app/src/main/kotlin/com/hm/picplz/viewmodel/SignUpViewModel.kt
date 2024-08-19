@@ -6,14 +6,20 @@ import com.hm.picplz.ui.screen.sign_up.Destination.*
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
 import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
-import com.hm.picplz.ui.screen.sign_up.UserType
-import com.hm.picplz.ui.screen.sign_up.UserType.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import com.hm.picplz.data.model.User
+import com.hm.picplz.data.model.UserType
+import com.hm.picplz.data.model.UserType.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class SignUpViewModel : ViewModel() {
+
+    private val _selectedUserType = MutableStateFlow<UserType?>(null)
+    val selectedUserType: StateFlow<UserType?> get() = _selectedUserType
+
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect: SharedFlow<SignUpSideEffect> get() = _sideEffect
 
@@ -25,18 +31,23 @@ class SignUpViewModel : ViewModel() {
 
     fun handleIntent(intent: SignUpIntent) {
         when (intent) {
-            is SelectUserType -> {
-                val destination = when (intent.userType) {
-                    User -> SignUpClient
-                    Photographer -> SignUpPhotographer
-                }
-                viewModelScope.launch {
-                    _sideEffect.emit(SignUpSideEffect.NavigateToSetting(destination, userData))
-                }
-            }
             is NavigateToPrev -> {
                 viewModelScope.launch {
                     _sideEffect.emit(SignUpSideEffect.NavigateToPrev)
+                }
+            }
+            is SelectUserType -> {
+                _selectedUserType.value = intent.userType
+            }
+            is NavigateToSelected -> {
+                viewModelScope.launch {
+                    _selectedUserType.value?.let { selectedUserType ->
+                        val destination = when (selectedUserType) {
+                            User -> SignUpClient
+                            Photographer -> SignUpPhotographer
+                        }
+                        _sideEffect.emit(SignUpSideEffect.NavigateToSelected(destination, userData))
+                    }
                 }
             }
         }
