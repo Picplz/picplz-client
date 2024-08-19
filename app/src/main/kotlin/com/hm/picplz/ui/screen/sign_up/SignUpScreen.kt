@@ -1,8 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up
 
-import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,17 +58,13 @@ fun SignUpScreen(
     DisposableEffect(Unit) {
         activity?.window?.apply {
             statusBarColor = Color.Gray.toArgb()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = false
-            }
+            WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = false
         }
 
         onDispose {
             activity?.window?.apply {
                 statusBarColor = Color.White.toArgb()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
-                }
+                WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
             }
         }
     }
@@ -179,7 +173,6 @@ fun SignUpScreen(
             when (sideEffect) {
                 is SignUpSideEffect.NavigateToSelected -> {
                     val bundle = bundleOf("userInfo" to sideEffect.user)
-
                     navController.navigate(sideEffect.destination.route, bundle)
                 }
                 is SignUpSideEffect.NavigateToPrev -> {
