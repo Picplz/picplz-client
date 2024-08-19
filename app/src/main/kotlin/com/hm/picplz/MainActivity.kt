@@ -3,9 +3,13 @@ package com.hm.picplz
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -32,6 +36,9 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
+    private var isBackPressedOnce = false
+    private val handler = Handler(Looper.getMainLooper())
+    private val resetDoubleBackFlag = Runnable { isBackPressedOnce = false }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -75,6 +82,18 @@ class MainActivity : ComponentActivity() {
         }
 
         enableEdgeToEdge()
+
+        /** 2초 안에 뒤로가기 두번 입력 시 종료 **/
+        onBackPressedDispatcher.addCallback(this) {
+            if (isBackPressedOnce) {
+                finishAffinity()
+            } else {
+                isBackPressedOnce = true
+                Toast.makeText(this@MainActivity, "한 번 더 누르면 종료합니다.", Toast.LENGTH_SHORT).show()
+                handler.postDelayed(resetDoubleBackFlag, 2000)
+            }
+        }
+
         setContent {
             PicplzTheme {
                 val navController = rememberNavController()
@@ -84,5 +103,12 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(resetDoubleBackFlag)
+    }
+
 }
