@@ -34,6 +34,11 @@ class SignUpViewModel : ViewModel() {
                     _sideEffect.emit(SignUpSideEffect.NavigateToSetting(destination, userData))
                 }
             }
+            is NavigateToPrev -> {
+                viewModelScope.launch {
+                    _sideEffect.emit(SignUpSideEffect.NavigateToPrev)
+                }
+            }
         }
     }
 }

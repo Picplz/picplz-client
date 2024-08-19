@@ -7,6 +7,7 @@ sealed class SignUpSideEffect {
         val destination: Destination,
         val user: User
     ) : SignUpSideEffect()
+    data object NavigateToPrev : SignUpSideEffect()
 }
 
 enum class Destination(val route: String) {

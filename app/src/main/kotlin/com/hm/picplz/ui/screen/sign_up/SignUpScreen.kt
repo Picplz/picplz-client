@@ -1,5 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,16 +21,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hm.picplz.viewmodel.SignUpViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.hm.picplz.ui.screen.login.LoginSideEffect
 import com.hm.picplz.ui.theme.PicplzTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignUpScreen(
@@ -57,7 +62,9 @@ fun SignUpScreen(
                         .fillMaxWidth()
                 ) {
                     IconButton(
-                        onClick = {/*TODO*/},
+                        onClick = {
+                            viewModel.handleIntent(SignUpIntent.NavigateToPrev)
+                        },
                         modifier = Modifier
                             .fillMaxHeight()
                     ) {
@@ -121,6 +128,17 @@ fun SignUpScreen(
 
                 ) {
                  Text("다음")
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collectLatest { sideEffect ->
+            when (sideEffect) {
+                is SignUpSideEffect.NavigateToSetting -> {}
+                is SignUpSideEffect.NavigateToPrev -> {
+                    navController.popBackStack()
                 }
             }
         }
