@@ -11,7 +11,7 @@ import com.hm.picplz.data.model.User
 import com.hm.picplz.ui.screen.main.MainScreen
 import com.hm.picplz.ui.screen.sign_up.SignUpScreen
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientScreen
-import com.hm.picplz.ui.screen.sign_up_client.SignUpPhotographerScreen
+import com.hm.picplz.ui.screen.sign_up_photograppher.SignUpPhotographerScreen
 import com.hm.picplz.viewmodel.MainActivityUiState
 import com.hm.picplz.viewmodel.emptyUserData
 
@@ -22,8 +22,8 @@ fun AppNavHost(
     modifier: Modifier = Modifier
 ) {
     val startDestination = when (uiState) {
-        is MainActivityUiState.Unauthenticated -> "login"
-        else -> "main"
+        is MainActivityUiState.Success -> "main"
+        else -> "login"
     }
 
     NavHost(
