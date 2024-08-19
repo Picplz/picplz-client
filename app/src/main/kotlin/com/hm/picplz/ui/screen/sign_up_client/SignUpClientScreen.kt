@@ -17,12 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.hm.picplz.data.model.User
+import com.hm.picplz.viewmodel.emptyUserData
 
 @Composable
 fun SignUpClientScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    userInfo: User
+    userInfo: User = emptyUserData
 ) {
     Scaffold (
         modifier = Modifier.fillMaxSize()

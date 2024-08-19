@@ -13,6 +13,7 @@ import com.hm.picplz.ui.screen.sign_up.SignUpScreen
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientScreen
 import com.hm.picplz.ui.screen.sign_up_client.SignUpPhotographerScreen
 import com.hm.picplz.viewmodel.MainActivityUiState
+import com.hm.picplz.viewmodel.emptyUserData
 
 @Composable
 fun AppNavHost(
@@ -40,9 +41,10 @@ fun AppNavHost(
                 @Suppress("DEPRECATION")
                 backStackEntry.arguments?.getParcelable("userInfo")
             }
-            userInfo?.let {
-                SignUpClientScreen(navController = navController, userInfo = it)
-            }
+            SignUpPhotographerScreen(
+                navController = navController,
+                userInfo = userInfo ?: emptyUserData
+            )
         }
 
         composable("sign-up-photographer") { backStackEntry ->
@@ -52,9 +54,10 @@ fun AppNavHost(
                 @Suppress("DEPRECATION")
                 backStackEntry.arguments?.getParcelable("userInfo")
             }
-            userInfo?.let {
-                SignUpPhotographerScreen(navController = navController, userInfo = userInfo)
-            }
+            SignUpClientScreen(
+                navController = navController,
+                userInfo = userInfo ?: emptyUserData
+            )
         }
     }
 }
