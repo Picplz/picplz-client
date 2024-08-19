@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up_client
+package com.hm.picplz.ui.screen.sign_up_photograppher
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
