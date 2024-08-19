@@ -8,3 +8,9 @@ data class User(
     val name: String,
     val email: String
 ) : Parcelable
+
+
+enum class UserType {
+    User,
+    Photographer
+}

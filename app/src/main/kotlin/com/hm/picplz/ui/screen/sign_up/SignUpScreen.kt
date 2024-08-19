@@ -1,7 +1,8 @@
 package com.hm.picplz.ui.screen.sign_up
 
 import android.os.Build
-import android.widget.Toast
+import android.os.Bundle
+import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,15 +33,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import com.hm.picplz.viewmodel.SignUpViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
-import com.hm.picplz.ui.screen.login.LoginSideEffect
+import com.hm.picplz.data.model.UserType
 import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
+import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
 
 @Composable
 fun SignUpScreen(
@@ -69,6 +74,8 @@ fun SignUpScreen(
             }
         }
     }
+
+    val selectedUserType = viewModel.selectedUserType.collectAsState().value
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -128,14 +135,18 @@ fun SignUpScreen(
                         modifier = Modifier,
                     ) {
                         Button(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                viewModel.handleIntent(SelectUserType(UserType.User))
+                            },
                             modifier = Modifier
                                 .padding(end = 8.dp)
                         ) {
                             Text("고객")
                         }
                         Button(
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                viewModel.handleIntent(SelectUserType(UserType.Photographer))
+                            }
                         ) {
                             Text("금손")
                         }
@@ -149,7 +160,9 @@ fun SignUpScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        viewModel.handleIntent(NavigateToSelected)
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Blue
                     )
@@ -164,7 +177,11 @@ fun SignUpScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpSideEffect.NavigateToSetting -> {}
+                is SignUpSideEffect.NavigateToSelected -> {
+                    val bundle = bundleOf("userInfo" to sideEffect.user)
+
+                    navController.navigate(sideEffect.destination.route, bundle)
+                }
                 is SignUpSideEffect.NavigateToPrev -> {
                     navController.popBackStack()
                 }
@@ -179,5 +196,17 @@ fun SignUpScreenPreview() {
     val navController = rememberNavController()
     PicplzTheme {
         SignUpScreen(navController = navController)
+    }
+}
+
+fun NavController.navigate(
+    route: String,
+    args: Bundle,
+    navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null
+) {
+    val nodeId = graph.findNode(route)?.id
+    if (nodeId != null) {
+        navigate(nodeId, args, navOptions, navigatorExtras)
     }
 }
