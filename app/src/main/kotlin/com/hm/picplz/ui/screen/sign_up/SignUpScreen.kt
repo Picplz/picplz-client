@@ -1,5 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,17 +22,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import com.hm.picplz.viewmodel.SignUpViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.hm.picplz.MainActivity
 import com.hm.picplz.ui.screen.login.LoginSideEffect
 import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +48,28 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = viewModel(),
     navController: NavController,
 ) {
+    /** 상태바 스타일 설정 **/
+    val view = LocalView.current
+    val activity = LocalContext.current as? MainActivity
+
+    DisposableEffect(Unit) {
+        activity?.window?.apply {
+            statusBarColor = Color.Gray.toArgb()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = false
+            }
+        }
+
+        onDispose {
+            activity?.window?.apply {
+                statusBarColor = Color.White.toArgb()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
+                }
+            }
+        }
+    }
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
