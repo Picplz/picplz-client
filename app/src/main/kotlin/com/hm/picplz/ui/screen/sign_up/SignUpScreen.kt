@@ -144,7 +144,6 @@ fun SignUpScreen(
                         ) {
                             Text("금손")
                         }
-                        Text ("$selectedUserType")
                     }
                 }
             }
@@ -159,9 +158,9 @@ fun SignUpScreen(
                         viewModel.handleIntent(NavigateToSelected)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Blue
-                    )
-
+                        containerColor = if (selectedUserType == null) Color.Gray else Color.Blue
+                    ),
+                    enabled = selectedUserType != null
                 ) {
                  Text("다음")
                 }
