@@ -7,7 +7,7 @@
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/black</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
         <item name="android:windowSplashScreenAnimationDuration" tools:ignore="NewApi">1000</item>
         <item name="postSplashScreenTheme">@style/Theme.Picplz</item>
