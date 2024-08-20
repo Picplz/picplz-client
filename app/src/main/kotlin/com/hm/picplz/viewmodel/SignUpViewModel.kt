@@ -36,8 +36,12 @@ class SignUpViewModel : ViewModel() {
                     _sideEffect.emit(SignUpSideEffect.NavigateToPrev)
                 }
             }
-            is SelectUserType -> {
-                _selectedUserType.value = intent.userType
+            is ClickUserTypeButton -> {
+                if (_selectedUserType.value == intent.userType) {
+                    _selectedUserType.value = null
+                } else {
+                    _selectedUserType.value = intent.userType
+                }
             }
             is NavigateToSelected -> {
                 viewModelScope.launch {

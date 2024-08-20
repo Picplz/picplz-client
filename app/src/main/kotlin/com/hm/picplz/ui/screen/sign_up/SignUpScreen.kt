@@ -130,7 +130,7 @@ fun SignUpScreen(
                     ) {
                         Button(
                             onClick = {
-                                viewModel.handleIntent(SelectUserType(UserType.User))
+                                viewModel.handleIntent(ClickUserTypeButton(UserType.User))
                             },
                             modifier = Modifier
                                 .padding(end = 8.dp)
@@ -139,11 +139,12 @@ fun SignUpScreen(
                         }
                         Button(
                             onClick = {
-                                viewModel.handleIntent(SelectUserType(UserType.Photographer))
+                                viewModel.handleIntent(ClickUserTypeButton(UserType.Photographer))
                             }
                         ) {
                             Text("금손")
                         }
+                        Text ("$selectedUserType")
                     }
                 }
             }
