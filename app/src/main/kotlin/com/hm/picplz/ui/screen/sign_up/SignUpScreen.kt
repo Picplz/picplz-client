@@ -55,17 +55,10 @@ fun SignUpScreen(
     val view = LocalView.current
     val activity = LocalContext.current as? MainActivity
 
-    DisposableEffect(Unit) {
+    LaunchedEffect(Unit) {
         activity?.window?.apply {
             statusBarColor = Color.Gray.toArgb()
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = false
-        }
-
-        onDispose {
-            activity?.window?.apply {
-                statusBarColor = Color.White.toArgb()
-                WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
-            }
         }
     }
 
