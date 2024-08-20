@@ -6,19 +6,19 @@ import com.hm.picplz.ui.screen.sign_up.Destination.*
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
 import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
+import com.hm.picplz.ui.screen.sign_up.SignUpViewState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
-import com.hm.picplz.data.model.User
-import com.hm.picplz.data.model.UserType
-import com.hm.picplz.data.model.UserType.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import com.hm.picplz.data.model.User
+import com.hm.picplz.data.model.UserType.*
 
 class SignUpViewModel : ViewModel() {
 
-    private val _selectedUserType = MutableStateFlow<UserType?>(null)
-    val selectedUserType: StateFlow<UserType?> get() = _selectedUserType
+    private val _state = MutableStateFlow<SignUpViewState>(SignUpViewState.idle())
+    val state: StateFlow<SignUpViewState> get() = _state
 
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect: SharedFlow<SignUpSideEffect> get() = _sideEffect
@@ -37,15 +37,17 @@ class SignUpViewModel : ViewModel() {
                 }
             }
             is ClickUserTypeButton -> {
-                if (_selectedUserType.value == intent.userType) {
-                    _selectedUserType.value = null
+                val newUserType = if (_state.value.selectedUserType == intent.userType) {
+                    null
                 } else {
-                    _selectedUserType.value = intent.userType
+                    intent.userType
                 }
+
+                _state.value = _state.value.copy(selectedUserType = newUserType)
             }
             is NavigateToSelected -> {
                 viewModelScope.launch {
-                    _selectedUserType.value?.let { selectedUserType ->
+                    _state.value.selectedUserType?.let { selectedUserType ->
                         val destination = when (selectedUserType) {
                             User -> SignUpClient
                             Photographer -> SignUpPhotographer
@@ -53,6 +55,9 @@ class SignUpViewModel : ViewModel() {
                         _sideEffect.emit(SignUpSideEffect.NavigateToSelected(destination, userData))
                     }
                 }
+            }
+            is ResetSelectedUserType -> {
+                _state.value = SignUpViewState.idle()
             }
         }
     }
