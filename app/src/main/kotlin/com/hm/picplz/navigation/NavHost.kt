@@ -41,7 +41,7 @@ fun AppNavHost(
                 @Suppress("DEPRECATION")
                 backStackEntry.arguments?.getParcelable("userInfo")
             }
-            SignUpPhotographerScreen(
+            SignUpClientScreen(
                 navController = navController,
                 userInfo = userInfo ?: emptyUserData
             )
@@ -54,7 +54,7 @@ fun AppNavHost(
                 @Suppress("DEPRECATION")
                 backStackEntry.arguments?.getParcelable("userInfo")
             }
-            SignUpClientScreen(
+            SignUpPhotographerScreen(
                 navController = navController,
                 userInfo = userInfo ?: emptyUserData
             )
