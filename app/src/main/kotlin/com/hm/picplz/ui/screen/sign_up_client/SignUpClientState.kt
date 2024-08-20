@@ -3,7 +3,7 @@ package com.hm.picplz.ui.screen.sign_up
 sealed class SignUpClientState {
     data class Step(
         val currentStep : SignUpStep
-    ) : SignUpState()
+    ) : SignUpClientState()
 }
 
 sealed interface SignUpStep {
