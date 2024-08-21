@@ -97,7 +97,7 @@ fun LoginScreen(
                     Text(
                         text = "카카오로 계속하기",
                         modifier = Modifier.padding(
-                            vertical = 5.dp
+                            vertical = 8.dp
                         ),
                         style = TextStyle(
                             fontSize = 16.sp,
