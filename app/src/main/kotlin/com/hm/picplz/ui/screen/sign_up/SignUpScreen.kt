@@ -80,7 +80,7 @@ fun SignUpScreen(
         ) {
             CommonTopBar(
                 text = "회원 타입 선택",
-                onClickBack = { viewModel.handleIntent(SignUpIntent.NavigateToPrev) },
+                onClickBack = { viewModel.handleIntent(NavigateToPrev) },
             )
             Box(
                 modifier = Modifier
