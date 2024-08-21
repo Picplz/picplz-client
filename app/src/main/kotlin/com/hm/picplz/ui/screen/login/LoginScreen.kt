@@ -65,7 +65,6 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize(),
         containerColor = MainThemeColor.Black
-
     ) { innerPadding ->
         Box(
             modifier = Modifier
