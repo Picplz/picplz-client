@@ -1,9 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up
 
 import android.os.Bundle
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -12,17 +9,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +30,8 @@ import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
+import com.hm.picplz.ui.screen.common.CommonButton
+import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -85,8 +77,9 @@ fun SignUpScreen(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp),
+            contentAlignment = Alignment.Center
             ) {
                 Column(
                     modifier = Modifier
@@ -100,8 +93,7 @@ fun SignUpScreen(
                             append("선택해주세요")
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 32.dp),
+                            .fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.SemiBold
@@ -114,111 +106,19 @@ fun SignUpScreen(
                     Column(
                         modifier = Modifier,
                     ) {
-                        Button(
-                            onClick = {
-                                viewModel.handleIntent(ClickUserTypeButton(UserType.User))
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 32.dp)
-                                .height(100.dp)
-                                .shadow(
-                                    elevation = 5.dp,
-                                    shape = RoundedCornerShape(16.dp),
-                                    ambientColor = Color.Gray,
-                                    spotColor = Color.Gray)
-                                .background(
-                                    Color.White,
-                                    shape = RoundedCornerShape(16.dp)
-                                ).border(
-                                    width = 2.dp,
-                                    color = if (selectedUserType == UserType.User) {
-                                        MainThemeColor.Olive
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    shape = RoundedCornerShape(16.dp)
-                                ),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.White,
-                                contentColor = MainThemeColor.Black
-                            ),
-                            shape = RoundedCornerShape(16.dp),
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.logo),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(40.dp)
-                                )
-                                Spacer(modifier = Modifier.width(20.dp))
-                                Text(
-                                    text = "고객",
-                                    style = TextStyle(
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MainThemeColor.Black
-                                    )
-                                )
-                            }
-                        }
+                        CommonSelectImageButton(
+                            text = "고객",
+                            isSelected = selectedUserType == UserType.User,
+                            onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.User)) },
+                            iconResId = R.drawable.logo
+                        )
                         Spacer(modifier = Modifier.height(10.dp))
-                        Button(
-                            onClick = {
-                                viewModel.handleIntent(ClickUserTypeButton(UserType.Photographer))
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 32.dp)
-                                .height(100.dp)
-                                .shadow(
-                                    elevation = 5.dp,
-                                    shape = RoundedCornerShape(16.dp),
-                                    ambientColor = Color.Gray,
-                                    spotColor = Color.Gray)
-                                .background(
-                                    Color.White,
-                                    shape = RoundedCornerShape(16.dp)
-                                ).border(
-                                    width = 2.dp,
-                                    color = if (selectedUserType == UserType.Photographer) {
-                                        MainThemeColor.Olive
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    shape = RoundedCornerShape(16.dp)
-                                ),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.White,
-                                contentColor = MainThemeColor.Black
-                            ),
-                            shape = RoundedCornerShape(16.dp),
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.logo),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(40.dp)
-                                )
-                                Spacer(modifier = Modifier.width(20.dp))
-                                Text(
-                                    text = "금손",
-                                    style = TextStyle(
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MainThemeColor.Black
-                                    )
-                                )
-                            }
-                        }
+                        CommonSelectImageButton(
+                            text = "금손",
+                            isSelected = selectedUserType == UserType.Photographer,
+                            onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.Photographer)) },
+                            iconResId = R.drawable.logo
+                        )
                     }
                 }
             }
@@ -229,26 +129,12 @@ fun SignUpScreen(
                     .padding(horizontal = 32.dp),
             contentAlignment = Alignment.Center
             ) {
-                Button(
-                    onClick = {
-                        viewModel.handleIntent(NavigateToSelected)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MainThemeColor.Olive
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    enabled = selectedUserType != null
-                ) {
-                    Text(
-                        text = "다음",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium                        )
-                    )
-                }
+                CommonButton(
+                    text = "다음",
+                    onClick = { viewModel.handleIntent(NavigateToSelected) },
+                    enabled = selectedUserType != null,
+                    containerColor = MainThemeColor.Olive
+                )
             }
         }
     }
