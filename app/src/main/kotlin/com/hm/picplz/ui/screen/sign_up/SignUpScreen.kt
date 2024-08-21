@@ -126,7 +126,7 @@ fun SignUpScreen(
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
+                    .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
             ) {
                 CommonButton(

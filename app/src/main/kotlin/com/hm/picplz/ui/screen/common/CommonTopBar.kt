@@ -34,9 +34,9 @@ fun CommonTopBar(
         fontSize = 16.sp,
         fontWeight = FontWeight.SemiBold
     ),
-    paddingStart: Dp = 10.dp,
+    paddingStart: Dp = 0.dp,
     iconSize: Dp = 35.dp,
-    spacerWidth: Dp = 60.dp
+    spacerWidth: Dp = 50.dp
 ) {
     Box(
         modifier = Modifier
