@@ -2,19 +2,29 @@ package com.hm.picplz.ui.screen.sign_up
 
 import android.os.Bundle
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +43,7 @@ import com.hm.picplz.data.model.UserType
 import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
+import com.hm.picplz.ui.theme.MainThemeColor
 
 @Composable
 fun SignUpScreen(
@@ -55,7 +66,10 @@ fun SignUpScreen(
     val currentState = viewModel.state.collectAsState().value
     val selectedUserType = currentState.selectedUserType
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MainThemeColor.White
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -118,7 +132,23 @@ fun SignUpScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "선택해주세요")
+                    Text(
+                        text = buildAnnotatedString {
+                            append("회원 타입을\n")
+                            append("선택해주세요")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 32.dp),
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .height(30.dp)
+                    )
                     Column(
                         modifier = Modifier,
                     ) {
@@ -127,16 +157,105 @@ fun SignUpScreen(
                                 viewModel.handleIntent(ClickUserTypeButton(UserType.User))
                             },
                             modifier = Modifier
-                                .padding(end = 8.dp)
+                                .fillMaxWidth()
+                                .padding(horizontal = 32.dp)
+                                .height(100.dp)
+                                .shadow(
+                                    elevation = 5.dp,
+                                    shape = RoundedCornerShape(16.dp),
+                                    ambientColor = Color.Gray,
+                                    spotColor = Color.Gray)
+                                .background(
+                                    Color.White,
+                                    shape = RoundedCornerShape(16.dp)
+                                ).border(
+                                    width = 2.dp,
+                                    color = if (selectedUserType == UserType.User) {
+                                        MainThemeColor.Olive
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White,
+                                contentColor = MainThemeColor.Black
+                            ),
+                            shape = RoundedCornerShape(16.dp),
                         ) {
-                            Text("고객")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                                Spacer(modifier = Modifier.width(15.dp))
+                                Text(
+                                    text = "고객",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MainThemeColor.Black
+                                    )
+                                )
+                            }
                         }
+                        Spacer(modifier = Modifier.height(10.dp))
                         Button(
                             onClick = {
                                 viewModel.handleIntent(ClickUserTypeButton(UserType.Photographer))
-                            }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 32.dp)
+                                .height(100.dp)
+                                .shadow(
+                                    elevation = 5.dp,
+                                    shape = RoundedCornerShape(16.dp),
+                                    ambientColor = Color.Gray,
+                                    spotColor = Color.Gray)
+                                .background(
+                                    Color.White,
+                                    shape = RoundedCornerShape(16.dp)
+                                ).border(
+                                    width = 2.dp,
+                                    color = if (selectedUserType == UserType.Photographer) {
+                                        MainThemeColor.Olive
+                                    } else {
+                                        Color.Transparent
+                                    },
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.White,
+                                contentColor = MainThemeColor.Black
+                            ),
+                            shape = RoundedCornerShape(16.dp),
                         ) {
-                            Text("금손")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "금손",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MainThemeColor.Black
+                                    )
+                                )
+                            }
                         }
                     }
                 }
