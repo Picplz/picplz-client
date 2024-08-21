@@ -1,5 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up_client
 
+import SignUpClientNicknameView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
