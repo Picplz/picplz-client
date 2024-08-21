@@ -193,7 +193,7 @@ fun SignUpScreen(
                                     contentDescription = "",
                                     modifier = Modifier.size(40.dp)
                                 )
-                                Spacer(modifier = Modifier.width(15.dp))
+                                Spacer(modifier = Modifier.width(20.dp))
                                 Text(
                                     text = "고객",
                                     style = TextStyle(
@@ -246,7 +246,7 @@ fun SignUpScreen(
                                     contentDescription = "",
                                     modifier = Modifier.size(40.dp)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(20.dp))
                                 Text(
                                     text = "금손",
                                     style = TextStyle(
@@ -262,20 +262,30 @@ fun SignUpScreen(
             }
             Box(
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                    .height(120.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp),
+            contentAlignment = Alignment.Center
             ) {
                 Button(
                     onClick = {
                         viewModel.handleIntent(NavigateToSelected)
                     },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectedUserType == null) Color.Gray else Color.Blue
+                        containerColor = MainThemeColor.Olive
                     ),
+                    shape = RoundedCornerShape(10.dp),
                     enabled = selectedUserType != null
                 ) {
-                    Text("다음")
+                    Text(
+                        text = "다음",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium                        )
+                    )
                 }
             }
         }
