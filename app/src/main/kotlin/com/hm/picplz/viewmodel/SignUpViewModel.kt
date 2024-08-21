@@ -6,7 +6,7 @@ import com.hm.picplz.ui.screen.sign_up.Destination.*
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
 import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
-import com.hm.picplz.ui.screen.sign_up.SignUpViewState
+import com.hm.picplz.ui.screen.sign_up.SignUpState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ import com.hm.picplz.data.model.UserType.*
 
 class SignUpViewModel : ViewModel() {
 
-    private val _state = MutableStateFlow<SignUpViewState>(SignUpViewState.idle())
-    val state: StateFlow<SignUpViewState> get() = _state
+    private val _state = MutableStateFlow<SignUpState>(SignUpState.idle())
+    val state: StateFlow<SignUpState> get() = _state
 
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect: SharedFlow<SignUpSideEffect> get() = _sideEffect
@@ -57,7 +57,7 @@ class SignUpViewModel : ViewModel() {
                 }
             }
             is ResetSelectedUserType -> {
-                _state.value = SignUpViewState.idle()
+                _state.value = SignUpState.idle()
             }
         }
     }
