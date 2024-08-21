@@ -50,6 +50,13 @@ fun SignUpClientNicknameView(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
-        ) {}
+        ) {
+            CommonButton(
+                text = "다음",
+                onClick = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
+                enabled =  currentState.nickname!= "",
+                containerColor = MainThemeColor.Olive
+            )
+        }
     }
 }

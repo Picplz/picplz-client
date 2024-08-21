@@ -29,6 +29,7 @@ class SignUpClientViewModel : ViewModel() {
                     _sideEffect.emit(SignUpClientSideEffect.NavigateToPrev)
                 }
             }
+            is ChangeStep -> {}
         }
     }
 }

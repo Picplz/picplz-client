@@ -7,4 +7,5 @@ sealed class SignUpClientIntent {
     data class SetNickName(val newNickname: String) : SignUpClientIntent()
     data class SetProfileImageUrl(val newProfileImageUrl: String) : SignUpClientIntent()
     data object NavigateToPrev : SignUpClientIntent()
+    data class ChangeStep(val stepNum: Int) : SignUpClientIntent()
 }
