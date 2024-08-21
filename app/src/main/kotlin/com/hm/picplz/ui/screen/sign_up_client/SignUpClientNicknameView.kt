@@ -1,15 +1,9 @@
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -21,7 +15,6 @@ import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.theme.MainThemeColor
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SignUpClientNicknameView(
     modifier: Modifier = Modifier,
@@ -29,7 +22,6 @@ fun SignUpClientNicknameView(
     viewModel: SignUpClientViewModel,
     innerPadding: PaddingValues
 ) {
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -68,6 +60,10 @@ fun SignUpClientNicknameView(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = "닉네임을 입력하세요",
                 isError = false,
+                imeAction = ImeAction.Done,
+                keyboardActions = {
+                    focusManager.clearFocus()
+                }
             )
         }
         Box(
