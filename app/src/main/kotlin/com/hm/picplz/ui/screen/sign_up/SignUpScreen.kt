@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
+import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
@@ -77,49 +78,10 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .height(50.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    IconButton(
-                        onClick = {
-                            viewModel.handleIntent(SignUpIntent.NavigateToPrev)
-                        },
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(start = 10.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.arrow_left),
-                            contentDescription = "arrow left",
-                            modifier = Modifier.size(35.dp)
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "회원 타입 선택",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(60.dp))
-                }
-            }
+            CommonTopBar(
+                text = "회원 타입 선택",
+                onClickBack = { viewModel.handleIntent(SignUpIntent.NavigateToPrev) },
+            )
             Box(
                 modifier = Modifier
                     .weight(1f)
