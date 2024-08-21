@@ -4,7 +4,7 @@ import com.hm.picplz.data.model.User
 import com.hm.picplz.viewmodel.emptyUserData
 
 data class SignUpClientState(
-    val currentStep: Int? = null,
+    val currentStep: Int? = 0,
     val isLoading: Boolean = false,
     val error: Throwable? = null,
     val userInfo: User = emptyUserData,
@@ -14,7 +14,7 @@ data class SignUpClientState(
     companion object {
         fun idle(): SignUpClientState {
             return SignUpClientState(
-                currentStep = null,
+                currentStep = 0,
                 isLoading = false,
                 error = null,
                 userInfo = emptyUserData,
