@@ -1,5 +1,3 @@
-package com.hm.picplz.ui.screen.sign_up_client
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +14,7 @@ import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.viewmodel.SignUpClientViewModel
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.NavigateToSelected
+import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.theme.MainThemeColor
 
 @Composable
@@ -34,7 +32,7 @@ fun SignUpClientNicknameView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CommonTopBar(
-            text ="닉네임 등록하기",
+            text = "닉네임 등록하기",
             onClickBack = { viewModel.handleIntent(SignUpClientIntent.NavigateToPrev) },
         )
         Box(
@@ -43,7 +41,17 @@ fun SignUpClientNicknameView(
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
             contentAlignment = Alignment.Center
-        ) {}
+        ) {
+            CommonOutlinedTextField(
+                value = currentState.nickname,
+                onValueChange = { newValue ->
+                    viewModel.handleIntent(SignUpClientIntent.SetNickName(newValue))
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = "닉네임을 입력하세요",
+                isError = false,
+            )
+        }
         Box(
             modifier = Modifier
                 .height(120.dp)
@@ -54,7 +62,7 @@ fun SignUpClientNicknameView(
             CommonButton(
                 text = "다음",
                 onClick = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
-                enabled =  currentState.nickname!= "",
+                enabled = currentState.nickname.isNotEmpty(),  // 상태를 기반으로 버튼 활성화 여부 결정
                 containerColor = MainThemeColor.Olive
             )
         }

@@ -22,7 +22,10 @@ class SignUpClientViewModel : ViewModel() {
     fun handleIntent(intent: SignUpClientIntent) {
         when (intent) {
             is SetUserInfo -> {}
-            is SetNickName -> {}
+            is SetNickName -> {
+                val newNickname = _state.value.copy(nickname = intent.newNickname)
+                _state.value = newNickname
+            }
             is SetProfileImageUrl -> {}
             is NavigateToPrev -> {
                 viewModelScope.launch {
