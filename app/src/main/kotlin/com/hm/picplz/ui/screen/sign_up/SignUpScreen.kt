@@ -79,7 +79,7 @@ fun SignUpScreen(
                     .weight(1f)
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp),
-            contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 Column(
                     modifier = Modifier
