@@ -35,12 +35,12 @@ fun SignUpClientScreen(
                 viewModel = viewModel,
                 innerPadding = innerPadding
             )
-//            1 -> SignUpClientProfileImageView(
-//                modifier = modifier,
-//                currentState = currentState,
-//                viewModel = viewModel,
-//                innerPadding = innerPadding
-//            )
+            1 -> SignUpClientProfileImageView(
+                modifier = modifier,
+                currentState = currentState,
+                viewModel = viewModel,
+                innerPadding = innerPadding
+            )
             else -> {}
         }
     }

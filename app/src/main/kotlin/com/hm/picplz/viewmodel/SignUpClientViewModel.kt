@@ -32,7 +32,10 @@ class SignUpClientViewModel : ViewModel() {
                     _sideEffect.emit(SignUpClientSideEffect.NavigateToPrev)
                 }
             }
-            is ChangeStep -> {}
+            is ChangeStep -> {
+                val newStep = _state.value.copy(currentStep = intent.stepNum)
+                _state.value = newStep
+            }
         }
     }
 }
