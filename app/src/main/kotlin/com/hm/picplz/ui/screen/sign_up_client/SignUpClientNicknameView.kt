@@ -66,7 +66,8 @@ fun SignUpClientNicknameView(
                 imeAction = ImeAction.Done,
                 keyboardActions = {
                     focusManager.clearFocus()
-                }
+                },
+                label = "닉네임"
             )
         }
         Box(
