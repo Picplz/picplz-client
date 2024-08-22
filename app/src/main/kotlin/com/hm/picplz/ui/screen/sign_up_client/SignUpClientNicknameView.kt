@@ -5,17 +5,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.viewmodel.SignUpClientViewModel
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
 
 @Composable
 fun SignUpClientNicknameView(
@@ -30,6 +30,7 @@ fun SignUpClientNicknameView(
         modifier = modifier
             .fillMaxSize()
             .padding(innerPadding)
+            .imePadding()
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -46,8 +47,7 @@ fun SignUpClientNicknameView(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .imePadding()
+                .padding(horizontal = 16.dp)
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = {
                         focusManager.clearFocus()
@@ -55,7 +55,7 @@ fun SignUpClientNicknameView(
                 },
             contentAlignment = Alignment.Center
         ) {
-            CommonOutlinedTextField(
+            CommonFilledTextField(
                 value = currentState.nickname,
                 onValueChange = { newValue ->
                     viewModel.handleIntent(SignUpClientIntent.SetNickName(newValue))
@@ -83,5 +83,20 @@ fun SignUpClientNicknameView(
                 containerColor = MainThemeColor.Olive
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignupClientNicknamePreview() {
+    val viewModel: SignUpClientViewModel = viewModel()
+    val currentState = viewModel.state.collectAsState().value
+
+    PicplzTheme {
+        SignUpClientNicknameView(
+            currentState = currentState,
+            viewModel = viewModel,
+            innerPadding = PaddingValues() ,
+        )
     }
 }
