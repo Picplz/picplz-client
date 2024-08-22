@@ -133,7 +133,7 @@ fun SignUpScreen(
                     text = "다음",
                     onClick = { viewModel.handleIntent(NavigateToSelected) },
                     enabled = selectedUserType != null,
-                    containerColor = MainThemeColor.Olive
+                    containerColor = MainThemeColor.Black
                 )
             }
         }

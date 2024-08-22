@@ -80,7 +80,7 @@ fun SignUpClientNicknameView(
                 text = "다음",
                 onClick = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
                 enabled = currentState.nickname.isNotEmpty(),
-                containerColor = MainThemeColor.Olive
+                containerColor = MainThemeColor.Black
             )
         }
     }
