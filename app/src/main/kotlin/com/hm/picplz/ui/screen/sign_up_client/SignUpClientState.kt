@@ -1,5 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up
 
+import android.net.Uri
 import com.hm.picplz.data.model.User
 import com.hm.picplz.viewmodel.emptyUserData
 
@@ -9,7 +10,7 @@ data class SignUpClientState(
     val error: Throwable? = null,
     val userInfo: User = emptyUserData,
     val nickname: String = "",
-    val profileImageUrl : String = ""
+    val profileImageUri: Uri? = null
 ){
     companion object {
         fun idle(): SignUpClientState {
@@ -19,7 +20,7 @@ data class SignUpClientState(
                 error = null,
                 userInfo = emptyUserData,
                 nickname = "",
-                profileImageUrl = ""
+                profileImageUri = null
             )
         }
     }

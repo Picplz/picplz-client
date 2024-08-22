@@ -23,18 +23,21 @@ class SignUpClientViewModel : ViewModel() {
         when (intent) {
             is SetUserInfo -> {}
             is SetNickName -> {
-                val newNickname = _state.value.copy(nickname = intent.newNickname)
-                _state.value = newNickname
+                val newNicknameState = _state.value.copy(nickname = intent.newNickname)
+                _state.value = newNicknameState
             }
-            is SetProfileImageUrl -> {}
+            is SetProfileImageUri -> {
+                val newProfileImageUrlState = _state.value.copy(profileImageUri = intent.newProfileImageUri)
+                _state.value = newProfileImageUrlState
+            }
             is NavigateToPrev -> {
                 viewModelScope.launch {
                     _sideEffect.emit(SignUpClientSideEffect.NavigateToPrev)
                 }
             }
             is ChangeStep -> {
-                val newStep = _state.value.copy(currentStep = intent.stepNum)
-                _state.value = newStep
+                val newStepState = _state.value.copy(currentStep = intent.stepNum)
+                _state.value = newStepState
             }
         }
     }

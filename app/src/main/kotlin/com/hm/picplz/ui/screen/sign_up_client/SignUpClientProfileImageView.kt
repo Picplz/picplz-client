@@ -1,10 +1,12 @@
 package com.hm.picplz.ui.screen.sign_up_client
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,11 +23,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.hm.picplz.R
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpClientViewModel
+import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent.*
 
 @Composable
 fun SignUpClientProfileImageView(
@@ -34,6 +38,15 @@ fun SignUpClientProfileImageView(
     viewModel: SignUpClientViewModel,
     innerPadding: PaddingValues
 ) {
+    /** 파일 피커 **/
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            viewModel.handleIntent(SetProfileImageUri(uri))
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -43,7 +56,7 @@ fun SignUpClientProfileImageView(
     ) {
         CommonTopBar(
             text = "프로필 이미지 업로드",
-            onClickBack = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(0)) }
+            onClickBack = { viewModel.handleIntent(ChangeStep(0)) }
         )
 
         Box(
@@ -63,8 +76,13 @@ fun SignUpClientProfileImageView(
                     modifier = Modifier.size(150.dp),
                     contentAlignment = Alignment.Center
                 ) {
+                    val painter = if (currentState.profileImageUri != null) {
+                        rememberAsyncImagePainter(model = currentState.profileImageUri)
+                    } else {
+                        painterResource(id = R.drawable.logo_temp)
+                    }
                     Image(
-                        painter = painterResource(id = R.drawable.logo_temp),
+                        painter = painter,
                         contentDescription = "프로필 이미지",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -74,7 +92,9 @@ fun SignUpClientProfileImageView(
                     )
 
                     IconButton(
-                        onClick = { },
+                        onClick = {
+                            filePickerLauncher.launch("image/*")
+                        },
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .size(40.dp)
@@ -97,7 +117,7 @@ fun SignUpClientProfileImageView(
                     text = "${currentState.nickname}님 안녕하세요",
                     style = TextStyle(
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Normal
                     )
                 )
             }
