@@ -53,7 +53,7 @@ fun CommonFilledTextField(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = if (isError) Color.Red else MainThemeColor.Gray,
-                modifier = Modifier.padding(start = 16.dp, bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp)
             )
         }
 
@@ -61,8 +61,7 @@ fun CommonFilledTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth(),
             singleLine = true,
             interactionSource = interactionSource,
             enabled = enabled,
