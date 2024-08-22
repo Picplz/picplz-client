@@ -1,6 +1,7 @@
 package com.hm.picplz.ui.screen.sign_up_client
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -19,17 +20,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.hm.picplz.R
+import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpClientViewModel
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent.*
+import com.hm.picplz.ui.theme.MainThemeColor
 
 @Composable
 fun SignUpClientProfileImageView(
@@ -123,6 +127,7 @@ fun SignUpClientProfileImageView(
             }
 
         }
+        val context = LocalContext.current
 
         Box(
             modifier = Modifier
@@ -130,7 +135,16 @@ fun SignUpClientProfileImageView(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
-        ) {}
+        ) {
+            CommonButton(
+                text = "완료하기",
+                onClick = {
+                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
+                },
+                enabled = currentState.nickname.isNotEmpty() && currentState.profileImageUri != null,
+                containerColor = MainThemeColor.Black
+            )
+        }
     }
 }
 
