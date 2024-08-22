@@ -85,6 +85,9 @@ dependencies {
 
    // Navigation
     implementation(libs.androidx.navigation.compose.v260)
+
+    // coil
+    implementation(libs.coil.compose)
 }
 
 apply(plugin = "dagger.hilt.android.plugin")
