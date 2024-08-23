@@ -1,12 +1,14 @@
 package com.hm.picplz.ui.screen.sign_up_client
 
 import SignUpClientNicknameView
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hm.picplz.data.model.User
@@ -44,11 +46,14 @@ fun SignUpClientScreen(
             else -> {}
         }
     }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpClientSideEffect.SubmitProfileInfo -> {}
+                is SignUpClientSideEffect.SubmitProfileInfo -> {
+                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
+                }
                 is SignUpClientSideEffect.ShowFileUploadDialog -> {}
                 is SignUpClientSideEffect.NavigateToPrev-> {
                     navController.popBackStack()

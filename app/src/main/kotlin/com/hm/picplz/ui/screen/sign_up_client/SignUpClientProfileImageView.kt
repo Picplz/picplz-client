@@ -127,8 +127,6 @@ fun SignUpClientProfileImageView(
             }
 
         }
-        val context = LocalContext.current
-
         Box(
             modifier = Modifier
                 .height(120.dp)
@@ -138,9 +136,7 @@ fun SignUpClientProfileImageView(
         ) {
             CommonButton(
                 text = "완료하기",
-                onClick = {
-                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
-                },
+                onClick = { viewModel.handleIntent(ClickSubmitButton) },
                 enabled = currentState.nickname.isNotEmpty() && currentState.profileImageUri != null,
                 containerColor = MainThemeColor.Black
             )
