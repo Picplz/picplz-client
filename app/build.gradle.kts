@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -84,6 +85,9 @@ dependencies {
 
    // Navigation
     implementation(libs.androidx.navigation.compose.v260)
+
+    // coil
+    implementation(libs.coil.compose)
 }
 
 apply(plugin = "dagger.hilt.android.plugin")
