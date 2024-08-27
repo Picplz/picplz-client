@@ -24,7 +24,7 @@ class SignUpClientViewModel : ViewModel() {
     fun handleIntent(intent: SignUpClientIntent) {
         when (intent) {
             is SetUserInfo -> {}
-            is SetNickName -> {
+            is SetNickname -> {
                 val newNicknameState = _state.value.copy(nickname = intent.newNickname)
                 _state.value = newNicknameState
             }
