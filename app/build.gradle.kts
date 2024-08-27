@@ -88,6 +88,11 @@ dependencies {
 
     // coil
     implementation(libs.coil.compose)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 }
 
 apply(plugin = "dagger.hilt.android.plugin")
