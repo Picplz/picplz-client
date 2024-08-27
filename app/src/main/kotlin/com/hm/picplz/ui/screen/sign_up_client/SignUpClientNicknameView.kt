@@ -18,6 +18,7 @@ import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.viewmodel.SignUpClientViewModel
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
+import com.hm.picplz.ui.screen.sign_up.common.SignUpNicknameView
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
@@ -29,89 +30,14 @@ fun SignUpClientNicknameView(
     viewModel: SignUpClientViewModel,
     innerPadding: PaddingValues
 ) {
-    val focusManager = LocalFocusManager.current
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .imePadding()
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                })
-            },
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CommonTopBar(
-            text = "닉네임 등록하기",
-            onClickBack = { viewModel.handleIntent(SignUpClientIntent.NavigateToPrev) },
-        )
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        append("닉네임을\n")
-                        append("선택해주세요")
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                )
-                CommonFilledTextField(
-                    value = currentState.nickname,
-                    onValueChange = { newValue ->
-                        viewModel.handleIntent(SignUpClientIntent.SetNickName(newValue))
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = "닉네임을 입력하세요",
-                    isError = false,
-                    imeAction = ImeAction.Done,
-                    keyboardActions = {
-                        focusManager.clearFocus()
-                    },
-                    label = "닉네임"
-                )
-                Spacer(
-                    modifier = Modifier.height(80.dp)
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
-                .height(120.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            CommonButton(
-                text = "다음",
-                onClick = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
-                enabled = currentState.nickname.isNotEmpty(),
-                containerColor = MainThemeColor.Black
-            )
-        }
-    }
+    SignUpNicknameView(
+        modifier = modifier,
+        currentNickname = currentState.nickname,
+        onNicknameChange = { newValue -> viewModel.handleIntent(SignUpClientIntent.SetNickName(newValue)) },
+        onNavigateToPrev = { viewModel.handleIntent(SignUpClientIntent.NavigateToPrev) },
+        onNextStep = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
+        innerPadding = innerPadding
+    )
 }
 
 @Preview(showBackground = true)
