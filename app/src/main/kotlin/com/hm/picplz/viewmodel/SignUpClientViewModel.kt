@@ -6,8 +6,6 @@ import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent.*
 import com.hm.picplz.ui.screen.sign_up_client.SignUpClientSideEffect
-import com.hm.picplz.ui.screen.sign_up_photographer.SignUpPhotographerIntent
-import com.hm.picplz.ui.screen.sign_up_photographer.SignUpPhotographerSideEffect
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
