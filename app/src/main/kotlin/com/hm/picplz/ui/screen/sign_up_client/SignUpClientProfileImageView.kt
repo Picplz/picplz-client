@@ -27,7 +27,8 @@ fun SignUpClientProfileImageView(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-            viewModel.handleIntent(SetProfileImageUri(uri))        }
+            viewModel.handleIntent(SetProfileImageUri(uri))
+        }
     }
 
     SignUpProfileImageView(
