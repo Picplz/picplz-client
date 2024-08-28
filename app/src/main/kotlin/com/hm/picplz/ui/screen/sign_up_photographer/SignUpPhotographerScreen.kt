@@ -1,11 +1,13 @@
 package com.hm.picplz.ui.screen.sign_up_photographer
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hm.picplz.data.model.User
@@ -34,14 +36,28 @@ fun SignUpPhotographerScreen(
                 viewModel = viewModel,
                 innerPadding = innerPadding,
             )
+            1 -> SignUpPhotographerProfileImageView(
+                modifier = modifier,
+                currentState = currentState,
+                viewModel = viewModel,
+                innerPadding = innerPadding
+            )
+            else -> {}
         }
     }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpPhotographerSideEffect.NavigateToPrev-> {
+                is SignUpPhotographerSideEffect.NavigateToPrev -> {
                     navController.popBackStack()
+                }
+                is SignUpPhotographerSideEffect.ShowFileUploadDialog -> {
+
+                }
+                is SignUpPhotographerSideEffect.SubmitProfileInfo -> {
+                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
                 }
             }
         }
