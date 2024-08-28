@@ -16,9 +16,9 @@ fun SignUpPhotographerNicknameView (
     SignUpNicknameView(
         modifier = modifier,
         currentNickname = currentState.nickname,
-        onNavigateToPrev = { viewModel.handleIntent(SignUpPhotographerIntent.NavigateToPrev) },
-        onNicknameChange = { newValue -> viewModel.handleIntent(SignUpPhotographerIntent.SetNickname(newValue)) },
-        onNextStep = { viewModel.handleIntent(SignUpPhotographerIntent.ChangeStep(1))},
+        onClickBackIcon = { viewModel.handleIntent(SignUpPhotographerIntent.NavigateToPrev) },
+        onNicknameFieldChange = { newValue -> viewModel.handleIntent(SignUpPhotographerIntent.SetNickname(newValue)) },
+        onClickBottomButton = { viewModel.handleIntent(SignUpPhotographerIntent.ChangeStep(1))},
         innerPadding = innerPadding,
     )
 }
