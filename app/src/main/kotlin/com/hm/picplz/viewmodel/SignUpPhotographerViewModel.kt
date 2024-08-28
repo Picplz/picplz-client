@@ -31,7 +31,10 @@ class SignUpPhotographerViewModel : ViewModel() {
                 val newStepState = _state.value.copy(currentStep = intent.stepNum)
                 _state.value = newStepState
             }
-            is SetNickname -> {}
+            is SetNickname -> {
+                val newNicknameState = _state.value.copy(nickname = intent.newNickname)
+                _state.value = newNicknameState
+            }
             is ClickSubmitButton -> {}
             is SetUserInfo -> {}
             is SetProfileImageUri -> {}
