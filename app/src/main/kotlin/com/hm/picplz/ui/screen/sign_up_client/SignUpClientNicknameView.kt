@@ -33,9 +33,9 @@ fun SignUpClientNicknameView(
     SignUpNicknameView(
         modifier = modifier,
         currentNickname = currentState.nickname,
-        onNicknameChange = { newValue -> viewModel.handleIntent(SignUpClientIntent.SetNickname(newValue)) },
-        onNavigateToPrev = { viewModel.handleIntent(SignUpClientIntent.NavigateToPrev) },
-        onNextStep = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
+        onNicknameFieldChange = { newValue -> viewModel.handleIntent(SignUpClientIntent.SetNickname(newValue)) },
+        onClickBackIcon = { viewModel.handleIntent(SignUpClientIntent.NavigateToPrev) },
+        onClickBottomButton = { viewModel.handleIntent(SignUpClientIntent.ChangeStep(1)) },
         innerPadding = innerPadding
     )
 }

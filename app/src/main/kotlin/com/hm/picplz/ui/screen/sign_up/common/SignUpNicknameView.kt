@@ -33,9 +33,9 @@ fun SignUpNicknameView(
     modifier: Modifier = Modifier,
     currentNickname: String,
     innerPadding: PaddingValues,
-    onNavigateToPrev: () -> Unit,
-    onNicknameChange: (String) -> Unit,
-    onNextStep: () -> Unit
+    onClickBackIcon: () -> Unit,
+    onNicknameFieldChange: (String) -> Unit,
+    onClickBottomButton: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -54,7 +54,7 @@ fun SignUpNicknameView(
     ) {
         CommonTopBar(
             text = "닉네임 등록하기",
-            onClickBack = { onNavigateToPrev() },
+            onClickBack = { onClickBackIcon() },
         )
         Box(
             modifier = Modifier
@@ -89,7 +89,7 @@ fun SignUpNicknameView(
                 CommonFilledTextField(
                     value = currentNickname,
                     onValueChange = { newValue ->
-                        onNicknameChange(newValue)
+                        onNicknameFieldChange(newValue)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = "닉네임을 입력하세요",
@@ -114,7 +114,7 @@ fun SignUpNicknameView(
         ) {
             CommonButton(
                 text = "다음",
-                onClick = { onNextStep() },
+                onClick = { onClickBottomButton() },
                 enabled = currentNickname.isNotEmpty(),
                 containerColor = MainThemeColor.Black
             )
