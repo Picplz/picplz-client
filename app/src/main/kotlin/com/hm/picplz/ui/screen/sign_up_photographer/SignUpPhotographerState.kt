@@ -4,7 +4,7 @@ import android.net.Uri
 import com.hm.picplz.data.model.User
 import com.hm.picplz.viewmodel.emptyUserData
 
-class SignUpPhotographerState (
+data class SignUpPhotographerState (
     val currentStep: Int? = 0,
     val isLoading: Boolean = false,
     val error: Throwable? = null,
