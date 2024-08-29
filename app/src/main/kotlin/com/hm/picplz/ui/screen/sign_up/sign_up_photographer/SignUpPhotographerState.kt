@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up_photographer
+package com.hm.picplz.ui.screen.sign_up.sign_up_photographer
 
 import android.net.Uri
 import com.hm.picplz.data.model.User

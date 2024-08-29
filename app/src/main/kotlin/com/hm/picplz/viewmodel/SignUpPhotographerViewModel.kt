@@ -2,10 +2,10 @@ package com.hm.picplz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hm.picplz.ui.screen.sign_up_photographer.SignUpPhotographerIntent
-import com.hm.picplz.ui.screen.sign_up_photographer.SignUpPhotographerIntent.*
-import com.hm.picplz.ui.screen.sign_up_photographer.SignUpPhotographerSideEffect
-import com.hm.picplz.ui.screen.sign_up_photographer.SignUpPhotographerState
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -37,10 +37,12 @@ class SignUpPhotographerViewModel : ViewModel() {
             }
             is ClickSubmitButton -> {
                 viewModelScope.launch {
-                    _sideEffect.emit(SignUpPhotographerSideEffect.SubmitProfileInfo(
-                        nickname = _state.value.nickname,
-                        profileImageUri = _state.value.profileImageUri,
-                    ))
+                    _sideEffect.emit(
+                        SignUpPhotographerSideEffect.SubmitProfileInfo(
+                            nickname = _state.value.nickname,
+                            profileImageUri = _state.value.profileImageUri,
+                        )
+                    )
                 }
             }
             is SetUserInfo -> {}

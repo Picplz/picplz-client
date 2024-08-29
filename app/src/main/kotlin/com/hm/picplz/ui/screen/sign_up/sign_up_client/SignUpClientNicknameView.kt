@@ -6,7 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hm.picplz.viewmodel.SignUpClientViewModel
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.screen.sign_up.common.SignUpNicknameView
-import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.theme.PicplzTheme
 
 @Composable

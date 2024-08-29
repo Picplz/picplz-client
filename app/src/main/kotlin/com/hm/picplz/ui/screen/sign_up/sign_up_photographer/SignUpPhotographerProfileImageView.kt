@@ -1,26 +1,21 @@
-package com.hm.picplz.ui.screen.sign_up_client
+package com.hm.picplz.ui.screen.sign_up.sign_up_photographer
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hm.picplz.ui.screen.sign_up.SignUpClientState
 import com.hm.picplz.ui.screen.sign_up.common.SignUpProfileImageView
-import com.hm.picplz.ui.theme.PicplzTheme
-import com.hm.picplz.viewmodel.SignUpClientViewModel
-import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent.*
+import com.hm.picplz.viewmodel.SignUpPhotographerViewModel
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
 
 @Composable
-fun SignUpClientProfileImageView(
+fun SignUpPhotographerProfileImageView(
     modifier: Modifier = Modifier,
-    currentState: SignUpClientState,
-    viewModel: SignUpClientViewModel,
-    innerPadding: PaddingValues
+    currentState: SignUpPhotographerState,
+    viewModel: SignUpPhotographerViewModel,
+    innerPadding: PaddingValues,
 ) {
     /** 파일 피커 **/
     val filePickerLauncher = rememberLauncherForActivityResult(
@@ -41,18 +36,4 @@ fun SignUpClientProfileImageView(
         isBottomButtonEnabled = currentState.nickname.isNotEmpty() && currentState.profileImageUri != null,
         filePickerLauncher = filePickerLauncher,
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpClientProfileImageViewPreview() {
-    val viewModel: SignUpClientViewModel = viewModel()
-    val currentState = viewModel.state.collectAsState().value
-    PicplzTheme {
-        SignUpClientProfileImageView(
-            currentState = currentState,
-            viewModel = viewModel,
-            innerPadding = PaddingValues()
-        )
-    }
 }

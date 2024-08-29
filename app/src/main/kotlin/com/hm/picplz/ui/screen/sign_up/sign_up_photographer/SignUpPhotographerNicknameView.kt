@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up_photographer
+package com.hm.picplz.ui.screen.sign_up.sign_up_photographer
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -17,7 +17,11 @@ fun SignUpPhotographerNicknameView (
         modifier = modifier,
         currentNickname = currentState.nickname,
         onClickBackIcon = { viewModel.handleIntent(SignUpPhotographerIntent.NavigateToPrev) },
-        onNicknameFieldChange = { newValue -> viewModel.handleIntent(SignUpPhotographerIntent.SetNickname(newValue)) },
+        onNicknameFieldChange = { newValue -> viewModel.handleIntent(
+            SignUpPhotographerIntent.SetNickname(
+                newValue
+            )
+        ) },
         onClickBottomButton = { viewModel.handleIntent(SignUpPhotographerIntent.ChangeStep(1))},
         innerPadding = innerPadding,
     )

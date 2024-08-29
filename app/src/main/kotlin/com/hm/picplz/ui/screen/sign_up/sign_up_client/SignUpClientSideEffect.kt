@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up_client
+package com.hm.picplz.ui.screen.sign_up.sign_up_client
 
 import android.net.Uri
 

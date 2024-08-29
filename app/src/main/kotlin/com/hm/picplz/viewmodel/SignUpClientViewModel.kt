@@ -3,9 +3,9 @@ package com.hm.picplz.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.ui.screen.sign_up.SignUpClientState
-import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent
-import com.hm.picplz.ui.screen.sign_up_client.SignUpClientIntent.*
-import com.hm.picplz.ui.screen.sign_up_client.SignUpClientSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientSideEffect
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -41,10 +41,12 @@ class SignUpClientViewModel : ViewModel() {
             }
             is ClickSubmitButton -> {
                 viewModelScope.launch {
-                    _sideEffect.emit(SignUpClientSideEffect.SubmitProfileInfo(
-                        nickname = _state.value.nickname,
-                        profileImageUrl = _state.value.profileImageUri,
-                    ))
+                    _sideEffect.emit(
+                        SignUpClientSideEffect.SubmitProfileInfo(
+                            nickname = _state.value.nickname,
+                            profileImageUrl = _state.value.profileImageUri,
+                        )
+                    )
                 }
             }
         }

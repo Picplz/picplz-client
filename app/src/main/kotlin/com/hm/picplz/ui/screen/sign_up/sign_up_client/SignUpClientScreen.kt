@@ -1,5 +1,6 @@
-package com.hm.picplz.ui.screen.sign_up_photographer
+package com.hm.picplz.ui.screen.sign_up.sign_up_client
 
+import SignUpClientNicknameView
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
@@ -12,31 +13,31 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hm.picplz.data.model.User
 import com.hm.picplz.ui.theme.MainThemeColor
-import com.hm.picplz.viewmodel.SignUpPhotographerViewModel
+import com.hm.picplz.viewmodel.SignUpClientViewModel
 import com.hm.picplz.viewmodel.emptyUserData
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SignUpPhotographerScreen(
+fun SignUpClientScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     userInfo: User = emptyUserData,
-    viewModel: SignUpPhotographerViewModel = viewModel(),
+    viewModel: SignUpClientViewModel = viewModel(),
 ) {
     val currentState = viewModel.state.collectAsState().value
 
-    Scaffold (
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MainThemeColor.White
     ) { innerPadding ->
         when (currentState.currentStep) {
-            0 -> SignUpPhotographerNicknameView(
+            0 -> SignUpClientNicknameView(
                 modifier = modifier,
                 currentState = currentState,
                 viewModel = viewModel,
-                innerPadding = innerPadding,
+                innerPadding = innerPadding
             )
-            1 -> SignUpPhotographerProfileImageView(
+            1 -> SignUpClientProfileImageView(
                 modifier = modifier,
                 currentState = currentState,
                 viewModel = viewModel,
@@ -50,14 +51,12 @@ fun SignUpPhotographerScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpPhotographerSideEffect.NavigateToPrev -> {
-                    navController.popBackStack()
-                }
-                is SignUpPhotographerSideEffect.ShowFileUploadDialog -> {
-
-                }
-                is SignUpPhotographerSideEffect.SubmitProfileInfo -> {
+                is SignUpClientSideEffect.SubmitProfileInfo -> {
                     Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
+                }
+                is SignUpClientSideEffect.ShowFileUploadDialog -> {}
+                is SignUpClientSideEffect.NavigateToPrev -> {
+                    navController.popBackStack()
                 }
             }
         }
