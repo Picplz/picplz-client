@@ -38,6 +38,7 @@ import com.hm.picplz.data.model.UserType
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
+import com.hm.picplz.ui.screen.sign_up.SignUpIntent
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.ClickUserTypeButton
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.NavigateToPrev
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.NavigateToSelected
@@ -62,6 +63,8 @@ fun SignUpSelectTypeScreen(
             statusBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
+        /** 이 페이지 진입시 선택지 초기화 **/
+        viewModel.handleIntent(SignUpIntent.ResetSelectedUserType)
     }
 
     val currentState = viewModel.state.collectAsState().value
