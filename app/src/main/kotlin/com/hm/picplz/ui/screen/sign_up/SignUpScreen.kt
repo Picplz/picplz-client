@@ -22,15 +22,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
+import com.hm.picplz.navigation.SignUpNavHost
 import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
-import com.hm.picplz.ui.screen.sign_up.common.SignUpNicknameView
-import com.hm.picplz.ui.screen.sign_up.common.SignUpProfileImageView
-import com.hm.picplz.ui.screen.sign_up.common.SignUpSelectTypeView
-import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.screen.sign_up.common.SignUpNicknameScreen
+
 
 @Composable
 fun SignUpScreen(
@@ -38,74 +39,48 @@ fun SignUpScreen(
     viewModel: SignUpViewModel = viewModel(),
     navController: NavController,
 ) {
-    /** 상태바 스타일 설정 **/
-    val view = LocalView.current
-    val activity = LocalContext.current as? MainActivity
+    val signUpNavController = rememberNavController()
 
-    LaunchedEffect(Unit) {
-        activity?.window?.apply {
-            statusBarColor = Color.Transparent.toArgb()
-            WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
-        }
-        viewModel.handleIntent(ResetSelectedUserType)
+    SignUpNavHost(
+        navController = signUpNavController,
+    )
+//    ) { innerPadding ->
+//        /** 파일 피커 **/
+//        val filePickerLauncher = rememberLauncherForActivityResult(
+//            contract = ActivityResultContracts.GetContent()
+//        ) { uri: Uri? ->
+//            if (uri != null) {
+//                viewModel.handleIntent(SetProfileImageUri(uri))
+//            }
+//        }
+//
+//        when(currentState.currentStep) {
+//            0 -> SignUpNicknameView(
+//                modifier = modifier,
+//                innerPadding = innerPadding,
+//                currentNickname = currentState.nickname,
+//                onClickBackIcon = {viewModel.handleIntent(NavigateToPrev)},
+//                onNicknameFieldChange = { newNickname -> viewModel.handleIntent(SetNickname(newNickname))},
+//                onClickBottomButton = { viewModel.handleIntent(ChangeStep(1)) }
+//            )
+//            1 -> SignUpProfileImageView(
+//                modifier= modifier,
+//                innerPadding = innerPadding,
+//                currentNickname = currentState.nickname,
+//                currentImageUri = currentState.profileImageUri,
+//                onClickPrevIcon = { viewModel.handleIntent(ChangeStep(0)) },
+//                onClickBottomButton = { viewModel.handleIntent(ChangeStep(2)) },
+//                isBottomButtonEnabled = currentState.nickname.isNotEmpty() && currentState.profileImageUri != null,
+//                filePickerLauncher = filePickerLauncher,
+//            )
+//            2 -> SignUpSelectTypeView(
+//                modifier = modifier,
+//                innerPadding = innerPadding,
+//                selectedUserType = currentState.selectedUserType
+//            )
+//        }
     }
 
-    val currentState = viewModel.state.collectAsState().value
-
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = MainThemeColor.White
-    ) { innerPadding ->
-        /** 파일 피커 **/
-        val filePickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent()
-        ) { uri: Uri? ->
-            if (uri != null) {
-                viewModel.handleIntent(SetProfileImageUri(uri))
-            }
-        }
-
-        when(currentState.currentStep) {
-            0 -> SignUpNicknameView(
-                modifier = modifier,
-                innerPadding = innerPadding,
-                currentNickname = currentState.nickname,
-                onClickBackIcon = {viewModel.handleIntent(NavigateToPrev)},
-                onNicknameFieldChange = { newNickname -> viewModel.handleIntent(SetNickname(newNickname))},
-                onClickBottomButton = { viewModel.handleIntent(ChangeStep(1)) }
-            )
-            1 -> SignUpProfileImageView(
-                modifier= modifier,
-                innerPadding = innerPadding,
-                currentNickname = currentState.nickname,
-                currentImageUri = currentState.profileImageUri,
-                onClickPrevIcon = { viewModel.handleIntent(ChangeStep(0)) },
-                onClickBottomButton = { viewModel.handleIntent(ChangeStep(2)) },
-                isBottomButtonEnabled = currentState.nickname.isNotEmpty() && currentState.profileImageUri != null,
-                filePickerLauncher = filePickerLauncher,
-            )
-            2 -> SignUpSelectTypeView(
-                modifier = modifier,
-                innerPadding = innerPadding,
-                selectedUserType = currentState.selectedUserType
-            )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.sideEffect.collectLatest { sideEffect ->
-            when (sideEffect) {
-                is SignUpSideEffect.NavigateToSelected -> {
-                    val bundle = bundleOf("userInfo" to sideEffect.user)
-                    navController.navigate(sideEffect.destination.route, bundle)
-                }
-                is SignUpSideEffect.NavigateToPrev -> {
-                    navController.popBackStack()
-                }
-            }
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
