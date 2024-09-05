@@ -55,12 +55,6 @@ fun SignUpPhotographerScreen(
                 is SignUpPhotographerSideEffect.NavigateToPrev -> {
                     navController.popBackStack()
                 }
-                is SignUpPhotographerSideEffect.ShowFileUploadDialog -> {
-
-                }
-                is SignUpPhotographerSideEffect.SubmitProfileInfo -> {
-                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }

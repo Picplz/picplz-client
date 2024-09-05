@@ -9,8 +9,6 @@ data class SignUpPhotographerState (
     val isLoading: Boolean = false,
     val error: Throwable? = null,
     val userInfo: User = emptyUserData,
-    val nickname: String = "",
-    val profileImageUri: Uri? = null,
 ) {
     companion object {
         fun idle(): SignUpPhotographerState {
@@ -19,8 +17,6 @@ data class SignUpPhotographerState (
                 isLoading = false,
                 error = null,
                 userInfo = emptyUserData,
-                nickname = "",
-                profileImageUri = null,
             )
         }
     }

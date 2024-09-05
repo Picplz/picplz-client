@@ -52,10 +52,6 @@ fun SignUpClientScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpClientSideEffect.SubmitProfileInfo -> {
-                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
-                }
-                is SignUpClientSideEffect.ShowFileUploadDialog -> {}
                 is SignUpClientSideEffect.NavigateToPrev -> {
                     navController.popBackStack()
                 }

@@ -6,9 +6,5 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIn
 
 sealed class SignUpClientIntent {
     data class SetUserInfo(val userInfo: User) : SignUpClientIntent()
-    data class SetNickname(val newNickname: String) : SignUpClientIntent()
-    data class SetProfileImageUri(val newProfileImageUri: Uri?) : SignUpClientIntent()
     data object NavigateToPrev : SignUpClientIntent()
-    data class ChangeStep(val stepNum: Int) : SignUpClientIntent()
-    data object ClickSubmitButton : SignUpClientIntent()
 }
