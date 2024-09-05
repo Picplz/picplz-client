@@ -2,6 +2,7 @@ package com.hm.picplz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hm.picplz.data.model.NicknameFieldError
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.DestinationByUserType.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
@@ -77,6 +78,19 @@ class SignUpCommonViewModel : ViewModel() {
                     _sideEffect.emit(SignUpSideEffect.ShowFileUploadDialog)
                 }
             }
+        }
+    }
+    /** *
+     * Todo: 닉네임 유효성 검사 로직
+     *  중복 검사는 이후 api통신 필요
+     * **/
+    private fun validateNickname(nickname: String): NicknameFieldError? {
+        return when {
+            nickname.isEmpty() -> NicknameFieldError.Required()
+            !nickname.matches(Regex("^[가-힣a-zA-Z0-9]+$")) -> NicknameFieldError.InvalidChar()
+            nickname.contains(Regex("[^가-힣a-zA-Z0-9]")) -> NicknameFieldError.InvalidSpecialCharacter()
+            nickname.startsWith(" ") || nickname.endsWith(" ") -> NicknameFieldError.LeadingOrTrailingWhitespace()
+            else -> null
         }
     }
 }
