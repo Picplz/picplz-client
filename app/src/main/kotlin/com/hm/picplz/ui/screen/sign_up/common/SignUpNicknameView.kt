@@ -35,8 +35,9 @@ fun SignUpNicknameView(
     innerPadding: PaddingValues,
     onClickBackIcon: () -> Unit,
     onNicknameFieldChange: (String) -> Unit,
-    onClickBottomButton: () -> Unit
-) {
+    onClickBottomButton: () -> Unit,
+    isBottomButtonEnabled: Boolean = currentNickname.isNotEmpty(),
+    ) {
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -115,7 +116,7 @@ fun SignUpNicknameView(
             CommonButton(
                 text = "다음",
                 onClick = { onClickBottomButton() },
-                enabled = currentNickname.isNotEmpty(),
+                enabled = isBottomButtonEnabled,
                 containerColor = MainThemeColor.Black
             )
         }
