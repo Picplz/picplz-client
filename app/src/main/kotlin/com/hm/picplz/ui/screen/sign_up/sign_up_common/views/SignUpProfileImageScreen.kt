@@ -46,13 +46,13 @@ import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
-import com.hm.picplz.viewmodel.SignUpViewModel
+import com.hm.picplz.viewmodel.SignUpCommonViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignUpProfileImageScreen(
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel(),
+    viewModel: SignUpCommonViewModel = viewModel(),
     navController: NavController,
 ) {
     /** 상태바 스타일 설정 **/

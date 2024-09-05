@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import com.hm.picplz.data.model.User
 import com.hm.picplz.data.model.UserType.*
 
-class SignUpViewModel : ViewModel() {
+class SignUpCommonViewModel : ViewModel() {
 
     private val _state = MutableStateFlow<SignUpCommonState>(SignUpCommonState.idle())
     val state: StateFlow<SignUpCommonState> get() = _state

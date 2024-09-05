@@ -41,17 +41,16 @@ import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigate
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.ResetSelectedUserType
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpScreen
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
-import com.hm.picplz.viewmodel.SignUpViewModel
+import com.hm.picplz.viewmodel.SignUpCommonViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignUpNicknameScreen(
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel(),
+    viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
     signUpNavController: NavController,
 ) {

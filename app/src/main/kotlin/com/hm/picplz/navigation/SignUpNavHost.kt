@@ -9,14 +9,14 @@ import androidx.navigation.compose.composable
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.views.SignUpNicknameScreen
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.views.SignUpProfileImageScreen
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.views.SignUpSelectTypeScreen
-import com.hm.picplz.viewmodel.SignUpViewModel
+import com.hm.picplz.viewmodel.SignUpCommonViewModel
 
 @Composable
 fun SignUpNavHost(
     mainNavController: NavHostController,
     signUpNavController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel(),
+    viewModel: SignUpCommonViewModel = viewModel(),
 ) {
     NavHost(
         navController = signUpNavController,
