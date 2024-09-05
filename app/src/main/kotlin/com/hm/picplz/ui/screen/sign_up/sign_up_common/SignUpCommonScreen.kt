@@ -25,13 +25,3 @@ fun SignUpScreen(
         viewModel = viewModel
     )
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpScreenPreview() {
-    val navController = rememberNavController()
-    PicplzTheme {
-        SignUpScreen(mainNavController = navController)
-    }
-}
