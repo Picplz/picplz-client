@@ -45,6 +45,7 @@ import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
 import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.viewmodel.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -126,9 +127,7 @@ fun SignUpProfileImageScreen(
                         )
 
                         IconButton(
-                            onClick = {
-                                filePickerLauncher.launch("image/*")
-                            },
+                            onClick = { viewModel.handleIntent(ShowFileUploadDialog) },
                             modifier = Modifier
                                 .align(Alignment.BottomEnd)
                                 .size(40.dp)
@@ -182,6 +181,9 @@ fun SignUpProfileImageScreen(
                 }
                 is SignUpSideEffect.Navigate -> {
                     navController.navigate(sideEffect.destination)
+                }
+                is SignUpSideEffect.ShowFileUploadDialog -> {
+                    filePickerLauncher.launch("image/*")
                 }
                 else -> {}
             }

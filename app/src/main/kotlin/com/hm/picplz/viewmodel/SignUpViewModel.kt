@@ -72,6 +72,11 @@ class SignUpViewModel : ViewModel() {
                     _sideEffect.emit(SignUpSideEffect.Navigate(intent.destination))
                 }
             }
+            is ShowFileUploadDialog -> {
+                viewModelScope.launch {
+                    _sideEffect.emit(SignUpSideEffect.ShowFileUploadDialog)
+                }
+            }
         }
     }
 }

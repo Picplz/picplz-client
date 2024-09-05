@@ -11,6 +11,7 @@ sealed class SignUpSideEffect {
     }
     data object NavigateToPrev : SignUpSideEffect()
     data class Navigate(val destination: String) : SignUpSideEffect()
+    data object ShowFileUploadDialog : SignUpSideEffect()
 }
 
 enum class DestinationByUserType(val route: String) {

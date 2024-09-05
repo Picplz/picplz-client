@@ -11,4 +11,5 @@ sealed class SignUpIntent {
     data class SetNickname(val newNickname: String) : SignUpIntent()
     data class SetProfileImageUri(val newProfileImageUri: Uri?) : SignUpIntent()
     data class Navigate(val destination: String) : SignUpIntent()
+    data object ShowFileUploadDialog : SignUpIntent()
 }
