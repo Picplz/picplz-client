@@ -2,11 +2,11 @@ package com.hm.picplz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hm.picplz.ui.screen.sign_up.DestinationByUserType.*
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
-import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
-import com.hm.picplz.ui.screen.sign_up.SignUpState
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.DestinationByUserType.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ import com.hm.picplz.data.model.UserType.*
 
 class SignUpViewModel : ViewModel() {
 
-    private val _state = MutableStateFlow<SignUpState>(SignUpState.idle())
-    val state: StateFlow<SignUpState> get() = _state
+    private val _state = MutableStateFlow<SignUpCommonState>(SignUpCommonState.idle())
+    val state: StateFlow<SignUpCommonState> get() = _state
 
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect: SharedFlow<SignUpSideEffect> get() = _sideEffect
@@ -29,7 +29,7 @@ class SignUpViewModel : ViewModel() {
      */
     private var userData: User = emptyUserData
 
-    fun handleIntent(intent: SignUpIntent) {
+    fun handleIntent(intent: SignUpCommonIntent) {
         when (intent) {
             is NavigateToPrev -> {
                 viewModelScope.launch {

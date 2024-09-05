@@ -1,6 +1,5 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

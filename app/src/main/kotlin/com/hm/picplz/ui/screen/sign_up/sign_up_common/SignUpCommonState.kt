@@ -1,9 +1,9 @@
-package com.hm.picplz.ui.screen.sign_up
+package com.hm.picplz.ui.screen.sign_up.sign_up_common
 
 import android.net.Uri
 import com.hm.picplz.data.model.UserType
 
-data class SignUpState(
+data class SignUpCommonState(
     val currentStep: Int = 0,
     val selectedUserType: UserType? = null,
     val isLoading: Boolean = false,
@@ -12,8 +12,8 @@ data class SignUpState(
     val profileImageUri: Uri? = null
 ) {
     companion object {
-        fun idle(): SignUpState {
-            return SignUpState(
+        fun idle(): SignUpCommonState {
+            return SignUpCommonState(
                 currentStep = 0,
                 selectedUserType = null,
                 isLoading = false,

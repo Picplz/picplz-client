@@ -1,10 +1,9 @@
-package com.hm.picplz.ui.screen.sign_up.common
+package com.hm.picplz.ui.screen.sign_up.sign_up_common.views
 
 import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,11 +37,11 @@ import com.hm.picplz.data.model.UserType
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.ClickUserTypeButton
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.NavigateToPrev
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.NavigateToSelected
-import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.ClickUserTypeButton
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToPrev
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToSelected
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.viewmodel.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -64,7 +63,7 @@ fun SignUpSelectTypeScreen(
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
         /** 이 페이지 진입시 선택지 초기화 **/
-        viewModel.handleIntent(SignUpIntent.ResetSelectedUserType)
+        viewModel.handleIntent(SignUpCommonIntent.ResetSelectedUserType)
     }
 
     val currentState = viewModel.state.collectAsState().value

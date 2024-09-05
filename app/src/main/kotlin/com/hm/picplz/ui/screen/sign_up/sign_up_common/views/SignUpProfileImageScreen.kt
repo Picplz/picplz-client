@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up.common
+package com.hm.picplz.ui.screen.sign_up.sign_up_common.views
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -43,9 +43,8 @@ import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
-import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
-import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.viewmodel.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest

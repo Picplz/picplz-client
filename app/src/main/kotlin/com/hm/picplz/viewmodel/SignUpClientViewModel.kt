@@ -2,7 +2,7 @@ package com.hm.picplz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hm.picplz.ui.screen.sign_up.SignUpClientState
+import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientState
 import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientSideEffect

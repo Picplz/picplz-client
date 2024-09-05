@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up
+package com.hm.picplz.ui.screen.sign_up.sign_up_common
 
 import com.hm.picplz.data.model.User
 

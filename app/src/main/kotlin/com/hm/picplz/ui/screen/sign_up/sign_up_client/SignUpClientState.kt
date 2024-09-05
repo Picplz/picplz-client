@@ -1,6 +1,5 @@
-package com.hm.picplz.ui.screen.sign_up
+package com.hm.picplz.ui.screen.sign_up.sign_up_client
 
-import android.net.Uri
 import com.hm.picplz.data.model.User
 import com.hm.picplz.viewmodel.emptyUserData
 

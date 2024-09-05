@@ -1,4 +1,4 @@
-package com.hm.picplz.ui.screen.sign_up.common
+package com.hm.picplz.ui.screen.sign_up.sign_up_common.views
 
 import CommonFilledTextField
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -30,17 +30,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.Navigate
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.ResetSelectedUserType
-import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigate
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.ResetSelectedUserType
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.viewmodel.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -86,7 +85,7 @@ fun SignUpNicknameScreen(
         ) {
             CommonTopBar(
                 text = "닉네임 등록하기",
-                onClickBack = { viewModel.handleIntent(SignUpIntent.NavigateToPrev) },
+                onClickBack = { viewModel.handleIntent(SignUpCommonIntent.NavigateToPrev) },
             )
             Box(
                 modifier = Modifier
@@ -121,7 +120,7 @@ fun SignUpNicknameScreen(
                     CommonFilledTextField(
                         value = currentState.nickname,
                         onValueChange = { newNickname ->
-                            viewModel.handleIntent(SignUpIntent.SetNickname(newNickname))
+                            viewModel.handleIntent(SignUpCommonIntent.SetNickname(newNickname))
                         },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = "닉네임을 입력하세요",
