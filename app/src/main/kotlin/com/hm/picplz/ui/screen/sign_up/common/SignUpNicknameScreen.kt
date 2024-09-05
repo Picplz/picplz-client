@@ -5,7 +5,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,19 +38,20 @@ import com.hm.picplz.MainActivity
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent
+import com.hm.picplz.ui.screen.sign_up.SignUpIntent.Navigate
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.ResetSelectedUserType
 import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
-import com.hm.picplz.ui.screen.sign_up.SignUpState
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.viewmodel.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignUpNicknameScreen(
-        modifier: Modifier = Modifier,
-        viewModel: SignUpViewModel = viewModel(),
-        navController: NavController,
-    ) {
+    modifier: Modifier = Modifier,
+    viewModel: SignUpViewModel = viewModel(),
+    mainNavController: NavController,
+    signUpNavController: NavController,
+) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
     val activity = LocalContext.current as? MainActivity
@@ -76,7 +76,7 @@ fun SignUpNicknameScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .imePadding()
-                .pointerInput(Unit) {
+                .pointerInput(kotlin.Unit) {
                     detectTapGestures(onTap = {
                         focusManager.clearFocus()
                     })
@@ -146,23 +146,24 @@ fun SignUpNicknameScreen(
             ) {
                 CommonButton(
                     text = "다음",
-                    onClick = {  },
+                    onClick = { viewModel.handleIntent(Navigate("sign-up-profile")) },
                     enabled = currentState.nickname.isNotEmpty(),
                     containerColor = MainThemeColor.Black
                 )
             }
         }
     }
+
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpSideEffect.NavigateToSelected -> {
-                    val bundle = bundleOf("userInfo" to sideEffect.user)
-//                    navController.navigate(sideEffect.destination.route, bundle)
-                }
                 is SignUpSideEffect.NavigateToPrev -> {
-                    navController.popBackStack()
+                    mainNavController.popBackStack()
                 }
+                is SignUpSideEffect.Navigate -> {
+                    signUpNavController.navigate(sideEffect.destination)
+                }
+                else -> {}
             }
         }
     }
