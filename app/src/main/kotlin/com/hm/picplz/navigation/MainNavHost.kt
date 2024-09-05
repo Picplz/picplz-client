@@ -29,11 +29,11 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
     ) {
         composable("login") { LoginScreen(navController = navController) }
         composable("main") { MainScreen(navController = navController) }
-        composable("sign-up") { SignUpScreen(navController = navController)}
+        composable("sign-up") { SignUpScreen(mainNavController = navController)}
         composable("sign-up-client") { backStackEntry ->
             val userInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 backStackEntry.arguments?.getParcelable("userInfo", User::class.java)

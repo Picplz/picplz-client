@@ -10,5 +10,5 @@ sealed class SignUpIntent {
     data object ResetSelectedUserType : SignUpIntent()
     data class SetNickname(val newNickname: String) : SignUpIntent()
     data class SetProfileImageUri(val newProfileImageUri: Uri?) : SignUpIntent()
-    data class ChangeStep(val stepNum: Int) : SignUpIntent()
+    data class Navigate(val destination: String) : SignUpIntent()
 }

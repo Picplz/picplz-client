@@ -2,7 +2,7 @@ package com.hm.picplz.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hm.picplz.ui.screen.sign_up.Destination.*
+import com.hm.picplz.ui.screen.sign_up.DestinationByUserType.*
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent
 import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
 import com.hm.picplz.ui.screen.sign_up.SignUpSideEffect
@@ -52,12 +52,12 @@ class SignUpViewModel : ViewModel() {
                             User -> SignUpClient
                             Photographer -> SignUpPhotographer
                         }
-                        _sideEffect.emit(SignUpSideEffect.NavigateToSelected(destination, userData))
+                        _sideEffect.emit(SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected(destination, userData))
                     }
                 }
             }
             is ResetSelectedUserType -> {
-                _state.value = SignUpState.idle()
+                _state.value = _state.value.copy(selectedUserType = null)
             }
             is SetNickname -> {
                 val newNicknameState = _state.value.copy(nickname = intent.newNickname)
@@ -67,9 +67,10 @@ class SignUpViewModel : ViewModel() {
                 val newProfileImageUriState = _state.value.copy(profileImageUri = intent.newProfileImageUri)
                 _state.value = newProfileImageUriState
             }
-            is ChangeStep -> {
-                val newStepState = _state.value.copy(currentStep = intent.stepNum)
-                _state.value = newStepState
+            is Navigate -> {
+                viewModelScope.launch {
+                    _sideEffect.emit(SignUpSideEffect.Navigate(intent.destination))
+                }
             }
         }
     }

@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 MainNavHost(
                     navController = navController,
-                    uiState = uiState
+                    uiState = uiState,
                 )
             }
         }
