@@ -16,7 +16,7 @@ import com.hm.picplz.viewmodel.MainActivityUiState
 import com.hm.picplz.viewmodel.emptyUserData
 
 @Composable
-fun AppNavHost(
+fun MainNavHost(
     navController: NavHostController,
     uiState: MainActivityUiState,
     modifier: Modifier = Modifier

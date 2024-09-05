@@ -23,7 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.hm.picplz.navigation.AppNavHost
+import com.hm.picplz.navigation.MainNavHost
 import com.hm.picplz.viewmodel.MainActivityUiState
 import com.hm.picplz.viewmodel.MainActivityUiState.*
 import com.hm.picplz.viewmodel.MainActivityViewModel
@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PicplzTheme {
                 val navController = rememberNavController()
-                AppNavHost(
+                MainNavHost(
                     navController = navController,
                     uiState = uiState
                 )
