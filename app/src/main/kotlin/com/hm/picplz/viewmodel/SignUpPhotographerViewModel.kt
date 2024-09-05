@@ -27,29 +27,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                     _sideEffect.emit(SignUpPhotographerSideEffect.NavigateToPrev)
                 }
             }
-            is ChangeStep -> {
-                val newStepState = _state.value.copy(currentStep = intent.stepNum)
-                _state.value = newStepState
-            }
-            is SetNickname -> {
-                val newNicknameState = _state.value.copy(nickname = intent.newNickname)
-                _state.value = newNicknameState
-            }
-            is ClickSubmitButton -> {
-                viewModelScope.launch {
-                    _sideEffect.emit(
-                        SignUpPhotographerSideEffect.SubmitProfileInfo(
-                            nickname = _state.value.nickname,
-                            profileImageUri = _state.value.profileImageUri,
-                        )
-                    )
-                }
-            }
             is SetUserInfo -> {}
-            is SetProfileImageUri -> {
-                val newProfileImageUriState = _state.value.copy(profileImageUri = intent.newProfileImageUri)
-                _state.value = newProfileImageUriState
-            }
         }
     }
 }
