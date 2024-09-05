@@ -59,6 +59,18 @@ class SignUpViewModel : ViewModel() {
             is ResetSelectedUserType -> {
                 _state.value = SignUpState.idle()
             }
+            is SetNickname -> {
+                val newNicknameState = _state.value.copy(nickname = intent.newNickname)
+                _state.value = newNicknameState
+            }
+            is SetProfileImageUri -> {
+                val newProfileImageUriState = _state.value.copy(profileImageUri = intent.newProfileImageUri)
+                _state.value = newProfileImageUriState
+            }
+            is ChangeStep -> {
+                val newStepState = _state.value.copy(currentStep = intent.stepNum)
+                _state.value = newStepState
+            }
         }
     }
 }
