@@ -131,7 +131,7 @@ fun SignUpNicknameScreen(
                         Text(
                             text = buildAnnotatedString {
                                 append("닉네임을\n")
-                                append("선택해주세요")
+                                append("설정해주세요")
                             },
                             modifier = Modifier,
                             style = TextStyle(
@@ -155,7 +155,7 @@ fun SignUpNicknameScreen(
                             viewModel.handleIntent(SignUpCommonIntent.SetNickname(newNickname))
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = "닉네임을 입력하세요",
+                        placeholder = "닉네임 입력",
                         errors = currentState.nicknameFieldErrors,
                         imeAction = ImeAction.Done,
                         keyboardActions = {
