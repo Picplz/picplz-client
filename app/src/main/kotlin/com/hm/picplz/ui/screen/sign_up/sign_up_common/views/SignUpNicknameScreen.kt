@@ -127,7 +127,7 @@ fun SignUpNicknameScreen(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = "닉네임을 입력하세요",
-                        isError = false,
+                        errors = currentState.nicknameFieldErrors,
                         imeAction = ImeAction.Done,
                         keyboardActions = {
                             focusManager.clearFocus()
