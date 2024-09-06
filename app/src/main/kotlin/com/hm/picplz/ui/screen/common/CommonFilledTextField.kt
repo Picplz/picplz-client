@@ -95,11 +95,11 @@ fun CommonFilledTextField(
                     }
                 },
                 supportingText = {
-                    if (errors.isNotEmpty()) {
+                    if (isError) {
                         Text(
                             text = errors.first().message,
                             fontSize = 12.sp,
-                            color = if (isError) Color.Red else Color.Gray,
+                            color = Color.Red,
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     } else {
