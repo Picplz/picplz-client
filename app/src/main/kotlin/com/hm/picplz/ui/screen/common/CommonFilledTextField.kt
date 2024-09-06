@@ -1,6 +1,8 @@
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,6 +20,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hm.picplz.data.model.NicknameFieldError
 import com.hm.picplz.ui.theme.MainThemeColor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,8 +31,7 @@ fun CommonFilledTextField(
     modifier: Modifier = Modifier,
     label: String = "",
     placeholder: String = "",
-    isError: Boolean = false,
-    supportingText: String? = null,
+    errors: List<NicknameFieldError> = emptyList(),
     imeAction: ImeAction = ImeAction.Done,
     keyboardActions: () -> Unit = {},
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -46,13 +48,15 @@ fun CommonFilledTextField(
         unfocusedPlaceholderColor = Color.Gray
     )
 
+    val isError = errors.isNotEmpty()
+
     Column(modifier = modifier.fillMaxWidth()) {
         if (label.isNotEmpty()) {
             Text(
                 text = label,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = if (isError) Color.Red else MainThemeColor.Gray,
+                color = MainThemeColor.Gray,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
@@ -91,15 +95,16 @@ fun CommonFilledTextField(
                     }
                 },
                 supportingText = {
-                    if (supportingText != null) {
+                    if (errors.isNotEmpty()) {
                         Text(
-                            text = supportingText,
+                            text = errors.first().message,
                             fontSize = 12.sp,
                             color = if (isError) Color.Red else Color.Gray,
                             modifier = Modifier.padding(top = 4.dp)
                         )
-                    }
-                },
+                    } else {
+                        Spacer(modifier = Modifier.height(18.dp))
+                    }                },
                 contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
                     start = 4.dp, bottom = 0.dp
                 ),
