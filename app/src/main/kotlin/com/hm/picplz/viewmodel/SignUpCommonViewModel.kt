@@ -61,7 +61,7 @@ class SignUpCommonViewModel : ViewModel() {
                 _state.value = _state.value.copy(selectedUserType = null)
             }
             is SetNickname -> {
-                val errors = validateNickname(_state.value.nickname, intent.newNickname)
+                val errors = validateNickname(intent.newNickname)
                 val newNicknameState = _state.value.copy(
                     nickname = intent.newNickname,
                     nicknameFieldErrors = errors
@@ -92,12 +92,12 @@ class SignUpCommonViewModel : ViewModel() {
      * Todo: 닉네임 유효성 검사 로직
      *  중복 검사는 이후 api통신 필요
      * **/
-    private fun validateNickname( prevNickname: String, newNickname: String ): List<NicknameFieldError> {
+    private fun validateNickname( newNickname: String ): List<NicknameFieldError> {
         val errors = mutableListOf<NicknameFieldError>()
         if (newNickname.isEmpty()) {
             errors.add(NicknameFieldError.Required())
         }
-        if ((newNickname.length < 2 && prevNickname.length >= 2) || newNickname.length > 15) {
+        if (newNickname.length < 2 || newNickname.length > 15) {
             errors.add(NicknameFieldError.Length())
         }
         if (!newNickname.matches(Regex("^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]+$"))) {
