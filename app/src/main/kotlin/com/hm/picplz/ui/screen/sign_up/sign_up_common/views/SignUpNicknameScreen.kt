@@ -178,7 +178,7 @@ fun SignUpNicknameScreen(
                 CommonButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(Navigate("sign-up-profile")) },
-                    enabled = currentState.nickname.isNotEmpty(),
+                    enabled = currentState.nickname.isNotEmpty() && currentState.nicknameFieldErrors.isEmpty(),
                     containerColor = MainThemeColor.Black
                 )
             }
