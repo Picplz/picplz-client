@@ -11,7 +11,8 @@ data class SignUpCommonState(
     val error: Throwable? = null,
     val nickname: String = "",
     val profileImageUri: Uri? = null,
-    val nicknameFieldErrors: List<NicknameFieldError> = emptyList()
+    val nicknameFieldErrors: List<NicknameFieldError> = emptyList(),
+    val showValidateDialog: Boolean = false,
 ) {
     companion object {
         fun idle(): SignUpCommonState {
@@ -22,7 +23,8 @@ data class SignUpCommonState(
                 error = null,
                 nickname = "",
                 profileImageUri = null,
-                nicknameFieldErrors = emptyList()
+                nicknameFieldErrors = emptyList(),
+                showValidateDialog = false,
             )
         }
     }

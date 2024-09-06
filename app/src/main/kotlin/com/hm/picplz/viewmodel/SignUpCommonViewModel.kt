@@ -82,6 +82,10 @@ class SignUpCommonViewModel : ViewModel() {
                     _sideEffect.emit(SignUpSideEffect.ShowFileUploadDialog)
                 }
             }
+            is ToggleValidateDialog -> {
+                val newValidateDialogState = _state.value.copy(showValidateDialog = !_state.value.showValidateDialog)
+                _state.value = newValidateDialogState
+            }
         }
     }
     /** *
