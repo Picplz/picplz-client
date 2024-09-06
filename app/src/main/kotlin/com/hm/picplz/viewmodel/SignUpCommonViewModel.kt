@@ -61,7 +61,11 @@ class SignUpCommonViewModel : ViewModel() {
                 _state.value = _state.value.copy(selectedUserType = null)
             }
             is SetNickname -> {
-                val newNicknameState = _state.value.copy(nickname = intent.newNickname)
+                val errors = validateNickname(_state.value.nickname, intent.newNickname)
+                val newNicknameState = _state.value.copy(
+                    nickname = intent.newNickname,
+                    nicknameFieldErrors = errors
+                )
                 _state.value = newNicknameState
             }
             is SetProfileImageUri -> {
@@ -84,14 +88,24 @@ class SignUpCommonViewModel : ViewModel() {
      * Todo: 닉네임 유효성 검사 로직
      *  중복 검사는 이후 api통신 필요
      * **/
-    private fun validateNickname(nickname: String): NicknameFieldError? {
-        return when {
-            nickname.isEmpty() -> NicknameFieldError.Required()
-            !nickname.matches(Regex("^[가-힣a-zA-Z0-9]+$")) -> NicknameFieldError.InvalidChar()
-            nickname.contains(Regex("[^가-힣a-zA-Z0-9]")) -> NicknameFieldError.InvalidSpecialCharacter()
-            nickname.startsWith(" ") || nickname.endsWith(" ") -> NicknameFieldError.LeadingOrTrailingWhitespace()
-            else -> null
+    private fun validateNickname( prevNickname: String, newNickname: String ): List<NicknameFieldError> {
+        val errors = mutableListOf<NicknameFieldError>()
+        if (newNickname.isEmpty()) {
+            errors.add(NicknameFieldError.Required())
         }
+        if ((newNickname.length < 2 && prevNickname.length >= 2) || newNickname.length > 15) {
+            errors.add(NicknameFieldError.Length())
+        }
+        if (!newNickname.matches(Regex("^[가-힣a-zA-Z0-9]+$"))) {
+            errors.add(NicknameFieldError.InvalidChar())
+        }
+        if (newNickname.contains(Regex("[^가-힣a-zA-Z0-9]"))) {
+            errors.add(NicknameFieldError.InvalidSpecialCharacter())
+        }
+        if (newNickname.startsWith(" ") || newNickname.endsWith(" ")) {
+            errors.add(NicknameFieldError.Whitespace())
+        }
+        return errors
     }
 }
 
