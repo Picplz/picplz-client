@@ -100,10 +100,10 @@ class SignUpCommonViewModel : ViewModel() {
         if ((newNickname.length < 2 && prevNickname.length >= 2) || newNickname.length > 15) {
             errors.add(NicknameFieldError.Length())
         }
-        if (!newNickname.matches(Regex("^[가-힣a-zA-Z0-9]+$"))) {
+        if (!newNickname.matches(Regex("^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]+$"))) {
             errors.add(NicknameFieldError.InvalidChar())
         }
-        if (newNickname.contains(Regex("[^가-힣a-zA-Z0-9]"))) {
+        if (newNickname.contains(Regex("[\\p{So}\\p{Cn}\\p{Sk}\\p{Sc}\\p{Sm}]"))) {
             errors.add(NicknameFieldError.InvalidSpecialCharacter())
         }
         if (newNickname.startsWith(" ") || newNickname.endsWith(" ")) {
