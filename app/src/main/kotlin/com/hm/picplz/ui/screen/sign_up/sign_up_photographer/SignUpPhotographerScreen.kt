@@ -1,49 +1,49 @@
-package com.hm.picplz.ui.screen.sign_up_client
+package com.hm.picplz.ui.screen.sign_up.sign_up_photographer
 
-import SignUpClientNicknameView
-import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.hm.picplz.data.model.User
+import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.theme.MainThemeColor
-import com.hm.picplz.viewmodel.SignUpClientViewModel
+import com.hm.picplz.viewmodel.SignUpPhotographerViewModel
 import com.hm.picplz.viewmodel.emptyUserData
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SignUpClientScreen(
+fun SignUpPhotographerScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     userInfo: User = emptyUserData,
-    viewModel: SignUpClientViewModel = viewModel(),
+    viewModel: SignUpPhotographerViewModel = viewModel(),
 ) {
     val currentState = viewModel.state.collectAsState().value
 
-    Scaffold(
+    Scaffold (
         modifier = Modifier.fillMaxSize(),
         containerColor = MainThemeColor.White
     ) { innerPadding ->
-        when (currentState.currentStep) {
-            0 -> SignUpClientNicknameView(
-                modifier = modifier,
-                currentState = currentState,
-                viewModel = viewModel,
-                innerPadding = innerPadding
+        Column (
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CommonTopBar(
+                text = "금손 선택",
+                onClickBack = {}
             )
-            1 -> SignUpClientProfileImageView(
-                modifier = modifier,
-                currentState = currentState,
-                viewModel = viewModel,
-                innerPadding = innerPadding
-            )
-            else -> {}
         }
     }
     val context = LocalContext.current
@@ -51,11 +51,7 @@ fun SignUpClientScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpClientSideEffect.SubmitProfileInfo -> {
-                    Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
-                }
-                is SignUpClientSideEffect.ShowFileUploadDialog -> {}
-                is SignUpClientSideEffect.NavigateToPrev-> {
+                is SignUpPhotographerSideEffect.NavigateToPrev -> {
                     navController.popBackStack()
                 }
             }

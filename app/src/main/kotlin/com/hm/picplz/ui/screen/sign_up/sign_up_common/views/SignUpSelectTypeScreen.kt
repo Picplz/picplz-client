@@ -1,9 +1,16 @@
-package com.hm.picplz.ui.screen.sign_up
+package com.hm.picplz.ui.screen.sign_up.sign_up_common.views
 
 import android.os.Bundle
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,33 +23,35 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
-import com.hm.picplz.viewmodel.SignUpViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
-import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.theme.PicplzTheme
-import kotlinx.coroutines.flow.collectLatest
-import com.hm.picplz.ui.screen.sign_up.SignUpIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.ClickUserTypeButton
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToPrev
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToSelected
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.viewmodel.SignUpCommonViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SignUpScreen(
+fun SignUpSelectTypeScreen(
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel(),
-    navController: NavController,
+    viewModel: SignUpCommonViewModel = viewModel(),
+    mainNavController: NavController,
+    signUpNavController: NavController,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -53,18 +62,18 @@ fun SignUpScreen(
             statusBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
-        viewModel.handleIntent(ResetSelectedUserType)
+        /** 이 페이지 진입시 선택지 초기화 **/
+        viewModel.handleIntent(SignUpCommonIntent.ResetSelectedUserType)
     }
 
     val currentState = viewModel.state.collectAsState().value
-    val selectedUserType = currentState.selectedUserType
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = MainThemeColor.White
     ) { innerPadding ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             verticalArrangement = Arrangement.SpaceBetween,
@@ -108,14 +117,14 @@ fun SignUpScreen(
                     ) {
                         CommonSelectImageButton(
                             text = "고객",
-                            isSelected = selectedUserType == UserType.User,
+                            isSelected = currentState.selectedUserType == UserType.User,
                             onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.User)) },
                             iconResId = R.drawable.logo
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         CommonSelectImageButton(
                             text = "금손",
-                            isSelected = selectedUserType == UserType.Photographer,
+                            isSelected = currentState.selectedUserType == UserType.Photographer,
                             onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.Photographer)) },
                             iconResId = R.drawable.logo
                         )
@@ -127,12 +136,12 @@ fun SignUpScreen(
                     .height(120.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 CommonButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(NavigateToSelected) },
-                    enabled = selectedUserType != null,
+                    enabled = currentState.selectedUserType != null,
                     containerColor = MainThemeColor.Black
                 )
             }
@@ -142,24 +151,16 @@ fun SignUpScreen(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
-                is SignUpSideEffect.NavigateToSelected -> {
+                is SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected -> {
                     val bundle = bundleOf("userInfo" to sideEffect.user)
-                    navController.navigate(sideEffect.destination.route, bundle)
+                    mainNavController.navigate(sideEffect.destination.route, bundle)
                 }
                 is SignUpSideEffect.NavigateToPrev -> {
-                    navController.popBackStack()
+                    signUpNavController.popBackStack()
                 }
+                else -> {}
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SignUpScreenPreview() {
-    val navController = rememberNavController()
-    PicplzTheme {
-        SignUpScreen(navController = navController)
     }
 }
 
