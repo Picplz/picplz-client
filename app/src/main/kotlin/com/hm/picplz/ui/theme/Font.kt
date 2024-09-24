@@ -32,8 +32,8 @@ val pretendardTypography = Typography(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 20.0.sp,
-        letterSpacing = 0.2.sp
+        lineHeight = 19.6.sp,
+        letterSpacing = 0.sp
     ),
     bodySmall = TextStyle(
         fontFamily = Pretendard,
