@@ -104,7 +104,8 @@ fun CommonFilledTextField(
                         )
                     } else {
                         Spacer(modifier = Modifier.height(18.dp))
-                    }                },
+                    }
+                },
                 contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
                     start = 4.dp, bottom = 0.dp
                 ),
