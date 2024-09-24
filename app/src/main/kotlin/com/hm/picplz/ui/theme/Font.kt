@@ -72,10 +72,10 @@ val pretendardTypography = Typography(
     ),
     headlineMedium = TextStyle(
         fontFamily = Pretendard,
-        fontWeight = FontWeight.Normal,
-        fontSize = 28.sp,
-        lineHeight = 36.0.sp,
-        letterSpacing = 0.0.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
     ),
     headlineSmall = TextStyle(
         fontFamily = Pretendard,
