@@ -114,7 +114,7 @@ val pretendardTypography = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = Pretendard,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 20.sp * 1.4,
         letterSpacing = 0.sp
