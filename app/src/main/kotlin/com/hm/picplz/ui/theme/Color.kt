@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 object MainThemeColor {
     val Olive = Color(0xFFA6CB80)
-    val Black = Color(0xFF020202)
+    val Black = Color(0xFF0E0E0F)
     val White = Color(0xFFFEFEFE)
     val Gray = Color(0xFF949494)
     val Gray1 = Color(0xFFEFF4F8)
