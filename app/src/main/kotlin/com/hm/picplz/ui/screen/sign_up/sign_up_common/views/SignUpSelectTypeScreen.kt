@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
@@ -31,6 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
+import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
@@ -43,6 +45,7 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigat
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToSelected
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -173,5 +176,19 @@ fun NavController.navigate(
     val nodeId = graph.findNode(route)?.id
     if (nodeId != null) {
         navigate(nodeId, args, navOptions, navigatorExtras)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpSelectTypeScreenPreview() {
+    PicplzTheme {
+        val mainNavController = rememberNavController()
+        val signUpNavController = rememberNavController()
+
+        SignUpSelectTypeScreen(
+            mainNavController = mainNavController,
+            signUpNavController = signUpNavController
+        )
     }
 }
