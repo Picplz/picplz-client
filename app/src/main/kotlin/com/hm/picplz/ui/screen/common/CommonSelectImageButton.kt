@@ -15,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -22,10 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.hm.picplz.R
+
 
 @Composable
 fun CommonSelectImageButton(
@@ -74,7 +82,7 @@ fun CommonSelectImageButton(
         ) {
             if (iconResId != null) {
                 Image(
-                    painter = painterResource(id = iconResId), // 드로어블 리소스를 사용하여 이미지 로드
+                    painter = painterResource(id = iconResId),
                     contentDescription = null,
                     modifier = Modifier.size(40.dp)
                 )
@@ -89,5 +97,20 @@ fun CommonSelectImageButton(
                 )
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommonSelectImageButtonPreview() {
+    var isSelected by remember { mutableStateOf(false) }
+
+    PicplzTheme {
+        CommonSelectImageButton(
+            text = "라벨",
+            isSelected = false,
+            onClick = { isSelected = !isSelected },
+            iconResId = R.drawable.logo
+        )
     }
 }
