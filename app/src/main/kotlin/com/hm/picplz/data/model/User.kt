@@ -14,3 +14,7 @@ enum class UserType {
     User,
     Photographer
 }
+
+enum class SelectionState {
+    UNSELECTED, SELECTED, DESELECTED
+}
