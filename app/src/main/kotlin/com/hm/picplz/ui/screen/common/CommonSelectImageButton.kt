@@ -29,10 +29,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.hm.picplz.R
-
-enum class SelectionState {
-    UNSELECTED, SELECTED, DESELECTED
-}
+import com.hm.picplz.data.model.SelectionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Spacer
 
 @Composable
 fun CommonSelectImageButton(
@@ -40,25 +40,29 @@ fun CommonSelectImageButton(
     selectionState: SelectionState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    @DrawableRes unSelectedIconResId: Int? = null,
-    @DrawableRes deSelectedIconResId: Int? = unSelectedIconResId,
-    @DrawableRes selectedIconResId: Int? = unSelectedIconResId,
+    @DrawableRes selectedIconResId: Int? = null,
+    @DrawableRes deSelectedIconResId: Int? = selectedIconResId,
     contentColor: Color = MainThemeColor.Black,
 ) {
     val iconResId = when (selectionState) {
-        SelectionState.UNSELECTED -> unSelectedIconResId
+        SelectionState.UNSELECTED -> selectedIconResId
         SelectionState.DESELECTED -> deSelectedIconResId
         SelectionState.SELECTED -> selectedIconResId
     }
 
+    val size by animateDpAsState(
+        targetValue = if (selectionState == SelectionState.SELECTED) 160.dp else 120.dp,
+        animationSpec = tween(durationMillis = 300), label = "Size Animation"
+    )
+
     Box(
         modifier = modifier
-            .width(if (selectionState == SelectionState.SELECTED) 160.dp else 120.dp)
-            .height(if (selectionState == SelectionState.SELECTED) 190.dp else 150.dp)
+            .width(160.dp)
+            .height(200.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
                 .fillMaxSize()
         ) {
@@ -68,8 +72,12 @@ fun CommonSelectImageButton(
                     contentDescription = "User Type Button",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .size(if (selectionState == SelectionState.SELECTED) 160.dp else 120.dp)
+                        .size(size)
                         .clickable { onClick() }
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(15.dp)
                 )
             }
             Text(
@@ -94,7 +102,6 @@ fun CommonSelectImageButtonPreview() {
             text = "라벨",
             selectionState = SelectionState.UNSELECTED,
             onClick = { isSelected = !isSelected },
-            unSelectedIconResId = R.drawable.photographer_unselected,
             deSelectedIconResId = R.drawable.photographer_deselected,
             selectedIconResId = R.drawable.photographer_selected
         )
