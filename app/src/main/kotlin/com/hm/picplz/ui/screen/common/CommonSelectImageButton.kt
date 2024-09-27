@@ -41,8 +41,8 @@ fun CommonSelectImageButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     @DrawableRes unSelectedIconResId: Int? = null,
-    @DrawableRes deSelectedIconResId: Int? = null,
-    @DrawableRes selectedIconResId: Int? = null,
+    @DrawableRes deSelectedIconResId: Int? = unSelectedIconResId,
+    @DrawableRes selectedIconResId: Int? = unSelectedIconResId,
     contentColor: Color = MainThemeColor.Black,
 ) {
     val iconResId = when (selectionState) {
