@@ -42,7 +42,10 @@ fun CommonSelectImageButton(
     modifier: Modifier = Modifier,
     @DrawableRes selectedIconResId: Int? = null,
     @DrawableRes deSelectedIconResId: Int? = selectedIconResId,
-    contentColor: Color = MainThemeColor.Black,
+    contentColor: Color = when (selectionState) {
+        SelectionState.DESELECTED -> Color(0xFFACB3B9)
+        else -> MainThemeColor.Black
+    }
 ) {
     val iconResId = when (selectionState) {
         SelectionState.UNSELECTED -> selectedIconResId
@@ -91,6 +94,7 @@ fun CommonSelectImageButton(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
