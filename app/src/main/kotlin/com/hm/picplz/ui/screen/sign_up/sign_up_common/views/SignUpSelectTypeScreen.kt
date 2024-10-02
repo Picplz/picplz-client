@@ -66,8 +66,6 @@ fun SignUpSelectTypeScreen(
             statusBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
-        /** 이 페이지 진입시 선택지 초기화 **/
-        viewModel.handleIntent(SignUpCommonIntent.ResetSelectedUserType)
     }
 
     val currentState = viewModel.state.collectAsState().value
