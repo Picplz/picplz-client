@@ -25,15 +25,15 @@ val pretendardTypography = Typography(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.0.sp,
+        lineHeight = 16.sp * 1.4,
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 20.0.sp,
-        letterSpacing = 0.2.sp
+        lineHeight = 19.6.sp,
+        letterSpacing = 0.sp
     ),
     bodySmall = TextStyle(
         fontFamily = Pretendard,
@@ -72,10 +72,10 @@ val pretendardTypography = Typography(
     ),
     headlineMedium = TextStyle(
         fontFamily = Pretendard,
-        fontWeight = FontWeight.Normal,
-        fontSize = 28.sp,
-        lineHeight = 36.0.sp,
-        letterSpacing = 0.0.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
     ),
     headlineSmall = TextStyle(
         fontFamily = Pretendard,
@@ -108,22 +108,22 @@ val pretendardTypography = Typography(
     titleLarge = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.0.sp,
+        fontSize = 24.sp,
+        lineHeight = 24.sp * 1.4,
         letterSpacing = 0.0.sp
     ),
     titleMedium = TextStyle(
         fontFamily = Pretendard,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 24.0.sp,
-        letterSpacing = 0.2.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 20.sp * 1.4,
+        letterSpacing = 0.sp
     ),
     titleSmall = TextStyle(
         fontFamily = Pretendard,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        lineHeight = 20.0.sp,
-        letterSpacing = 0.1.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 18.sp * 1.4,
+        letterSpacing = 0.sp
     )
 )

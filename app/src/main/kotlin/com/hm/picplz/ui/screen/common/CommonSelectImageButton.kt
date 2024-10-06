@@ -1,84 +1,87 @@
 package com.hm.picplz.ui.screen.common
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.R
+import com.hm.picplz.data.model.SelectionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Spacer
 
 @Composable
 fun CommonSelectImageButton(
     text: String,
-    isSelected: Boolean,
+    selectionState: SelectionState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    @androidx.annotation.DrawableRes iconResId: Int? = null,
-    selectedColor: Color = MainThemeColor.Olive,
-    unselectedColor: Color = Color.Transparent,
-    backgroundColor: Color = Color.White,
-    contentColor: Color = MainThemeColor.Black,
-    elevation: Dp = 5.dp,
-    shape: RoundedCornerShape = RoundedCornerShape(16.dp)
+    @DrawableRes selectedIconResId: Int? = null,
+    @DrawableRes deSelectedIconResId: Int? = selectedIconResId,
+    contentColor: Color = when (selectionState) {
+        SelectionState.DESELECTED -> Color(0xFFACB3B9)
+        else -> MainThemeColor.Black
+    }
 ) {
-    Button(
-        onClick = onClick,
+    val iconResId = when (selectionState) {
+        SelectionState.UNSELECTED -> selectedIconResId
+        SelectionState.DESELECTED -> deSelectedIconResId
+        SelectionState.SELECTED -> selectedIconResId
+    }
+
+    val size by animateDpAsState(
+        targetValue = if (selectionState == SelectionState.SELECTED) 160.dp else 120.dp,
+        animationSpec = tween(durationMillis = 300), label = "Size Animation"
+    )
+
+    Box(
         modifier = modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .shadow(
-                elevation = elevation,
-                shape = shape,
-                ambientColor = Color.Gray,
-                spotColor = Color.Gray
-            )
-            .background(
-                color = backgroundColor,
-                shape = shape
-            )
-            .border(
-                width = 2.dp,
-                color = if (isSelected) selectedColor else unselectedColor,
-                shape = shape
-            ),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = contentColor
-        ),
-        shape = shape,
+            .width(160.dp)
+            .height(200.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            if (iconResId != null) {
+            iconResId?.let { iconResId ->
                 Image(
-                    painter = painterResource(id = iconResId), // 드로어블 리소스를 사용하여 이미지 로드
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp)
+                    painter = painterResource(id = iconResId),
+                    contentDescription = "User Type Button",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(size)
+                        .clickable { onClick() }
                 )
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(15.dp)
+                )
             }
             Text(
                 text = text,
@@ -89,5 +92,22 @@ fun CommonSelectImageButton(
                 )
             )
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CommonSelectImageButtonPreview() {
+    var isSelected by remember { mutableStateOf(false) }
+
+    PicplzTheme {
+        CommonSelectImageButton(
+            text = "라벨",
+            selectionState = SelectionState.UNSELECTED,
+            onClick = { isSelected = !isSelected },
+            deSelectedIconResId = R.drawable.photographer_deselected,
+            selectedIconResId = R.drawable.photographer_selected
+        )
     }
 }

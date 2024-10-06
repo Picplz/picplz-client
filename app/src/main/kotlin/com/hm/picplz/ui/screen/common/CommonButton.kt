@@ -11,17 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
 
 @Composable
 fun CommonButton (
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: RoundedCornerShape = RoundedCornerShape(10.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(5.dp),
     enabled: Boolean = true,
-    containerColor: Color = Color.Blue
+    containerColor: Color = MainThemeColor.Black,
+    contentColor: Color = Color(0xFFFFFFFF),
+    disabledContainerColor: Color = MainThemeColor.Gray3,
+    disabledContentColor: Color = MainThemeColor.Gray2,
 ) {
     Button(
         onClick = onClick,
@@ -29,7 +35,10 @@ fun CommonButton (
             .fillMaxWidth()
             .height(60.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor
         ),
         shape = shape,
         enabled = enabled
@@ -37,8 +46,19 @@ fun CommonButton (
         Text(
             text = text,
             style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium                        )
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 16.sp * 1.4,
+                letterSpacing = 0.sp
+            ),
         )
+    }
+}
+
+@Preview
+@Composable
+fun CommonButtonPreview() {
+    PicplzTheme {
+        CommonButton(text = "버튼", onClick = {})
     }
 }

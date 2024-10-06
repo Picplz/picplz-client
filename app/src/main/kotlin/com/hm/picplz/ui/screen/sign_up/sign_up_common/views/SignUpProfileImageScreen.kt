@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,13 +32,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
@@ -46,6 +48,7 @@ import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -106,51 +109,67 @@ fun SignUpProfileImageScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Text(
+                        text = "안녕하세요 ${currentState.nickname}님!",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .height(30.dp)
+                    )
                     Box(
-                        modifier = Modifier.size(150.dp),
+                        modifier = Modifier.size(160.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         val painter = if (currentState.profileImageUri != null) {
                             rememberAsyncImagePainter(model = currentState.profileImageUri)
                         } else {
-                            painterResource(id = R.drawable.logo_temp)
+                            painterResource(id = R.drawable.default_profile)
                         }
                         Image(
                             painter = painter,
                             contentDescription = "프로필 이미지",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(150.dp)
+                                .size(160.dp)
                                 .clip(CircleShape)
                                 .background(Color.Gray)
                         )
-
                         IconButton(
                             onClick = { viewModel.handleIntent(ShowFileUploadDialog) },
                             modifier = Modifier
                                 .align(Alignment.BottomEnd)
-                                .size(40.dp)
-                                .offset(x = 0.dp, y = 0.dp)
+                                .size(33.dp)
+                                .offset(x = (-5).dp, y = (-5).dp)
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.camera),
+                                painter = painterResource(id = R.drawable.camera_circle),
                                 contentDescription = "이미지 업로드",
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(33.dp)
                                     .background(Color.Gray, CircleShape)
                             )
                         }
                     }
                     Spacer(
                         modifier = Modifier
-                            .height(50.dp)
+                            .height(80.dp)
                     )
                     Text(
-                        text = "${currentState.nickname}님 안녕하세요",
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Normal
-                        )
+                        text = if (currentState.profileImageUri === null) {
+                            buildAnnotatedString {
+                                append("프로필 이미지를\n")
+                                append("설정해 주세요.\n")
+                            }
+                        } else {
+                            buildAnnotatedString {
+                                append("회원 타입 설정으로\n")
+                                append("넘어갈게요.\n")
+                            }
+                        },
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
 
@@ -163,9 +182,9 @@ fun SignUpProfileImageScreen(
                 contentAlignment = Alignment.Center
             ) {
                 CommonButton(
-                    text = "완료하기",
+                    text = if (currentState.profileImageUri === null) {"다음에 설정하기"} else {"다음"},
                     onClick = { viewModel.handleIntent(Navigate("sign-up-select-type")) },
-                    enabled = currentState.nickname.isNotEmpty() && currentState.profileImageUri != null,
+                    enabled = currentState.nickname.isNotEmpty(),
                     containerColor = MainThemeColor.Black
                 )
             }
@@ -187,5 +206,14 @@ fun SignUpProfileImageScreen(
                 else -> {}
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun SignUpProfileImageScreenPreview() {
+    val signUpNavController = rememberNavController()
+    PicplzTheme {
+        SignUpProfileImageScreen(navController = signUpNavController)
     }
 }

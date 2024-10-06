@@ -1,29 +1,19 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_common.views
 
 import CommonFilledTextField
-import android.widget.ImageButton
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,7 +25,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -43,13 +32,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
-import com.hm.picplz.R
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
@@ -101,7 +88,7 @@ fun SignUpNicknameScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CommonTopBar(
-                text = "닉네임 등록하기",
+                text = "닉네임 설정하기",
                 onClickBack = { viewModel.handleIntent(SignUpCommonIntent.NavigateToPrev) },
             )
             Box(
@@ -119,36 +106,15 @@ fun SignUpNicknameScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceEvenly
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.Bottom
-                    ){
-                        Text(
-                            text = buildAnnotatedString {
-                                append("닉네임을\n")
-                                append("설정해주세요")
-                            },
-                            modifier = Modifier,
-                            style = TextStyle(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Image(
-                            modifier = Modifier
-                                .size(22.dp)
-                                .padding(4.dp)
-                                .clickable { viewModel.handleIntent(SignUpCommonIntent.ToggleValidateDialog) },
-                            painter = painterResource(id = R.drawable.question),
-                            contentDescription = "닉네임 기준 툴팁"
-                        )
-                    }
+                    Text(
+                        text = "닉네임을 설정해주세요",
+                        modifier = Modifier,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(modifier = modifier.height(14.dp))
                     CommonFilledTextField(
                         value = currentState.nickname,
                         onValueChange = { newNickname ->
@@ -161,10 +127,23 @@ fun SignUpNicknameScreen(
                         keyboardActions = {
                             focusManager.clearFocus()
                         },
-                        label = "닉네임"
                     )
-                    Spacer(
-                        modifier = Modifier.height(80.dp)
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 5.dp),
+                        text = buildAnnotatedString {
+                            append("∙  한글, 영문, 숫자 입력 가능 (2~15자)\n")
+                            append("∙  중복 닉네임은 불가\n")
+                            append("∙  이모티콘, 특수문자 사용이 불가\n")
+                            append("∙  닉네임의 처음과 마지막 부분 공백 사용 불가")
+                        },
+                        style = TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 12.sp,
+                            lineHeight = 16.8.sp,
+                            letterSpacing = 0.sp,
+                            color = MainThemeColor.Gray3,
+                        )
                     )
                 }
             }
@@ -184,13 +163,6 @@ fun SignUpNicknameScreen(
             }
         }
     }
-
-    if (currentState.showValidateDialog) {
-        NicknameTooltipDialog(
-            onDismissRequest = { viewModel.handleIntent(SignUpCommonIntent.ToggleValidateDialog) }
-        )
-    }
-
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {

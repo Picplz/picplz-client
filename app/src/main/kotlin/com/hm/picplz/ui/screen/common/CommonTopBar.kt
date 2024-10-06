@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,12 +31,9 @@ fun CommonTopBar(
     onClickBack: () -> Unit,
     modifier: Modifier = Modifier,
     boxHeight: Dp = 50.dp,
-    textStyle: TextStyle = TextStyle(
-        fontSize = 16.sp,
-        fontWeight = FontWeight.SemiBold
-    ),
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     paddingStart: Dp = 0.dp,
-    iconSize: Dp = 35.dp,
+    iconSize: Dp = 16.dp,
     spacerWidth: Dp = 50.dp
 ) {
     Box(
@@ -57,7 +55,7 @@ fun CommonTopBar(
                     .padding(start = paddingStart)
             ) {
                 Image(
-                    painter = painterResource(R.drawable.arrow_left),
+                    painter = painterResource(R.drawable.triangle_left),
                     contentDescription = "arrow left",
                     modifier = Modifier.size(iconSize)
                 )

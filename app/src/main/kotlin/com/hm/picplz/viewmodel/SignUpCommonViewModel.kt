@@ -3,6 +3,7 @@ package com.hm.picplz.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.NicknameFieldError
+import com.hm.picplz.data.model.SelectionState
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.DestinationByUserType.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
@@ -43,9 +44,26 @@ class SignUpCommonViewModel : ViewModel() {
                 } else {
                     intent.userType
                 }
+                val newPhotographerSelectionState = if (newUserType == Photographer) {
+                    SelectionState.SELECTED
+                } else if (newUserType == User) {
+                    SelectionState.DESELECTED
+                } else {
+                    SelectionState.UNSELECTED
+                }
+                val newUserSelectionState = if (newUserType == User) {
+                    SelectionState.SELECTED
+                } else if (newUserType == Photographer) {
+                    SelectionState.DESELECTED
+                } else {
+                    SelectionState.UNSELECTED
+                }
 
-                _state.value = _state.value.copy(selectedUserType = newUserType)
-            }
+                _state.value = _state.value.copy(
+                    selectedUserType = newUserType,
+                    photographerSelectionState = newPhotographerSelectionState,
+                    userSelectionState = newUserSelectionState
+                )            }
             is NavigateToSelected -> {
                 viewModelScope.launch {
                     _state.value.selectedUserType?.let { selectedUserType ->
@@ -81,10 +99,6 @@ class SignUpCommonViewModel : ViewModel() {
                 viewModelScope.launch {
                     _sideEffect.emit(SignUpSideEffect.ShowFileUploadDialog)
                 }
-            }
-            is ToggleValidateDialog -> {
-                val newValidateDialogState = _state.value.copy(showValidateDialog = !_state.value.showValidateDialog)
-                _state.value = newValidateDialogState
             }
         }
     }

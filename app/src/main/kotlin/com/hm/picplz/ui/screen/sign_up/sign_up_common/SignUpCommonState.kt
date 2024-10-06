@@ -2,6 +2,7 @@ package com.hm.picplz.ui.screen.sign_up.sign_up_common
 
 import android.net.Uri
 import com.hm.picplz.data.model.NicknameFieldError
+import com.hm.picplz.data.model.SelectionState
 import com.hm.picplz.data.model.UserType
 
 data class SignUpCommonState(
@@ -12,7 +13,8 @@ data class SignUpCommonState(
     val nickname: String = "",
     val profileImageUri: Uri? = null,
     val nicknameFieldErrors: List<NicknameFieldError> = emptyList(),
-    val showValidateDialog: Boolean = false,
+    val photographerSelectionState: SelectionState,
+    val userSelectionState: SelectionState,
 ) {
     companion object {
         fun idle(): SignUpCommonState {
@@ -24,7 +26,8 @@ data class SignUpCommonState(
                 nickname = "",
                 profileImageUri = null,
                 nicknameFieldErrors = emptyList(),
-                showValidateDialog = false,
+                photographerSelectionState = SelectionState.UNSELECTED,
+                userSelectionState = SelectionState.UNSELECTED
             )
         }
     }

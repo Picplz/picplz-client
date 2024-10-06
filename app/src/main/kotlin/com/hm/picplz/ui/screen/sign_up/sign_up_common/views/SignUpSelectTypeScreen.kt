@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,17 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
+import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
@@ -43,6 +46,7 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigat
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToSelected
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -62,8 +66,6 @@ fun SignUpSelectTypeScreen(
             statusBarColor = Color.Transparent.toArgb()
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
-        /** 이 페이지 진입시 선택지 초기화 **/
-        viewModel.handleIntent(SignUpCommonIntent.ResetSelectedUserType)
     }
 
     val currentState = viewModel.state.collectAsState().value
@@ -98,37 +100,46 @@ fun SignUpSelectTypeScreen(
                 ) {
                     Text(
                         text = buildAnnotatedString {
-                            append("회원 타입을\n")
-                            append("선택해주세요")
+                            append("가입하실 회원 타입을\n")
+                            append("선택해주세요.")
                         },
                         modifier = Modifier
                             .fillMaxWidth(),
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center
                     )
                     Spacer(
                         modifier = Modifier
                             .height(30.dp)
                     )
-                    Column(
-                        modifier = Modifier,
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(horizontal = 10.dp)
+                        ,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
                     ) {
                         CommonSelectImageButton(
-                            text = "고객",
-                            isSelected = currentState.selectedUserType == UserType.User,
-                            onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.User)) },
-                            iconResId = R.drawable.logo
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        CommonSelectImageButton(
-                            text = "금손",
-                            isSelected = currentState.selectedUserType == UserType.Photographer,
+                            text = "찍사",
+                            selectionState =currentState.photographerSelectionState,
                             onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.Photographer)) },
-                            iconResId = R.drawable.logo
+                            selectedIconResId = R.drawable.user_selected,
+                            deSelectedIconResId = R.drawable.user_deselected,
+                        )
+                        CommonSelectImageButton(
+                            text = "고객",
+                            selectionState =currentState.userSelectionState,
+                            onClick = { viewModel.handleIntent(ClickUserTypeButton(UserType.User)) },
+                            selectedIconResId = R.drawable.photographer_selected,
+                            deSelectedIconResId = R.drawable.photographer_deselected,
                         )
                     }
+                    Spacer(
+                        modifier = Modifier
+                            .height(170.dp)
+                    )
                 }
             }
             Box(
@@ -173,5 +184,19 @@ fun NavController.navigate(
     val nodeId = graph.findNode(route)?.id
     if (nodeId != null) {
         navigate(nodeId, args, navOptions, navigatorExtras)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpSelectTypeScreenPreview() {
+    PicplzTheme {
+        val mainNavController = rememberNavController()
+        val signUpNavController = rememberNavController()
+
+        SignUpSelectTypeScreen(
+            mainNavController = mainNavController,
+            signUpNavController = signUpNavController
+        )
     }
 }
