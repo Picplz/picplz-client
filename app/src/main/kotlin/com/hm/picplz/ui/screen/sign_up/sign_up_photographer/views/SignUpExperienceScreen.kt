@@ -1,24 +1,43 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer.views
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import com.hm.picplz.viewmodel.SignUpPhotographerViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.hm.picplz.MainActivity
+import com.hm.picplz.R
+import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigate
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.NavigateToPrev
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.PicplzTheme
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -29,6 +48,17 @@ fun SignUpExperience(
     mainNavController: NavController,
     signUpPhotographerNavController: NavController,
 ) {
+    /** 상태바 스타일 설정 **/
+    val view = LocalView.current
+    val activity = LocalContext.current as? MainActivity
+
+    LaunchedEffect(Unit) {
+        activity?.window?.apply {
+            statusBarColor = Color.Transparent.toArgb()
+            WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
+        }
+    }
+
     val currentState = viewModel.state.collectAsState().value
 
     Scaffold (
@@ -50,8 +80,46 @@ fun SignUpExperience(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()
-                    .padding(horizontal = 32.dp)
-            )
+                    .padding(horizontal = 15.dp)
+            ) {
+                Column (
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    ) {
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    ) {
+                        Text(
+                            text = "사진 촬영 경험이 있으신가요?",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.info),
+                            contentDescription = "info icon",
+                            modifier = Modifier
+                                .height(24.dp)
+                        )
+                    }
+                    Text(
+                        text = "픽플즈는 사진 경력이 없는 금손님도 환영해요!",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .height(120.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CommonButton(
+                    text = "다음",
+                    onClick = { },
+                    containerColor = MainThemeColor.Black
+                )
+            }
         }
     }
 
@@ -63,5 +131,19 @@ fun SignUpExperience(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpExprienceScreenPreview() {
+    PicplzTheme {
+        val mainNavController = rememberNavController()
+        val signUpPhotographerNavController = rememberNavController()
+
+        SignUpExperience(
+            mainNavController = mainNavController,
+            signUpPhotographerNavController = signUpPhotographerNavController,
+        )
     }
 }
