@@ -55,7 +55,7 @@ fun MainNavHost(
                 backStackEntry.arguments?.getParcelable("userInfo")
             }
             SignUpPhotographerScreen(
-                navController = navController,
+                mainNavController = navController,
                 userInfo = userInfo ?: emptyUserData
             )
         }
