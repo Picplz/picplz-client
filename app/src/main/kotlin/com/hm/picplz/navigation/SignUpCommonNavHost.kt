@@ -12,7 +12,7 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_common.views.SignUpSelectTypeScre
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
 
 @Composable
-fun SignUpNavHost(
+fun SignUpCommonNavHost(
     mainNavController: NavHostController,
     signUpNavController: NavHostController,
     modifier: Modifier = Modifier,

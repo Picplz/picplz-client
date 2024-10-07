@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hm.picplz.navigation.SignUpNavHost
+import com.hm.picplz.navigation.SignUpCommonNavHost
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
 
@@ -19,7 +19,7 @@ fun SignUpScreen(
 ) {
     val signUpNavController = rememberNavController()
 
-    SignUpNavHost(
+    SignUpCommonNavHost(
         mainNavController = mainNavController,
         signUpNavController = signUpNavController,
         viewModel = viewModel
