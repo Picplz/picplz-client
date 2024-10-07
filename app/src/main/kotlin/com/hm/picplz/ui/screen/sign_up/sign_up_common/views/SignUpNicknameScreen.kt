@@ -95,7 +95,7 @@ fun SignUpNicknameScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
+                    .padding(horizontal = 15.dp)
                     .pointerInput(Unit) {
                         detectTapGestures(onTap = {
                             focusManager.clearFocus()
@@ -151,7 +151,7 @@ fun SignUpNicknameScreen(
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
                 CommonButton(

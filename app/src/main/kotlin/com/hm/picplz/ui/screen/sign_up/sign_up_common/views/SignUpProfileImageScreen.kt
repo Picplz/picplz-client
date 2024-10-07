@@ -178,7 +178,7 @@ fun SignUpProfileImageScreen(
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
                 CommonButton(

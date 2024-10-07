@@ -188,11 +188,11 @@ fun NavController.navigate(
 fun SignUpSelectTypeScreenPreview() {
     PicplzTheme {
         val mainNavController = rememberNavController()
-        val signUpNavController = rememberNavController()
+        val signUpCommonNavController = rememberNavController()
 
         SignUpSelectTypeScreen(
             mainNavController = mainNavController,
-            signUpCommonNavController = signUpNavController
+            signUpCommonNavController = signUpCommonNavController
         )
     }
 }
