@@ -53,7 +53,7 @@ fun SignUpNicknameScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
-    signUpNavController: NavController,
+    signUpCommonNavController: NavController,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -170,7 +170,7 @@ fun SignUpNicknameScreen(
                     mainNavController.popBackStack()
                 }
                 is SignUpSideEffect.Navigate -> {
-                    signUpNavController.navigate(sideEffect.destination)
+                    signUpCommonNavController.navigate(sideEffect.destination)
                 }
                 else -> {}
             }
@@ -187,7 +187,7 @@ fun SignUpNicknameScreenPreview() {
     PicplzTheme {
         SignUpNicknameScreen(
             mainNavController = mainNavController,
-            signUpNavController = signUpNavController,
+            signUpCommonNavController = signUpNavController,
         )
     }
 }

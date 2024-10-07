@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,10 +39,7 @@ import com.hm.picplz.data.model.UserType
 import com.hm.picplz.ui.screen.common.CommonButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.ClickUserTypeButton
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToPrev
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToSelected
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
@@ -55,7 +51,7 @@ fun SignUpSelectTypeScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
-    signUpNavController: NavController,
+    signUpCommonNavController: NavController,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -167,7 +163,7 @@ fun SignUpSelectTypeScreen(
                     mainNavController.navigate(sideEffect.destination.route, bundle)
                 }
                 is SignUpSideEffect.NavigateToPrev -> {
-                    signUpNavController.popBackStack()
+                    signUpCommonNavController.popBackStack()
                 }
                 else -> {}
             }
@@ -196,7 +192,7 @@ fun SignUpSelectTypeScreenPreview() {
 
         SignUpSelectTypeScreen(
             mainNavController = mainNavController,
-            signUpNavController = signUpNavController
+            signUpCommonNavController = signUpNavController
         )
     }
 }
