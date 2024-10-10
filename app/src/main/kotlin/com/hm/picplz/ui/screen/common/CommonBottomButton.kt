@@ -55,7 +55,7 @@ fun CommonBottomButton (
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CommonButtonPreview() {
     PicplzTheme {
