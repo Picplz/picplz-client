@@ -28,6 +28,16 @@ class SignUpPhotographerViewModel : ViewModel() {
                 }
             }
             is SetUserInfo -> {}
+            is SetPhotographyExperience -> {
+                val newPhotographyExperienceState = _state.value.copy(
+                    hasPhotographyExperience = if (_state.value.hasPhotographyExperience == intent.hasExperience) {
+                        null
+                    } else {
+                        intent.hasExperience
+                    }
+                )
+                _state.value = newPhotographyExperienceState
+            }
         }
     }
 }

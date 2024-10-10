@@ -36,6 +36,7 @@ import com.hm.picplz.R
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.NavigateToPrev
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.SetPhotographyExperience
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
@@ -125,16 +126,16 @@ fun SignUpExperience(
                     ) {
                         CommonSelectButton(
                             text = "있어요",
-                            isSelected = false,
-                            onClick = {},
+                            isSelected = currentState.hasPhotographyExperience == true,
+                            onClick = {viewModel.handleIntent(SetPhotographyExperience(hasExperience = true))},
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
                         )
                         CommonSelectButton(
                             text = "없어요",
-                            isSelected = false,
-                            onClick = {},
+                            isSelected = currentState.hasPhotographyExperience == false,
+                            onClick = {viewModel.handleIntent(SetPhotographyExperience(hasExperience = false))},
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
@@ -152,7 +153,8 @@ fun SignUpExperience(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = { },
+                    onClick = {},
+                    enabled = currentState.hasPhotographyExperience != null,
                     containerColor = MainThemeColor.Black
                 )
             }
