@@ -63,7 +63,8 @@ class SignUpCommonViewModel : ViewModel() {
                     selectedUserType = newUserType,
                     photographerSelectionState = newPhotographerSelectionState,
                     userSelectionState = newUserSelectionState
-                )            }
+                )
+            }
             is NavigateToSelected -> {
                 viewModelScope.launch {
                     _state.value.selectedUserType?.let { selectedUserType ->
