@@ -1,5 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer.views
 
+import CommonSelectButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -78,16 +79,15 @@ fun SignUpExperience(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxSize()
                     .padding(horizontal = 15.dp)
             ) {
-                Column (
+                Column(
                     modifier = Modifier
-                        .fillMaxSize(),
-                    ) {
-                    Row (
+                        .fillMaxSize()
+                ) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
                     ) {
                         Text(
                             text = "사진 촬영 경험이 있으신가요?",
@@ -102,10 +102,34 @@ fun SignUpExperience(
                     }
                     Text(
                         text = "픽플즈는 사진 경력이 없는 금손님도 환영해요!",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        CommonSelectButton(
+                            text = "있어요",
+                            isSelected = false,
+                            onClick = {},
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(60.dp)
+                        )
+                        CommonSelectButton(
+                            text = "없어요",
+                            isSelected = false,
+                            onClick = {},
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(60.dp)
+                        )
+                    }
                 }
             }
+
             Box(
                 modifier = Modifier
                     .height(120.dp)
