@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -85,9 +86,14 @@ fun SignUpExperience(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
+                    Spacer(
+                        modifier = Modifier
+                            .height(80.dp)
+                    )
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         Text(
                             text = "사진 촬영 경험이 있으신가요?",
@@ -100,14 +106,21 @@ fun SignUpExperience(
                                 .height(24.dp)
                         )
                     }
+                    Spacer(
+                        modifier = Modifier
+                            .height(15.dp)
+                    )
                     Text(
                         text = "픽플즈는 사진 경력이 없는 금손님도 환영해요!",
                         style = MaterialTheme.typography.bodyMedium,
                     )
+                    Spacer(
+                        modifier = Modifier
+                            .height(30.dp)
+                    )
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp),
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         CommonSelectButton(
