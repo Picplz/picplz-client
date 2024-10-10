@@ -31,9 +31,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
-import com.hm.picplz.ui.screen.common.CommonButton
+import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigate
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.NavigateToPrev
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
@@ -114,7 +113,7 @@ fun SignUpExperience(
                     .padding(horizontal = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
-                CommonButton(
+                CommonBottomButton(
                     text = "다음",
                     onClick = { },
                     containerColor = MainThemeColor.Black

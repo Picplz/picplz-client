@@ -36,7 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
-import com.hm.picplz.ui.screen.common.CommonButton
+import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
@@ -145,7 +145,7 @@ fun SignUpSelectTypeScreen(
                     .padding(horizontal = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                CommonButton(
+                CommonBottomButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(NavigateToSelected) },
                     enabled = currentState.selectedUserType != null,

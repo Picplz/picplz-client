@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
-import com.hm.picplz.ui.screen.common.CommonButton
+import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigate
@@ -154,7 +154,7 @@ fun SignUpNicknameScreen(
                     .padding(horizontal = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
-                CommonButton(
+                CommonBottomButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(Navigate("sign-up-profile")) },
                     enabled = currentState.nickname.isNotEmpty() && currentState.nicknameFieldErrors.isEmpty(),
