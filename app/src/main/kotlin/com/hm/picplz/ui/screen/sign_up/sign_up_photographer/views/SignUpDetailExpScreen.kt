@@ -21,7 +21,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.ui.screen.common.CommonTopBar
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignUpDetailExpScreen(
@@ -51,10 +54,26 @@ fun SignUpDetailExpScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            CommonTopBar(text = "경력 선택", onClickBack = {})
+            CommonTopBar(
+                text = "경력 선택",
+                onClickBack = { viewModel.handleIntent(NavigateToPrev)}
+            )
         }
-
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collectLatest { sideEffect ->
+            when (sideEffect) {
+                is SignUpPhotographerSideEffect.NavigateToPrev -> {
+                    signUpPhotographerNavController.popBackStack()
+                }
+                is SignUpPhotographerSideEffect.Navigate -> {
+                    signUpPhotographerNavController.navigate(sideEffect.destination)
+                }
+            }
+        }
+    }
+
 }
 
 @Preview(showBackground = true)

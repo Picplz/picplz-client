@@ -35,8 +35,7 @@ import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.NavigateToPrev
-import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.SetPhotographyExperience
+import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
@@ -44,7 +43,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
-fun SignUpExperience(
+fun SignUpExperienceScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpPhotographerViewModel = viewModel(),
     mainNavController: NavController,
@@ -153,7 +152,15 @@ fun SignUpExperience(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = {},
+                    onClick = {
+                        if (currentState.hasPhotographyExperience == true) {
+                            viewModel.handleIntent(Navigate("sign-up-detail-experience"))
+                        } else {
+                            /**
+                             * Todo: 경험 내용 스킵하고 자신있는 감성으로 바로 라우팅
+                             * **/
+                        }
+                    },
                     enabled = currentState.hasPhotographyExperience != null,
                     containerColor = MainThemeColor.Black
                 )
@@ -167,6 +174,9 @@ fun SignUpExperience(
                 is SignUpPhotographerSideEffect.NavigateToPrev -> {
                     mainNavController.popBackStack()
                 }
+                is SignUpPhotographerSideEffect.Navigate -> {
+                    signUpPhotographerNavController.navigate(sideEffect.destination)
+                }
             }
         }
     }
@@ -179,7 +189,7 @@ fun SignUpExprienceScreenPreview() {
         val mainNavController = rememberNavController()
         val signUpPhotographerNavController = rememberNavController()
 
-        SignUpExperience(
+        SignUpExperienceScreen(
             mainNavController = mainNavController,
             signUpPhotographerNavController = signUpPhotographerNavController,
         )

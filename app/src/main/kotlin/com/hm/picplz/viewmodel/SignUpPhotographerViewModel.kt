@@ -38,6 +38,11 @@ class SignUpPhotographerViewModel : ViewModel() {
                 )
                 _state.value = newPhotographyExperienceState
             }
+            is Navigate -> {
+                viewModelScope.launch {
+                    _sideEffect.emit(SignUpPhotographerSideEffect.Navigate(intent.destination))
+                }
+            }
         }
     }
 }
