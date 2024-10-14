@@ -1,0 +1,81 @@
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.hm.picplz.ui.theme.PicplzTheme
+import com.hm.picplz.ui.screen.common.common_chip.CommonChipIntent.*
+import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.pretendardTypography
+import com.hm.picplz.viewmodel.common.CommonChipViewModel
+
+@Composable
+fun CommonChip(
+    viewModel: CommonChipViewModel = viewModel(),
+    value: String,
+    borderColor: Color = MainThemeColor.Gray3
+) {
+    val currentState = viewModel.state.collectAsState().value
+
+    LaunchedEffect(value) {
+        viewModel.handleIntent(SetInitialValue(value))
+    }
+
+    if (currentState.isEditing) {
+        TextField(
+            value = currentState.value,
+            onValueChange = { newValue ->
+                viewModel.handleIntent(UpdateValue(newValue))
+            },
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    viewModel.handleIntent(FinishEditing)
+                }
+            ),
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 10.dp)
+                .border(1.dp, borderColor, RoundedCornerShape(5.dp))
+                .widthIn(min = 20.dp)
+        )
+    } else {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    viewModel.handleIntent(StartEditing)
+                }
+                .height(40.dp)
+                .border(1.dp, borderColor, RoundedCornerShape(5.dp))
+                .widthIn(min = 20.dp)
+        ) {
+            Text(
+                text = currentState.value,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MainThemeColor.Gray4
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommonChipPreview() {
+    PicplzTheme {
+        CommonChip(value = "안뇽")
+    }
+}
