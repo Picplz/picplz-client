@@ -18,14 +18,8 @@ class CommonChipViewModel : ViewModel() {
             is SetValue -> {
                 _state.update { it.copy(value = intent.value) }
             }
-            is StartEditing -> {
-                _state.update { it.copy(isEditing = true) }
-            }
             is UpdateValue -> {
                 _state.update { it.copy(value = intent.value) }
-            }
-            is FinishEditing -> {
-                _state.update { it.copy(isEditing = false) }
             }
             is SetChipMode -> {
                 _state.update { it.copy(chipMode = intent.newChipMode)}
