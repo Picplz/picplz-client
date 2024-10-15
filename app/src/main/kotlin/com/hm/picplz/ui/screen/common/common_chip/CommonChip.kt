@@ -151,7 +151,7 @@ fun CommonChip(
                     .focusRequester(focusRequester),
                 value = currentState.value,
                 onValueChange = { newValue ->
-                    viewModel.handleIntent(UpdateValue(newValue))
+                    viewModel.handleIntent(SetValue(newValue))
                 },
                 singleLine = true,
                 textStyle = TextStyle(
