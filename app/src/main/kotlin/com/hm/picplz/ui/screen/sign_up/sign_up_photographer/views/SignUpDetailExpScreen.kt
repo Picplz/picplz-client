@@ -1,15 +1,16 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer.views
 
 import CommonChip
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -33,7 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
-import com.hm.picplz.R
+import com.hm.picplz.data.model.ChipMode
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
@@ -41,6 +41,7 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSi
 import com.hm.picplz.ui.theme.MainThemeColor
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SignUpDetailExpScreen(
     modifier: Modifier = Modifier,
@@ -78,7 +79,8 @@ fun SignUpDetailExpScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 15.dp)
-            ) {
+                    .imePadding(),
+                ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -103,11 +105,23 @@ fun SignUpDetailExpScreen(
                         modifier = Modifier
                             .height(30.dp)
                     )
-                    Row(
+                    FlowRow(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
+                        currentState.experienceChipList.map { chip ->
+                            CommonChip(
+                                id = chip.id,
+                                label = chip.label,
+                                initialMode = ChipMode.DEFAULT,
+                            )
+                        }
+                        CommonChip(
+                            id = "ADD_1",
+                            initialMode = ChipMode.ADD,
+                        )
                     }
                 }
             }
@@ -121,15 +135,7 @@ fun SignUpDetailExpScreen(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = {
-                        if (currentState.hasPhotographyExperience == true) {
-                            viewModel.handleIntent(Navigate("sign-up-detail-experience"))
-                        } else {
-                            /**
-                             * Todo: 경험 내용 스킵하고 자신있는 감성으로 바로 라우팅
-                             * **/
-                        }
-                    },
+                    onClick = {},
                     enabled = currentState.hasPhotographyExperience != null,
                     containerColor = MainThemeColor.Black
                 )
