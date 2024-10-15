@@ -1,8 +1,10 @@
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,7 +32,7 @@ import com.hm.picplz.viewmodel.common.CommonChipViewModel
 @Composable
 fun CommonChip(
     viewModel: CommonChipViewModel = viewModel(),
-    value: String,
+    label: String = "Text",
     unselectedBorderColor: Color = MainThemeColor.Gray3,
     selectedBorderColor: Color = MainThemeColor.Black,
     unselectedTextColor: Color = MainThemeColor.Gray4,
@@ -43,8 +45,8 @@ fun CommonChip(
 
     val currentState = viewModel.state.collectAsState().value
 
-    LaunchedEffect(value) {
-        viewModel.handleIntent(SetInitialValue(value))
+    LaunchedEffect(label) {
+        viewModel.handleIntent(SetInitialValue(label))
         viewModel.handleIntent(SetChipMode(initialMode))
     }
 
@@ -64,9 +66,12 @@ fun CommonChip(
                     .widthIn(min = 20.dp)
             ) {
                 Text(
-                    text = currentState.value,
+                    text = label,
                     modifier = Modifier
-                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                        .padding(
+                            horizontal = 12.dp,
+                            vertical = 10.dp
+                        ),
                     style = TextStyle(
                         fontFamily = Pretendard,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
@@ -76,7 +81,38 @@ fun CommonChip(
                 )
             }
         }
-        ADD -> {}
+        ADD -> {
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        viewModel.handleIntent(SetChipMode(EDIT))
+                    }
+                    .height(40.dp)
+                    .border(
+                        width = 1.dp,
+                        color = MainThemeColor.Gray3,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+                    .background(
+                        color = MainThemeColor.Gray1
+                    )
+            ) {
+                Text(
+                    text = "+직접 적어주세요",
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 12.dp,
+                            vertical = 10.dp
+                        ),
+                    style = TextStyle(
+                        fontFamily = Pretendard,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                    ),
+                    color = MainThemeColor.Gray3,
+                )
+            }
+        }
         EDIT -> {
             TextField(
                 value = currentState.value,
@@ -107,7 +143,7 @@ fun CommonChip(
 @Composable
 fun CommonChipPreviewTrue() {
     PicplzTheme {
-        CommonChip(value = "을지로 감성", isSelected = true, isEditable = true)
+        CommonChip(label = "을지로 감성", isSelected = true, isEditable = true)
     }
 }
 
@@ -115,6 +151,22 @@ fun CommonChipPreviewTrue() {
 @Composable
 fun CommonChipPreviewFalse() {
     PicplzTheme {
-        CommonChip(value = "키치 감성", isSelected = false)
+        CommonChip(label = "키치 감성", isSelected = false)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommonChipPreviewAdd() {
+    PicplzTheme {
+        CommonChip(initialMode = ADD)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommonChipPreviewEdit() {
+    PicplzTheme {
+        CommonChip(initialMode = EDIT)
     }
 }
