@@ -15,7 +15,7 @@ class CommonChipViewModel : ViewModel() {
 
     fun handleIntent(intent: CommonChipIntent) {
         when (intent) {
-            is SetInitialValue -> {
+            is SetValue -> {
                 _state.update { it.copy(value = intent.value) }
             }
             is StartEditing -> {
