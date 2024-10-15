@@ -94,3 +94,11 @@ fun CommonChipPreviewTrue() {
         CommonChip(value = "안뇽", isSelected = true)
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun CommonChipPreviewFalse() {
+    PicplzTheme {
+        CommonChip(value = "안뇽", isSelected = false)
+    }
+}
