@@ -14,12 +14,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.ui.screen.common.common_chip.CommonChipIntent.*
 import com.hm.picplz.ui.theme.MainThemeColor
+import com.hm.picplz.ui.theme.Pretendard
 import com.hm.picplz.ui.theme.pretendardTypography
 import com.hm.picplz.viewmodel.common.CommonChipViewModel
 
@@ -80,7 +84,11 @@ fun CommonChip(
                         horizontal = 12.dp,
                         vertical = 10.dp
                     ),
-                style = MaterialTheme.typography.bodyMedium,
+                style = TextStyle(
+                    fontFamily = Pretendard,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                    fontSize = 14.sp,
+                ),
                 color = if (isSelected) selectedTextColor else unselectedTextColor,
             )
         }
@@ -91,7 +99,7 @@ fun CommonChip(
 @Composable
 fun CommonChipPreviewTrue() {
     PicplzTheme {
-        CommonChip(value = "안뇽", isSelected = true)
+        CommonChip(value = "을지로 감성", isSelected = true)
     }
 }
 
@@ -99,6 +107,6 @@ fun CommonChipPreviewTrue() {
 @Composable
 fun CommonChipPreviewFalse() {
     PicplzTheme {
-        CommonChip(value = "안뇽", isSelected = false)
+        CommonChip(value = "키치 감성", isSelected = false)
     }
 }
