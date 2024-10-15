@@ -1,22 +1,31 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,11 +37,14 @@ import com.hm.picplz.ui.screen.common.common_chip.CommonChipIntent.*
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.Pretendard
 import com.hm.picplz.viewmodel.common.CommonChipViewModel
+import java.util.UUID
 
 @Composable
 fun CommonChip(
-    viewModel: CommonChipViewModel = viewModel(),
-    label: String = "Text",
+    id: String = UUID.randomUUID().toString(),
+    initialMode: ChipMode = DEFAULT,
+    label: String = "",
+    viewModel: CommonChipViewModel = viewModel(key = id),
     unselectedBorderColor: Color = MainThemeColor.Gray3,
     selectedBorderColor: Color = MainThemeColor.Black,
     unselectedTextColor: Color = MainThemeColor.Gray4,
@@ -40,13 +52,14 @@ fun CommonChip(
     isSelected: Boolean = false,
     onClick: () -> Unit = {},
     isEditable: Boolean = false,
-    initialMode: ChipMode = DEFAULT
+    onAdd: (String) -> Unit = {},
+    onUpdate: (String) -> Unit = {},
 ) {
 
     val currentState = viewModel.state.collectAsState().value
 
     LaunchedEffect(label) {
-        viewModel.handleIntent(SetInitialValue(label))
+        viewModel.handleIntent(SetValue(label))
         viewModel.handleIntent(SetChipMode(initialMode))
     }
 
@@ -65,20 +78,25 @@ fun CommonChip(
                     )
                     .widthIn(min = 20.dp)
             ) {
-                Text(
-                    text = label,
+                Row(
                     modifier = Modifier
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 10.dp
+                        .fillMaxHeight(),
+                    verticalAlignment = CenterVertically
+                ) {
+                    Text(
+                        text = label,
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 12.dp,
+                            ),
+                        style = TextStyle(
+                            fontFamily = Pretendard,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            fontSize = 14.sp,
                         ),
-                    style = TextStyle(
-                        fontFamily = Pretendard,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        fontSize = 14.sp,
-                    ),
-                    color = if (isSelected) selectedTextColor else unselectedTextColor,
-                )
+                        color = if (isSelected) selectedTextColor else unselectedTextColor,
+                    )
+                }
             }
         }
         ADD -> {
@@ -97,45 +115,79 @@ fun CommonChip(
                         color = MainThemeColor.Gray1
                     )
             ) {
-                Text(
-                    text = "+직접 적어주세요",
+                Row(
                     modifier = Modifier
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 10.dp
+                        .fillMaxHeight(),
+                    verticalAlignment = CenterVertically
+                ) {
+                    Text(
+                        text = "+직접 적어주세요",
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 12.dp,
+                            ),
+                        style = TextStyle(
+                            fontFamily = Pretendard,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp,
                         ),
-                    style = TextStyle(
-                        fontFamily = Pretendard,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                    ),
-                    color = MainThemeColor.Gray3,
-                )
+                        color = MainThemeColor.Gray3,
+                    )                }
+
             }
         }
         EDIT -> {
-            TextField(
+            BasicTextField(
                 value = currentState.value,
                 onValueChange = { newValue ->
                     viewModel.handleIntent(UpdateValue(newValue))
                 },
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontFamily = Pretendard,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                    fontSize = 14.sp,
+                ),
+                cursorBrush = SolidColor(Color.Black),
                 keyboardActions = KeyboardActions(
                     onDone = {
+                        if (initialMode == ADD) {
+                            onAdd(currentState.value)
+                        } else if(initialMode == DEFAULT) {
+                            onUpdate(currentState.value)
+                        }
                         viewModel.handleIntent(FinishEditing)
                         viewModel.handleIntent(SetChipMode(DEFAULT))
                     }
                 ),
-                modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 10.dp)
-                    .border(
-                        width = 1.dp,
-                        color = if (isSelected) selectedBorderColor else unselectedBorderColor,
-                        shape = RoundedCornerShape(5.dp)
-                    )
-                    .widthIn(min = 20.dp)
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Text
+                ),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                color = if (isSelected) selectedBorderColor else unselectedBorderColor,
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                            .height(40.dp)
+                            .padding(
+                                horizontal = 12.dp,
+                            ),
+                        ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalAlignment = CenterVertically
+                        ) {
+                            innerTextField()
+                        }
+                    }
+                }
             )
         }
-
     }
 }
 
