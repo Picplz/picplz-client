@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -20,11 +19,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.hm.picplz.data.model.ChipMode
+import com.hm.picplz.data.model.ChipMode.*
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.ui.screen.common.common_chip.CommonChipIntent.*
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.Pretendard
-import com.hm.picplz.ui.theme.pretendardTypography
 import com.hm.picplz.viewmodel.common.CommonChipViewModel
 
 @Composable
@@ -36,62 +36,70 @@ fun CommonChip(
     unselectedTextColor: Color = MainThemeColor.Gray4,
     selectedTextColor: Color = MainThemeColor.Black,
     isSelected: Boolean = false,
+    onClick: () -> Unit = {},
+    isEditable: Boolean = false,
+    initialMode: ChipMode = DEFAULT
 ) {
+
     val currentState = viewModel.state.collectAsState().value
 
     LaunchedEffect(value) {
         viewModel.handleIntent(SetInitialValue(value))
+        viewModel.handleIntent(SetChipMode(initialMode))
     }
 
-    if (currentState.isEditing) {
-        TextField(
-            value = currentState.value,
-            onValueChange = { newValue ->
-                viewModel.handleIntent(UpdateValue(newValue))
-            },
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    viewModel.handleIntent(FinishEditing)
-                }
-            ),
-            modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 10.dp)
-                .border(
-                    width = 1.dp,
-                    color = if (isSelected) selectedBorderColor else unselectedBorderColor,
-                    shape = RoundedCornerShape(5.dp)
-                )
-                .widthIn(min = 20.dp)
-        )
-    } else {
-        Row(
-            modifier = Modifier
-                .clickable {
-                    viewModel.handleIntent(StartEditing)
-                }
-                .height(40.dp)
-                .border(
-                    width = 1.dp,
-                    color = if (isSelected) selectedBorderColor else unselectedBorderColor,
-                    shape = RoundedCornerShape(5.dp)
-                )
-                .widthIn(min = 20.dp)
-        ) {
-            Text(
-                text = currentState.value,
+    when (currentState.chipMode) {
+        DEFAULT -> {
+            Row(
                 modifier = Modifier
-                    .padding(
-                        horizontal = 12.dp,
-                        vertical = 10.dp
+                    .clickable {
+                        onClick()
+                    }
+                    .height(40.dp)
+                    .border(
+                        width = 1.dp,
+                        color = if (isSelected) selectedBorderColor else unselectedBorderColor,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+                    .widthIn(min = 20.dp)
+            ) {
+                Text(
+                    text = currentState.value,
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                    style = TextStyle(
+                        fontFamily = Pretendard,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                        fontSize = 14.sp,
                     ),
-                style = TextStyle(
-                    fontFamily = Pretendard,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                    fontSize = 14.sp,
+                    color = if (isSelected) selectedTextColor else unselectedTextColor,
+                )
+            }
+        }
+        ADD -> {}
+        EDIT -> {
+            TextField(
+                value = currentState.value,
+                onValueChange = { newValue ->
+                    viewModel.handleIntent(UpdateValue(newValue))
+                },
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        viewModel.handleIntent(FinishEditing)
+                        viewModel.handleIntent(SetChipMode(DEFAULT))
+                    }
                 ),
-                color = if (isSelected) selectedTextColor else unselectedTextColor,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 10.dp)
+                    .border(
+                        width = 1.dp,
+                        color = if (isSelected) selectedBorderColor else unselectedBorderColor,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+                    .widthIn(min = 20.dp)
             )
         }
+
     }
 }
 
@@ -99,7 +107,7 @@ fun CommonChip(
 @Composable
 fun CommonChipPreviewTrue() {
     PicplzTheme {
-        CommonChip(value = "을지로 감성", isSelected = true)
+        CommonChip(value = "을지로 감성", isSelected = true, isEditable = true)
     }
 }
 
