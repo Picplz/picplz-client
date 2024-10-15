@@ -18,3 +18,9 @@ enum class UserType {
 enum class SelectionState {
     UNSELECTED, SELECTED, DESELECTED
 }
+
+enum class PhotographyExperience {
+    PHOTO_MAJOR,
+    INCOME_GENERATION,
+    SNS_OPERATION,
+}
