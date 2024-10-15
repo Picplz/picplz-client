@@ -27,7 +27,11 @@ import com.hm.picplz.viewmodel.common.CommonChipViewModel
 fun CommonChip(
     viewModel: CommonChipViewModel = viewModel(),
     value: String,
-    borderColor: Color = MainThemeColor.Gray3
+    unselectedBorderColor: Color = MainThemeColor.Gray3,
+    selectedBorderColor: Color = MainThemeColor.Black,
+    unselectedTextColor: Color = MainThemeColor.Gray4,
+    selectedTextColor: Color = MainThemeColor.Black,
+    isSelected: Boolean = false,
 ) {
     val currentState = viewModel.state.collectAsState().value
 
@@ -48,7 +52,11 @@ fun CommonChip(
             ),
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 10.dp)
-                .border(1.dp, borderColor, RoundedCornerShape(5.dp))
+                .border(
+                    width = 1.dp,
+                    color = if (isSelected) selectedBorderColor else unselectedBorderColor,
+                    shape = RoundedCornerShape(5.dp)
+                )
                 .widthIn(min = 20.dp)
         )
     } else {
@@ -58,15 +66,22 @@ fun CommonChip(
                     viewModel.handleIntent(StartEditing)
                 }
                 .height(40.dp)
-                .border(1.dp, borderColor, RoundedCornerShape(5.dp))
+                .border(
+                    width = 1.dp,
+                    color = if (isSelected) selectedBorderColor else unselectedBorderColor,
+                    shape = RoundedCornerShape(5.dp)
+                )
                 .widthIn(min = 20.dp)
         ) {
             Text(
                 text = currentState.value,
                 modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                    .padding(
+                        horizontal = 12.dp,
+                        vertical = 10.dp
+                    ),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MainThemeColor.Gray4
+                color = if (isSelected) selectedTextColor else unselectedTextColor,
             )
         }
     }
@@ -74,8 +89,8 @@ fun CommonChip(
 
 @Preview(showBackground = true)
 @Composable
-fun CommonChipPreview() {
+fun CommonChipPreviewTrue() {
     PicplzTheme {
-        CommonChip(value = "안뇽")
+        CommonChip(value = "안뇽", isSelected = true)
     }
 }
