@@ -7,4 +7,5 @@ sealed class SignUpPhotographerIntent {
     data object NavigateToPrev : SignUpPhotographerIntent()
     data class SetPhotographyExperience(val hasExperience: Boolean) : SignUpPhotographerIntent()
     data class Navigate(val destination: String) : SignUpPhotographerIntent()
+    data class SetEditingChipId(val chipId: String?) : SignUpPhotographerIntent()
 }

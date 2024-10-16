@@ -1,5 +1,6 @@
 package com.hm.picplz.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
@@ -42,6 +44,9 @@ class SignUpPhotographerViewModel : ViewModel() {
                 viewModelScope.launch {
                     _sideEffect.emit(SignUpPhotographerSideEffect.Navigate(intent.destination))
                 }
+            }
+            is SetEditingChipId -> {
+                _state.update { it.copy(editingChipId = intent.chipId)}
             }
         }
     }

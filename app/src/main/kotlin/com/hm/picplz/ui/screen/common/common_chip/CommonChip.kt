@@ -51,15 +51,26 @@ fun CommonChip(
     unselectedTextColor: Color = MainThemeColor.Gray4,
     selectedTextColor: Color = MainThemeColor.Black,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {},
+    onClickDefaultMode: () -> Unit = {},
     isEditable: Boolean = false,
     onAdd: (String) -> Unit = {},
     onUpdate: (String) -> Unit = {},
+    isEditing: Boolean = false,
+    onEdit: () -> Unit = {},
 ) {
 
     val currentState = viewModel.state.collectAsState().value
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(isEditing) {
+        if (isEditing) {
+            viewModel.handleIntent(SetChipMode(EDIT))
+        } else {
+            viewModel.handleIntent(SetChipMode(initialMode))
+            viewModel.handleIntent(SetValue(""))
+        }
+    }
 
     LaunchedEffect(currentState.chipMode) {
         if (currentState.chipMode == EDIT) {
@@ -77,7 +88,7 @@ fun CommonChip(
             Row(
                 modifier = Modifier
                     .clickable {
-                        onClick()
+                        onClickDefaultMode()
                     }
                     .height(40.dp)
                     .border(
@@ -112,7 +123,7 @@ fun CommonChip(
             Row(
                 modifier = Modifier
                     .clickable {
-                        viewModel.handleIntent(SetChipMode(EDIT))
+                        onEdit()
                     }
                     .height(40.dp)
                     .border(
