@@ -50,7 +50,11 @@ class SignUpPhotographerViewModel : ViewModel() {
                 _state.update { it.copy(editingChipId = intent.chipId)}
             }
             is AddChip -> {
-                val newChip = ChipItem(id = intent.chipId, label = intent.label)
+                val maxId = _state.value.experienceChipList
+                    .maxByOrNull { it.id.toIntOrNull() ?: 0 }?.id?.toIntOrNull() ?: 0
+                val newId = (maxId + 1).toString()
+
+                val newChip = ChipItem(id = newId, label = intent.label)
                 _state.update { currentState ->
                     val updatedChipList = currentState.experienceChipList + newChip
                     currentState.copy(experienceChipList = updatedChipList)
