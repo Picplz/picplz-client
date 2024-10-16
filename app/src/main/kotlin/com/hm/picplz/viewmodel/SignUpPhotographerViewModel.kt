@@ -3,6 +3,7 @@ package com.hm.picplz.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hm.picplz.data.model.ChipItem
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
@@ -47,6 +48,19 @@ class SignUpPhotographerViewModel : ViewModel() {
             }
             is SetEditingChipId -> {
                 _state.update { it.copy(editingChipId = intent.chipId)}
+            }
+            is AddChip -> {
+                val newChip = ChipItem(id = intent.chipId, label = intent.label)
+                _state.update { currentState ->
+                    val updatedChipList = currentState.experienceChipList + newChip
+                    currentState.copy(experienceChipList = updatedChipList)
+                }
+            }
+            is DeleteChip -> {
+                _state.update { currentState ->
+                    val updatedChipList = currentState.experienceChipList.filter { it.id != intent.chipId }
+                    currentState.copy(experienceChipList = updatedChipList)
+                }
             }
         }
     }
