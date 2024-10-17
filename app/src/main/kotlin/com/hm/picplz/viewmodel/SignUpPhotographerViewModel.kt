@@ -54,7 +54,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                     .maxByOrNull { it.id.toIntOrNull() ?: 0 }?.id?.toIntOrNull() ?: 0
                 val newId = (maxId + 1).toString()
 
-                val newChip = ChipItem(id = newId, label = intent.label)
+                val newChip = ChipItem(id = newId, label = intent.label, isEditable = true)
                 _state.update { currentState ->
                     val updatedChipList = currentState.experienceChipList + newChip
                     currentState.copy(experienceChipList = updatedChipList)
