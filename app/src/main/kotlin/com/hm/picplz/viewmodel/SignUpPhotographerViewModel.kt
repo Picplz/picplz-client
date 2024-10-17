@@ -49,26 +49,26 @@ class SignUpPhotographerViewModel : ViewModel() {
             is SetEditingChipId -> {
                 _state.update { it.copy(editingChipId = intent.chipId)}
             }
-            is AddChip -> {
-                val maxId = _state.value.experienceChipList
+            is AddVibeChip -> {
+                val maxId = _state.value.vibeChipList
                     .maxByOrNull { it.id.toIntOrNull() ?: 0 }?.id?.toIntOrNull() ?: 0
                 val newId = (maxId + 1).toString()
 
                 val newChip = ChipItem(id = newId, label = intent.label, isEditable = true)
                 _state.update { currentState ->
-                    val updatedChipList = currentState.experienceChipList + newChip
+                    val updatedChipList = currentState.vibeChipList + newChip
                     currentState.copy(experienceChipList = updatedChipList)
                 }
             }
-            is DeleteChip -> {
+            is DeleteVibeChip -> {
                 _state.update { currentState ->
-                    val updatedChipList = currentState.experienceChipList.filter { it.id != intent.chipId }
+                    val updatedChipList = currentState.vibeChipList.filter { it.id != intent.chipId }
                     currentState.copy(experienceChipList = updatedChipList)
                 }
             }
-            is UpdateChip -> {
+            is UpdateVibeChip -> {
                 _state.update { currentState ->
-                    val updatedChipList = currentState.experienceChipList.map { chip ->
+                    val updatedChipList = currentState.vibeChipList.map { chip ->
                         if (chip.id == intent.chipId) {
                             chip.copy(label = intent.label)
                         } else {

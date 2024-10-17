@@ -12,11 +12,20 @@ data class SignUpPhotographerState(
     val userInfo: User = emptyUserData,
     val hasPhotographyExperience: Boolean? = null,
     val photographyExperience: PhotographyExperience? = null,
-    val experienceChipList: List<ChipItem> = defaultChipList(),
+    val experienceChipList: List<ChipItem> = defaultExperienceChipList(),
+    val vibeChipList: List<ChipItem> = defaultVibeChipList(),
     val editingChipId: String? = null,
 ) {
     companion object {
-        private fun defaultChipList(): List<ChipItem> {
+        private fun defaultExperienceChipList(): List<ChipItem> {
+            return listOf(
+                ChipItem(id = "1", label = "사진 전공"),
+                ChipItem(id = "2", label = "수익 창충"),
+                ChipItem(id = "3", label = "SNS 계정 운영"),
+            )
+        }
+
+        private fun defaultVibeChipList(): List<ChipItem> {
             return listOf(
                 ChipItem(id = "1", label = "MZ 감성"),
                 ChipItem(id = "2", label = "을지로 감성"),
@@ -34,7 +43,8 @@ data class SignUpPhotographerState(
                 userInfo = emptyUserData,
                 hasPhotographyExperience = null,
                 photographyExperience = null,
-                experienceChipList = defaultChipList(),
+                experienceChipList = defaultExperienceChipList(),
+                vibeChipList = defaultVibeChipList(),
                 editingChipId = null,
             )
         }
