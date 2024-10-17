@@ -20,10 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -51,6 +48,7 @@ import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.Pretendard
 import com.hm.picplz.viewmodel.common.CommonChipViewModel
 import java.util.UUID
+import androidx.compose.ui.text.input.TextFieldValue
 
 @Composable
 fun CommonChip(
@@ -80,18 +78,18 @@ fun CommonChip(
         if (isEditing) {
             viewModel.handleIntent(SetChipMode(EDIT))
         } else {
-            if (currentState.value.isNotEmpty()) {
+            if (currentState.value.text.isNotEmpty()) {
                 if (initialMode == ADD) {
-                    onAdd(currentState.value)
+                    onAdd(currentState.value.text)
                 }
-                else if (initialMode == DEFAULT && label != currentState.value) {
-                    onUpdate(currentState.value)
+                else if (initialMode == DEFAULT && label != currentState.value.text) {
+                    onUpdate(currentState.value.text)
                 }
             }
             if (initialMode == ADD) {
-                viewModel.handleIntent(SetValue(""))
+                viewModel.handleIntent(SetValue(TextFieldValue("")))
             } else if (initialMode == DEFAULT) {
-                viewModel.handleIntent(SetValue(label))
+                viewModel.handleIntent(SetValue(TextFieldValue(label)))
             }
             viewModel.handleIntent(SetChipMode(initialMode))
         }
@@ -106,13 +104,13 @@ fun CommonChip(
     }
 
     LaunchedEffect(label) {
-        viewModel.handleIntent(SetValue(label))
+        viewModel.handleIntent(SetValue(TextFieldValue(label)))
         viewModel.handleIntent(SetChipMode(initialMode))
     }
 
     val density = LocalDensity.current
 
-    LaunchedEffect(currentState.value) {
+    LaunchedEffect(currentState.value.text) {
         if (currentState.calculatedWidth > currentState.textFieldWidth) {
             viewModel.handleIntent(SetTextFieldWidth(currentState.calculatedWidth))
         }
@@ -136,9 +134,7 @@ fun CommonChip(
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(
-                            horizontal = 12.dp,
-                        )
+                        .padding(horizontal = 12.dp)
                         .onGloballyPositioned { layoutCoordinates ->
                             val widthInPx = layoutCoordinates.size.width
                             val widthInDp = with(density) { widthInPx.toDp() }
@@ -155,19 +151,14 @@ fun CommonChip(
                         ),
                         color = if (isSelected) selectedTextColor else unselectedTextColor,
                     )
-                    if(isEditable) {
-                        Spacer(
-                            modifier = Modifier.width(3.dp)
-                        )
+                    if (isEditable) {
+                        Spacer(modifier = Modifier.width(3.dp))
                         IconButton(
-                            onClick = {
-                                onEdit()
-                            },
-                            modifier = Modifier
-                                .size(12.dp)
+                            onClick = { onEdit() },
+                            modifier = Modifier.size(12.dp)
                         ) {
                             Image(
-                                painter = painterResource(if(isSelected) R.drawable.edit else R.drawable.edit_grey4),
+                                painter = painterResource(if (isSelected) R.drawable.edit else R.drawable.edit_grey4),
                                 contentDescription = "edit",
                                 modifier = Modifier.size(12.dp)
                             )
@@ -179,30 +170,22 @@ fun CommonChip(
         ADD -> {
             Row(
                 modifier = Modifier
-                    .clickable {
-                        onEdit()
-                    }
+                    .clickable { onEdit() }
                     .height(40.dp)
                     .border(
                         width = 1.dp,
                         color = MainThemeColor.Gray3,
                         shape = RoundedCornerShape(5.dp)
                     )
-                    .background(
-                        color = MainThemeColor.Gray1
-                    )
+                    .background(color = MainThemeColor.Gray1)
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxHeight(),
+                    modifier = Modifier.fillMaxHeight(),
                     verticalAlignment = CenterVertically
                 ) {
                     Text(
                         text = "+직접 적어주세요",
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 12.dp,
-                            ),
+                        modifier = Modifier.padding(horizontal = 12.dp),
                         style = TextStyle(
                             fontFamily = Pretendard,
                             fontWeight = FontWeight.Normal,
@@ -217,10 +200,10 @@ fun CommonChip(
             BasicTextField(
                 modifier = Modifier
                     .focusRequester(focusRequester),
-                value = currentState.value,
+                value = currentState.value,  // TextFieldValue 사용
                 onValueChange = { newValue ->
                     val textWidthInDp = with(density) {
-                        (newValue.length * 20).toDp()
+                        (newValue.text.length * 20).toDp()
                     }
 
                     if (textWidthInDp > currentState.textFieldWidth) {
@@ -238,13 +221,13 @@ fun CommonChip(
                 cursorBrush = SolidColor(Color.Black),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (initialMode == ADD) onAdd(currentState.value)
-                        else if (initialMode == DEFAULT && label !== currentState.value) onUpdate(currentState.value)
+                        if (initialMode == ADD) onAdd(currentState.value.text)
+                        else if (initialMode == DEFAULT && label !== currentState.value.text) onUpdate(currentState.value.text)
                         onEndEdit()
                         if (initialMode == ADD) {
-                            viewModel.handleIntent(SetValue(""))
+                            viewModel.handleIntent(SetValue(TextFieldValue("")))
                         } else if (initialMode == DEFAULT) {
-                            viewModel.handleIntent(SetValue(label))
+                            viewModel.handleIntent(SetValue(TextFieldValue(label)))
                         }
                         viewModel.handleIntent(SetChipMode(initialMode))
                         keyboardController?.hide()
@@ -264,13 +247,10 @@ fun CommonChip(
                             )
                             .height(40.dp)
                             .width(currentState.textFieldWidth + 24.dp)
-                            .padding(
-                                    horizontal = 12.dp,
-                            ),
-                        ) {
+                            .padding(horizontal = 12.dp),
+                    ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxHeight(),
+                            modifier = Modifier.fillMaxHeight(),
                             verticalAlignment = CenterVertically
                         ) {
                             innerTextField()
@@ -281,6 +261,7 @@ fun CommonChip(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
