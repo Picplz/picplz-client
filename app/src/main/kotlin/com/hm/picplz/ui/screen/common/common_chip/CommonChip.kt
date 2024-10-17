@@ -76,7 +76,11 @@ fun CommonChip(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(isEditing) {
-        if (isEditing) {
+        viewModel.handleIntent(SetIsEditing(isEditing))
+    }
+
+    LaunchedEffect(currentState.isEditing) {
+        if (currentState.isEditing) {
             viewModel.handleIntent(SetChipMode(EDIT))
             viewModel.handleIntent(
                 SetValue(
@@ -90,8 +94,7 @@ fun CommonChip(
             if (currentState.value.text.isNotEmpty()) {
                 if (initialMode == ADD) {
                     onAdd(currentState.value.text)
-                }
-                else if (initialMode == DEFAULT && label != currentState.value.text) {
+                } else if (initialMode == DEFAULT && label != currentState.value.text) {
                     onUpdate(currentState.value.text)
                 }
             }
@@ -103,6 +106,7 @@ fun CommonChip(
             viewModel.handleIntent(SetChipMode(initialMode))
         }
     }
+
 
     LaunchedEffect(currentState.chipMode) {
         if (currentState.chipMode == EDIT) {
@@ -230,14 +234,8 @@ fun CommonChip(
                 cursorBrush = SolidColor(Color.Black),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (initialMode == ADD) onAdd(currentState.value.text)
-                        else if (initialMode == DEFAULT && label !== currentState.value.text) onUpdate(currentState.value.text)
+                        viewModel.handleIntent(SetIsEditing(false))
                         onEndEdit()
-                        if (initialMode == ADD) {
-                            viewModel.handleIntent(SetValue(TextFieldValue("")))
-                        } else if (initialMode == DEFAULT) {
-                            viewModel.handleIntent(SetValue(TextFieldValue(label)))
-                        }
                         viewModel.handleIntent(SetChipMode(initialMode))
                         keyboardController?.hide()
                     }

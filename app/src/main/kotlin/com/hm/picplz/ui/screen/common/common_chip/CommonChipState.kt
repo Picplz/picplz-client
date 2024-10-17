@@ -10,6 +10,7 @@ data class CommonChipState(
     val chipMode: ChipMode = ChipMode.DEFAULT,
     val calculatedWidth: Dp = 0.dp,
     val textFieldWidth: Dp = 0.dp,
+    val isEditing: Boolean = false,
 ) {
     companion object {
         fun idle(): CommonChipState {
@@ -18,6 +19,7 @@ data class CommonChipState(
                 chipMode = ChipMode.DEFAULT,
                 calculatedWidth = 0.dp,
                 textFieldWidth = 0.dp,
+                isEditing = false,
             )
         }
     }

@@ -27,6 +27,9 @@ class CommonChipViewModel : ViewModel() {
             is SetCalculatedWidth -> {
                 _state.update { it.copy(calculatedWidth = intent.newWidth) }
             }
+            is SetIsEditing -> {
+                _state.update { it.copy(isEditing = intent.isEditing) }
+            }
         }
     }
 }
