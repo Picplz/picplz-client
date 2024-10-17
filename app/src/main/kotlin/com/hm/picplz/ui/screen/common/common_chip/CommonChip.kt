@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -77,6 +78,14 @@ fun CommonChip(
     LaunchedEffect(isEditing) {
         if (isEditing) {
             viewModel.handleIntent(SetChipMode(EDIT))
+            viewModel.handleIntent(
+                SetValue(
+                    TextFieldValue(
+                        text = currentState.value.text,
+                        selection = TextRange(currentState.value.text.length)
+                    )
+                )
+            )
         } else {
             if (currentState.value.text.isNotEmpty()) {
                 if (initialMode == ADD) {
@@ -200,7 +209,7 @@ fun CommonChip(
             BasicTextField(
                 modifier = Modifier
                     .focusRequester(focusRequester),
-                value = currentState.value,  // TextFieldValue 사용
+                value = currentState.value,
                 onValueChange = { newValue ->
                     val textWidthInDp = with(density) {
                         (newValue.text.length * 20).toDp()
