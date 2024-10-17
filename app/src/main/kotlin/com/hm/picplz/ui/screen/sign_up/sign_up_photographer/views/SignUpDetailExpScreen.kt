@@ -143,6 +143,9 @@ fun SignUpDetailExpScreen(
                             isEditing = currentState.editingChipId == "ADD_1",
                             onEdit = {
                                 viewModel.handleIntent(SetEditingChipId("ADD_1"))
+                            },
+                            onAdd = {value ->
+                                viewModel.handleIntent(AddChip(value))
                             }
                         )
                     }
