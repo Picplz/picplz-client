@@ -14,4 +14,5 @@ sealed class SignUpPhotographerIntent {
     data class AddVibeChip(val label: String) : SignUpPhotographerIntent()
     data class DeleteVibeChip(val chipId: String) : SignUpPhotographerIntent()
     data class UpdateVibeChip(val chipId: String, val label: String) : SignUpPhotographerIntent()
+    data class UpdateSelectedVibeChipList(val chipId: String, val label: String) : SignUpPhotographerIntent()
 }

@@ -36,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
+import com.hm.picplz.data.model.ChipItem
 import com.hm.picplz.data.model.ChipMode
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
@@ -125,7 +126,9 @@ fun SignUpPhotographyVibeScreen(
                                 onClickDefaultMode = {
                                     focusManager.clearFocus()
                                     viewModel.handleIntent(SetEditingChipId(null))
+                                    viewModel.handleIntent(UpdateSelectedVibeChipList(chipId = chip.id, label = chip.label))
                                 },
+                                isSelected = currentState.selectedVibeChipList.any { it.id == chip.id },
                                 onUpdate = { value ->
                                     viewModel.handleIntent(UpdateVibeChip(chip.id, value))
                                 },
@@ -163,7 +166,7 @@ fun SignUpPhotographyVibeScreen(
                 CommonBottomButton(
                     text = "다음",
                     onClick = {},
-                    enabled = currentState.hasPhotographyExperience != null,
+                    enabled = currentState.selectedVibeChipList != listOf<ChipItem>(),
                     containerColor = MainThemeColor.Black
                 )
             }

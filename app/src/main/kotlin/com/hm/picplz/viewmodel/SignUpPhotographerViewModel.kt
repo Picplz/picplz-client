@@ -80,6 +80,16 @@ class SignUpPhotographerViewModel : ViewModel() {
                     currentState.copy(vibeChipList = updatedChipList)
                 }
             }
+            is UpdateSelectedVibeChipList -> {
+                _state.update { currentState ->
+                    val updateSelectedChipList = if (currentState.selectedVibeChipList.any {it.id == intent.chipId}) {
+                        currentState.selectedVibeChipList.filter { it.id != intent.chipId }
+                    } else {
+                        currentState.selectedVibeChipList + ChipItem(id = intent.chipId, label = intent.label)
+                    }
+                    currentState.copy(selectedVibeChipList = updateSelectedChipList)
+                }
+            }
         }
     }
 }

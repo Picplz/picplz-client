@@ -14,6 +14,7 @@ data class SignUpPhotographerState(
     val selectedPhotographyExperienceId: String? = null,
     val experienceChipList: List<ChipItem> = defaultExperienceChipList(),
     val vibeChipList: List<ChipItem> = defaultVibeChipList(),
+    val selectedVibeChipList: List<ChipItem> = listOf(),
     val editingChipId: String? = null,
 ) {
     companion object {
@@ -45,6 +46,7 @@ data class SignUpPhotographerState(
                 selectedPhotographyExperienceId = null,
                 experienceChipList = defaultExperienceChipList(),
                 vibeChipList = defaultVibeChipList(),
+                selectedVibeChipList = listOf(),
                 editingChipId = null,
             )
         }
