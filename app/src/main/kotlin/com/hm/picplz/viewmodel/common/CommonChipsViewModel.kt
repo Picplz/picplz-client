@@ -21,6 +21,12 @@ class CommonChipViewModel : ViewModel() {
             is SetChipMode -> {
                 _state.update { it.copy(chipMode = intent.newChipMode)}
             }
+            is SetTextFieldWidth -> {
+                _state.update { it.copy(textFieldWidth = intent.newWidth) }
+            }
+            is SetCalculatedWidth -> {
+                _state.update { it.copy(calculatedWidth = intent.newWidth) }
+            }
         }
     }
 }
