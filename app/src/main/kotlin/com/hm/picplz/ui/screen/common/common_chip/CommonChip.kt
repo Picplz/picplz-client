@@ -1,28 +1,39 @@
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -31,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.hm.picplz.R
 import com.hm.picplz.data.model.ChipMode
 import com.hm.picplz.data.model.ChipMode.*
 import com.hm.picplz.ui.theme.PicplzTheme
@@ -68,23 +80,41 @@ fun CommonChip(
             viewModel.handleIntent(SetChipMode(EDIT))
         } else {
             if (currentState.value.isNotEmpty()) {
-                if (initialMode == ADD) onAdd(currentState.value)
-                else if (initialMode == DEFAULT && label !== currentState.value) onUpdate(currentState.value)
+                if (initialMode == ADD) {
+                    onAdd(currentState.value)
+                }
+                else if (initialMode == DEFAULT && label != currentState.value) {
+                    onUpdate(currentState.value)
+                }
+            }
+            if (initialMode == ADD) {
+                viewModel.handleIntent(SetValue(""))
+            } else if (initialMode == DEFAULT) {
+                viewModel.handleIntent(SetValue(label))
             }
             viewModel.handleIntent(SetChipMode(initialMode))
-            viewModel.handleIntent(SetValue(""))
         }
     }
 
     LaunchedEffect(currentState.chipMode) {
         if (currentState.chipMode == EDIT) {
             focusRequester.requestFocus()
+        } else if (currentState.chipMode == ADD) {
+            viewModel.handleIntent(SetTextFieldWidth(96.dp))
         }
     }
 
     LaunchedEffect(label) {
         viewModel.handleIntent(SetValue(label))
         viewModel.handleIntent(SetChipMode(initialMode))
+    }
+
+    val density = LocalDensity.current
+
+    LaunchedEffect(currentState.value) {
+        if (currentState.calculatedWidth > currentState.textFieldWidth) {
+            viewModel.handleIntent(SetTextFieldWidth(currentState.calculatedWidth))
+        }
     }
 
     when (currentState.chipMode) {
@@ -104,15 +134,19 @@ fun CommonChip(
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxHeight(),
+                        .fillMaxHeight()
+                        .padding(
+                            horizontal = 12.dp,
+                        )
+                        .onGloballyPositioned { layoutCoordinates ->
+                            val widthInPx = layoutCoordinates.size.width
+                            val widthInDp = with(density) { widthInPx.toDp() }
+                            viewModel.handleIntent(SetCalculatedWidth(widthInDp))
+                        },
                     verticalAlignment = CenterVertically
                 ) {
                     Text(
                         text = label,
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 12.dp,
-                            ),
                         style = TextStyle(
                             fontFamily = Pretendard,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
@@ -120,6 +154,24 @@ fun CommonChip(
                         ),
                         color = if (isSelected) selectedTextColor else unselectedTextColor,
                     )
+                    if(isEditable) {
+                        Spacer(
+                            modifier = Modifier.width(3.dp)
+                        )
+                        IconButton(
+                            onClick = {
+                                onEdit()
+                            },
+                            modifier = Modifier
+                                .size(12.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(if(isSelected) R.drawable.edit else R.drawable.edit_grey4),
+                                contentDescription = "edit",
+                                modifier = Modifier.size(12.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -156,8 +208,8 @@ fun CommonChip(
                             fontSize = 14.sp,
                         ),
                         color = MainThemeColor.Gray3,
-                    )                }
-
+                    )
+                }
             }
         }
         EDIT -> {
@@ -166,6 +218,14 @@ fun CommonChip(
                     .focusRequester(focusRequester),
                 value = currentState.value,
                 onValueChange = { newValue ->
+                    val textWidthInDp = with(density) {
+                        (newValue.length * 20).toDp()
+                    }
+
+                    if (textWidthInDp > currentState.textFieldWidth) {
+                        viewModel.handleIntent(SetTextFieldWidth(textWidthInDp))
+                    }
+
                     viewModel.handleIntent(SetValue(newValue))
                 },
                 singleLine = true,
@@ -196,8 +256,9 @@ fun CommonChip(
                                 shape = RoundedCornerShape(5.dp)
                             )
                             .height(40.dp)
+                            .width(currentState.textFieldWidth + 24.dp)
                             .padding(
-                                horizontal = 12.dp,
+                                    horizontal = 12.dp,
                             ),
                         ) {
                         Row(
@@ -218,7 +279,7 @@ fun CommonChip(
 @Composable
 fun CommonChipPreviewTrue() {
     PicplzTheme {
-        CommonChip(label = "을지로 감성", isSelected = true, isEditable = true)
+        CommonChip(label = "을지로 감성", isSelected = true, isEditable = false)
     }
 }
 
@@ -243,5 +304,13 @@ fun CommonChipPreviewAdd() {
 fun CommonChipPreviewEdit() {
     PicplzTheme {
         CommonChip(initialMode = EDIT)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommonChipPreviewFalseEditable() {
+    PicplzTheme {
+        CommonChip(label = "공주 감성", isSelected = false, isEditable = true)
     }
 }

@@ -11,5 +11,6 @@ enum class ChipMode {
 data class ChipItem(
     val id: String = UUID.randomUUID().toString(),
     val label: String,
-    val initialMode: ChipMode = ChipMode.DEFAULT
+    val initialMode: ChipMode = ChipMode.DEFAULT,
+    val isEditable: Boolean = false,
 )
