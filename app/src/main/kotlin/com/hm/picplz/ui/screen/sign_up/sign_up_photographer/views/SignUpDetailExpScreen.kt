@@ -134,25 +134,8 @@ fun SignUpDetailExpScreen(
                                     focusManager.clearFocus()
                                     viewModel.handleIntent(SetEditingChipId(null))
                                 },
-                                onUpdate = { value ->
-                                    viewModel.handleIntent(UpdateChip(chip.id, value))
-                                },
-                                onEdit = {
-                                    viewModel.handleIntent(SetEditingChipId(chip.id))
-                                }
                             )
                         }
-                        CommonChip(
-                            id = "ADD_1",
-                            initialMode = ChipMode.ADD,
-                            isEditing = currentState.editingChipId == "ADD_1",
-                            onEdit = {
-                                viewModel.handleIntent(SetEditingChipId("ADD_1"))
-                            },
-                            onAdd = {value ->
-                                viewModel.handleIntent(AddChip(value))
-                            }
-                        )
                     }
                 }
             }
