@@ -1,7 +1,6 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer.views
 
 import CommonChip
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,17 +60,9 @@ fun SignUpDetailExpScreen(
     
     val currentState = viewModel.state.collectAsState().value
 
-    val focusManager = LocalFocusManager.current
-
     Scaffold (
         modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                    viewModel.handleIntent(SetEditingChipId(null))
-                })
-            },
+            .fillMaxSize(),
         containerColor = MainThemeColor.White
     ) { innerPadding ->
         Column (
@@ -128,12 +117,10 @@ fun SignUpDetailExpScreen(
                                 id = chip.id,
                                 label = chip.label,
                                 initialMode = ChipMode.DEFAULT,
-                                isEditing = currentState.editingChipId == chip.id,
-                                isEditable = chip.isEditable,
                                 onClickDefaultMode = {
-                                    focusManager.clearFocus()
-                                    viewModel.handleIntent(SetEditingChipId(null))
+                                    viewModel.handleIntent(SetPhotographyExperience(chip.id))
                                 },
+                                isSelected = currentState.photographyExperienceId === chip.id
                             )
                         }
                     }
@@ -149,7 +136,7 @@ fun SignUpDetailExpScreen(
                 CommonBottomButton(
                     text = "다음",
                     onClick = {},
-                    enabled = currentState.hasPhotographyExperience != null,
+                    enabled = currentState.photographyExperienceId != null,
                     containerColor = MainThemeColor.Black
                 )
             }

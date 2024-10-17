@@ -11,7 +11,7 @@ data class SignUpPhotographerState(
     val error: Throwable? = null,
     val userInfo: User = emptyUserData,
     val hasPhotographyExperience: Boolean? = null,
-    val photographyExperience: PhotographyExperience? = null,
+    val photographyExperienceId: String? = null,
     val experienceChipList: List<ChipItem> = defaultExperienceChipList(),
     val vibeChipList: List<ChipItem> = defaultVibeChipList(),
     val editingChipId: String? = null,
@@ -20,7 +20,7 @@ data class SignUpPhotographerState(
         private fun defaultExperienceChipList(): List<ChipItem> {
             return listOf(
                 ChipItem(id = "1", label = "사진 전공"),
-                ChipItem(id = "2", label = "수익 창충"),
+                ChipItem(id = "2", label = "수익 창출"),
                 ChipItem(id = "3", label = "SNS 계정 운영"),
             )
         }
@@ -42,7 +42,7 @@ data class SignUpPhotographerState(
                 error = null,
                 userInfo = emptyUserData,
                 hasPhotographyExperience = null,
-                photographyExperience = null,
+                photographyExperienceId = null,
                 experienceChipList = defaultExperienceChipList(),
                 vibeChipList = defaultVibeChipList(),
                 editingChipId = null,

@@ -1,6 +1,5 @@
 package com.hm.picplz.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.ChipItem
@@ -31,7 +30,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                 }
             }
             is SetUserInfo -> {}
-            is SetPhotographyExperience -> {
+            is SetHasPhotographyExperience -> {
                 val newPhotographyExperienceState = _state.value.copy(
                     hasPhotographyExperience = if (_state.value.hasPhotographyExperience == intent.hasExperience) {
                         null
@@ -45,6 +44,9 @@ class SignUpPhotographerViewModel : ViewModel() {
                 viewModelScope.launch {
                     _sideEffect.emit(SignUpPhotographerSideEffect.Navigate(intent.destination))
                 }
+            }
+            is SetPhotographyExperience -> {
+                _state.update { it.copy(photographyExperienceId = intent.photographyExperienceId)}
             }
             is SetEditingChipId -> {
                 _state.update { it.copy(editingChipId = intent.chipId)}
