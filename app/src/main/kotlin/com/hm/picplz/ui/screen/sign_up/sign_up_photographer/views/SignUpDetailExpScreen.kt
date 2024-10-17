@@ -131,7 +131,11 @@ fun SignUpDetailExpScreen(
                                 isEditing = currentState.editingChipId == chip.id,
                                 onClickDefaultMode = {
                                     focusManager.clearFocus()
-                                    viewModel.handleIntent(SetEditingChipId(null))                                },
+                                    viewModel.handleIntent(SetEditingChipId(null))
+                                },
+                                onUpdate = { value ->
+                                    viewModel.handleIntent(UpdateChip(chip.id, value))
+                                },
                                 onEdit = {
                                     viewModel.handleIntent(SetEditingChipId(chip.id))
                                 }

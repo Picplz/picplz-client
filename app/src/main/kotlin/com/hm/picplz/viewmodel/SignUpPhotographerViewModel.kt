@@ -66,6 +66,18 @@ class SignUpPhotographerViewModel : ViewModel() {
                     currentState.copy(experienceChipList = updatedChipList)
                 }
             }
+            is UpdateChip -> {
+                _state.update { currentState ->
+                    val updatedChipList = currentState.experienceChipList.map { chip ->
+                        if (chip.id == intent.chipId) {
+                            chip.copy(label = intent.label)
+                        } else {
+                            chip
+                        }
+                    }
+                    currentState.copy(experienceChipList = updatedChipList)
+                }
+            }
         }
     }
 }

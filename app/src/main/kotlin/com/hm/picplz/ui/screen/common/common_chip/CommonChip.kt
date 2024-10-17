@@ -68,7 +68,8 @@ fun CommonChip(
             viewModel.handleIntent(SetChipMode(EDIT))
         } else {
             if (currentState.value.isNotEmpty()) {
-                onAdd(currentState.value)
+                if (initialMode == ADD) onAdd(currentState.value)
+                else if (initialMode == DEFAULT && label !== currentState.value) onUpdate(currentState.value)
             }
             viewModel.handleIntent(SetChipMode(initialMode))
             viewModel.handleIntent(SetValue(""))
@@ -177,7 +178,7 @@ fun CommonChip(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         if (initialMode == ADD) onAdd(currentState.value)
-                        else onUpdate(currentState.value)
+                        else if (initialMode == DEFAULT && label !== currentState.value) onUpdate(currentState.value)
                         onAdd(currentState.value)
                         keyboardController?.hide()
                     }
