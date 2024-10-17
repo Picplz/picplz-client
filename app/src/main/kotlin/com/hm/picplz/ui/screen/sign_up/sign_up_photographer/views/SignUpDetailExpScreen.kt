@@ -129,6 +129,7 @@ fun SignUpDetailExpScreen(
                                 label = chip.label,
                                 initialMode = ChipMode.DEFAULT,
                                 isEditing = currentState.editingChipId == chip.id,
+                                isEditable = chip.isEditable,
                                 onClickDefaultMode = {
                                     focusManager.clearFocus()
                                     viewModel.handleIntent(SetEditingChipId(null))
