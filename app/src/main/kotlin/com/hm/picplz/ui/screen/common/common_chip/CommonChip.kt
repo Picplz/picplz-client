@@ -69,6 +69,7 @@ fun CommonChip(
     onUpdate: (String) -> Unit = {},
     isEditing: Boolean = false,
     onEdit: () -> Unit = {},
+    onEndEdit: () -> Unit = {},
 ) {
 
     val currentState = viewModel.state.collectAsState().value
@@ -239,7 +240,13 @@ fun CommonChip(
                     onDone = {
                         if (initialMode == ADD) onAdd(currentState.value)
                         else if (initialMode == DEFAULT && label !== currentState.value) onUpdate(currentState.value)
-                        onAdd(currentState.value)
+                        onEndEdit()
+                        if (initialMode == ADD) {
+                            viewModel.handleIntent(SetValue(""))
+                        } else if (initialMode == DEFAULT) {
+                            viewModel.handleIntent(SetValue(label))
+                        }
+                        viewModel.handleIntent(SetChipMode(initialMode))
                         keyboardController?.hide()
                     }
                 ),

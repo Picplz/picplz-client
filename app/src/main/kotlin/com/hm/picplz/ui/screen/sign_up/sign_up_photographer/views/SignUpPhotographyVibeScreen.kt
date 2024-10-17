@@ -46,7 +46,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SignUpVibeScreen(
+fun SignUpPhotographyVibeScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpPhotographerViewModel = viewModel(),
     signUpPhotographerNavController: NavController
@@ -131,6 +131,10 @@ fun SignUpVibeScreen(
                                 },
                                 onEdit = {
                                     viewModel.handleIntent(SetEditingChipId(chip.id))
+                                },
+                                onEndEdit = {
+                                    focusManager.clearFocus()
+                                    viewModel.handleIntent(SetEditingChipId(null))
                                 }
                             )
                         }
@@ -143,6 +147,7 @@ fun SignUpVibeScreen(
                             },
                             onAdd = {value ->
                                 viewModel.handleIntent(AddVibeChip(value))
+                                viewModel.handleIntent(SetEditingChipId(null))
                             }
                         )
                     }
@@ -182,10 +187,10 @@ fun SignUpVibeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun SignUpVibeScreenPreview() {
+fun SignUpPhotographyVibeScreenPreview() {
     PicplzTheme {
         val signUpPhotographerNavController = rememberNavController()
-        SignUpVibeScreen(
+        SignUpPhotographyVibeScreen(
             signUpPhotographerNavController = signUpPhotographerNavController
         )
     }
