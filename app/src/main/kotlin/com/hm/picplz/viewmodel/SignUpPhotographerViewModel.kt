@@ -59,13 +59,13 @@ class SignUpPhotographerViewModel : ViewModel() {
                 val newChip = ChipItem(id = newId, label = intent.label, isEditable = true)
                 _state.update { currentState ->
                     val updatedChipList = currentState.vibeChipList + newChip
-                    currentState.copy(experienceChipList = updatedChipList)
+                    currentState.copy(vibeChipList = updatedChipList)
                 }
             }
             is DeleteVibeChip -> {
                 _state.update { currentState ->
                     val updatedChipList = currentState.vibeChipList.filter { it.id != intent.chipId }
-                    currentState.copy(experienceChipList = updatedChipList)
+                    currentState.copy(vibeChipList = updatedChipList)
                 }
             }
             is UpdateVibeChip -> {
@@ -77,7 +77,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                             chip
                         }
                     }
-                    currentState.copy(experienceChipList = updatedChipList)
+                    currentState.copy(vibeChipList = updatedChipList)
                 }
             }
         }
