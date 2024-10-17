@@ -126,7 +126,7 @@ fun SignUpExperienceScreen(
                         CommonSelectButton(
                             text = "있어요",
                             isSelected = currentState.hasPhotographyExperience == true,
-                            onClick = {viewModel.handleIntent(SetPhotographyExperience(hasExperience = true))},
+                            onClick = {viewModel.handleIntent(SetHasPhotographyExperience(hasExperience = true))},
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
@@ -134,7 +134,7 @@ fun SignUpExperienceScreen(
                         CommonSelectButton(
                             text = "없어요",
                             isSelected = currentState.hasPhotographyExperience == false,
-                            onClick = {viewModel.handleIntent(SetPhotographyExperience(hasExperience = false))},
+                            onClick = {viewModel.handleIntent(SetHasPhotographyExperience(hasExperience = false))},
                             modifier = Modifier
                                 .weight(1f)
                                 .height(60.dp)
