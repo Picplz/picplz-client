@@ -46,7 +46,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                 }
             }
             is SetPhotographyExperience -> {
-                _state.update { it.copy(photographyExperienceId = intent.photographyExperienceId)}
+                _state.update { it.copy(selectedPhotographyExperienceId = intent.photographyExperienceId)}
             }
             is SetEditingChipId -> {
                 _state.update { it.copy(editingChipId = intent.chipId)}

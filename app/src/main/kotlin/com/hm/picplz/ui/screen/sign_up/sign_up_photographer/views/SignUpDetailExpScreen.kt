@@ -120,7 +120,7 @@ fun SignUpDetailExpScreen(
                                 onClickDefaultMode = {
                                     viewModel.handleIntent(SetPhotographyExperience(chip.id))
                                 },
-                                isSelected = currentState.photographyExperienceId === chip.id
+                                isSelected = currentState.selectedPhotographyExperienceId === chip.id
                             )
                         }
                     }
@@ -136,7 +136,7 @@ fun SignUpDetailExpScreen(
                 CommonBottomButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(Navigate("sign-up-photography-vibe"))},
-                    enabled = currentState.photographyExperienceId != null,
+                    enabled = currentState.selectedPhotographyExperienceId != null,
                     containerColor = MainThemeColor.Black
                 )
             }
