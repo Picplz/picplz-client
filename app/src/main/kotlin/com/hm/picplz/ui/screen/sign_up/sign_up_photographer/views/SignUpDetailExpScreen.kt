@@ -135,7 +135,7 @@ fun SignUpDetailExpScreen(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = {},
+                    onClick = { viewModel.handleIntent(Navigate("sign-up-photography-vibe"))},
                     enabled = currentState.photographyExperienceId != null,
                     containerColor = MainThemeColor.Black
                 )
