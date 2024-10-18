@@ -28,8 +28,12 @@ class MainRepository @Inject constructor(
     companion object {
         val emptyUserData = User(
             id = 0,
-            name = "Unknown",
-            email = "unknown@example.com"
+            nickname = "Unknown",
+            email = "unknown@example.com",
+            userType = null,
+            profileImageUri = null,
+            photographyExperience = null,
+            photographyVibes = null,
         )
     }
 }

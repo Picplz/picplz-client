@@ -1,12 +1,18 @@
 package com.hm.picplz.data.model
+import android.net.Uri
 import android.os.Parcelable
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(
     val id: Int,
-    val name: String,
-    val email: String
+    val nickname: String?,
+    val email: String?,
+    val userType: UserType?,
+    val profileImageUri: Uri?,
+    val photographyExperience: PhotographyExperience?,
+    val photographyVibes: List<String>?,
 ) : Parcelable
 
 
