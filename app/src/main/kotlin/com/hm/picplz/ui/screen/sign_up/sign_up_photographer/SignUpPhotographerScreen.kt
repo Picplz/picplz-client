@@ -1,6 +1,7 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -18,6 +19,8 @@ fun SignUpPhotographerScreen(
     userInfo: User = emptyUserData,
 ) {
     val signUpPhotographerNavController = rememberNavController()
+
+    viewModel.handleIntent(SignUpPhotographerIntent.SetUserInfo(userInfo))
 
     SignUpPhotographerNavHost(
         mainNavController = mainNavController,
