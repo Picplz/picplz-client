@@ -42,6 +42,7 @@ fun SignUpPhotographerNavHost(
             SignUpPhotographyVibeScreen(
                 modifier = modifier,
                 signUpPhotographerNavController = signUpPhotographerNavController,
+                mainNavController = mainNavController,
                 viewModel = viewModel
             )
         }

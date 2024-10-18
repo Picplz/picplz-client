@@ -53,7 +53,6 @@ fun SignUpCompletionScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
-    signUpPhotographerNavController: NavController,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -183,7 +182,7 @@ fun SignUpCompletionScreen(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is SignUpSideEffect.NavigateToPrev -> {
-                    signUpPhotographerNavController.popBackStack()
+                    mainNavController.popBackStack()
                 }
                 is SignUpSideEffect.Navigate -> {
                     mainNavController.navigate(sideEffect.destination)
@@ -198,12 +197,10 @@ fun SignUpCompletionScreen(
 @Composable
 fun SignUpCompletionScreenPreview() {
     val mainNavController = rememberNavController()
-    val signUpPhotographerNavController = rememberNavController()
 
     PicplzTheme {
         SignUpCompletionScreen(
             mainNavController = mainNavController,
-            signUpPhotographerNavController = signUpPhotographerNavController
         )
     }
 }

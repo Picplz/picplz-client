@@ -11,6 +11,7 @@ import com.hm.picplz.data.model.User
 import com.hm.picplz.ui.screen.main.MainScreen
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpScreen
 import com.hm.picplz.ui.screen.sign_up.sign_up_client.SignUpClientScreen
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.views.SignUpCompletionScreen
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerScreen
 import com.hm.picplz.viewmodel.MainActivityUiState
 import com.hm.picplz.viewmodel.emptyUserData
@@ -57,6 +58,11 @@ fun MainNavHost(
             SignUpPhotographerScreen(
                 mainNavController = navController,
                 userInfo = userInfo ?: emptyUserData
+            )
+        }
+        composable("sign-up-completion") {
+            SignUpCompletionScreen(
+                mainNavController = navController,
             )
         }
     }

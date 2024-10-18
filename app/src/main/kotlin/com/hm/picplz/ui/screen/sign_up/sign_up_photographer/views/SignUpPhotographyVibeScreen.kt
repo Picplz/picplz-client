@@ -52,7 +52,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun SignUpPhotographyVibeScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpPhotographerViewModel = viewModel(),
-    signUpPhotographerNavController: NavController
+    signUpPhotographerNavController: NavController,
+    mainNavController: NavController,
 ){
     val view = LocalView.current
     val activity = LocalContext.current as? MainActivity
@@ -169,7 +170,7 @@ fun SignUpPhotographyVibeScreen(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = {},
+                    onClick = { viewModel.handleIntent(Navigate("sign-up-completion"))},
                     enabled = currentState.selectedVibeChipList != listOf<ChipItem>(),
                     containerColor = MainThemeColor.Black
                 )
@@ -184,7 +185,7 @@ fun SignUpPhotographyVibeScreen(
                     signUpPhotographerNavController.popBackStack()
                 }
                 is SignUpPhotographerSideEffect.Navigate -> {
-                    signUpPhotographerNavController.navigate(sideEffect.destination)
+                    mainNavController.navigate(sideEffect.destination)
                 }
             }
         }
@@ -197,8 +198,11 @@ fun SignUpPhotographyVibeScreen(
 fun SignUpPhotographyVibeScreenPreview() {
     PicplzTheme {
         val signUpPhotographerNavController = rememberNavController()
+        val mainNavController = rememberNavController()
+
         SignUpPhotographyVibeScreen(
-            signUpPhotographerNavController = signUpPhotographerNavController
-        )
+            signUpPhotographerNavController = signUpPhotographerNavController,
+            mainNavController = mainNavController
+    )
     }
 }
