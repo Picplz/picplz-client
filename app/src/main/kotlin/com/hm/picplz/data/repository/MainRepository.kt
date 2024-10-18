@@ -27,7 +27,7 @@ class MainRepository @Inject constructor(
 
     companion object {
         val emptyUserData = User(
-            id = 0,
+            id = "0",
             nickname = "Unknown",
             email = "unknown@example.com",
             userType = null,

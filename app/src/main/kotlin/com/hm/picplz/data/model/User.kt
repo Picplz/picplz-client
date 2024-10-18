@@ -6,13 +6,13 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(
-    val id: Int,
-    val nickname: String?,
-    val email: String?,
-    val userType: UserType?,
-    val profileImageUri: Uri?,
-    val photographyExperience: PhotographyExperience?,
-    val photographyVibes: List<String>?,
+    val id: String,
+    val nickname: String? = null,
+    val email: String? = null,
+    val userType: UserType? = null,
+    val profileImageUri: Uri? = null,
+    val photographyExperience: PhotographyExperience? = null,
+    val photographyVibes: List<String>? = null,
 ) : Parcelable
 
 
