@@ -1,5 +1,6 @@
 package com.hm.picplz.viewmodel
 
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.ChipItem
@@ -106,6 +107,16 @@ class SignUpPhotographerViewModel : ViewModel() {
                         photographyExperience = newExperience
                     )
                     _state.update { it.copy(userInfo = updatedUser) }
+                }
+            }
+            is NavigateWithSubmit -> {
+                viewModelScope.launch {
+                    val userBundle  = if (_state.value.vibeChipList.isNotEmpty()) {
+                        bundleOf(
+                            "userInfo" to _state.value.userInfo
+                        )
+                    } else bundleOf()
+                    _sideEffect.emit(SignUpPhotographerSideEffect.NavigateWithSubmit(intent.destination, userBundle))
                 }
             }
         }

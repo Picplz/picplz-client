@@ -175,6 +175,7 @@ fun SignUpExperienceScreen(
                 is SignUpPhotographerSideEffect.Navigate -> {
                     signUpPhotographerNavController.navigate(sideEffect.destination)
                 }
+                is SignUpPhotographerSideEffect.NavigateWithSubmit -> {}
             }
         }
     }

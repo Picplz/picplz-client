@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.data.model.ChipItem
 import com.hm.picplz.data.model.ChipMode
+import com.hm.picplz.navigation.navigateWithBundle
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
@@ -170,7 +171,9 @@ fun SignUpPhotographyVibeScreen(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = { viewModel.handleIntent(Navigate("sign-up-completion"))},
+                    onClick = {
+                        viewModel.handleIntent(NavigateWithSubmit("sign-up-completion"))
+                    },
                     enabled = currentState.selectedVibeChipList != listOf<ChipItem>(),
                     containerColor = MainThemeColor.Black
                 )
@@ -186,6 +189,12 @@ fun SignUpPhotographyVibeScreen(
                 }
                 is SignUpPhotographerSideEffect.Navigate -> {
                     mainNavController.navigate(sideEffect.destination)
+                }
+                is SignUpPhotographerSideEffect.NavigateWithSubmit -> {
+                    mainNavController.navigateWithBundle(
+                        sideEffect.destination,
+                        sideEffect.userInfo
+                    )
                 }
             }
         }
