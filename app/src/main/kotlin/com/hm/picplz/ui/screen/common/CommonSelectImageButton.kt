@@ -55,7 +55,7 @@ fun CommonSelectImageButton(
 
     val size by animateDpAsState(
         targetValue = if (selectionState == SelectionState.SELECTED) 160.dp else 120.dp,
-        animationSpec = tween(durationMillis = 300), label = "Size Animation"
+        animationSpec = tween(durationMillis = 100), label = "Size Animation"
     )
 
     Box(

@@ -1,10 +1,10 @@
 package com.hm.picplz.viewmodel
 
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.NicknameFieldError
 import com.hm.picplz.data.model.SelectionState
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.DestinationByUserType.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.hm.picplz.data.model.User
 import com.hm.picplz.data.model.UserType.*
+import java.util.UUID
 
 class SignUpCommonViewModel : ViewModel() {
 
@@ -29,7 +30,6 @@ class SignUpCommonViewModel : ViewModel() {
      * 임시 데이터
      * Todo: 카카오 로그인에서 반환받은 유저 정보 호출
      */
-    private var userData: User = emptyUserData
 
     fun handleIntent(intent: SignUpCommonIntent) {
         when (intent) {
@@ -63,15 +63,26 @@ class SignUpCommonViewModel : ViewModel() {
                     selectedUserType = newUserType,
                     photographerSelectionState = newPhotographerSelectionState,
                     userSelectionState = newUserSelectionState
-                )            }
+                )
+            }
             is NavigateToSelected -> {
                 viewModelScope.launch {
                     _state.value.selectedUserType?.let { selectedUserType ->
                         val destination = when (selectedUserType) {
-                            User -> SignUpClient
-                            Photographer -> SignUpPhotographer
+                            User -> "sign-up-completion"
+                            Photographer -> "sign-up-photographer"
                         }
-                        _sideEffect.emit(SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected(destination, userData))
+                        val userBundle = bundleOf(
+                            "userInfo" to User(
+                                /**
+                                 * id 할당 방식은 차후 논의 후 설정
+                                 * **/
+                                id = UUID.randomUUID().toString(),
+                                nickname = _state.value.nickname,
+                                profileImageUri = _state.value.profileImageUri,
+                            )
+                        )
+                        _sideEffect.emit(SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected(destination, userBundle))
                     }
                 }
             }
@@ -128,7 +139,11 @@ class SignUpCommonViewModel : ViewModel() {
 }
 
 val emptyUserData = User(
-    id = 0,
-    name = "Unknown",
-    email = "unknown@example.com"
+    id = "0",
+    nickname = "Unknown",
+    email = "unknown@example.com",
+    userType = null,
+    profileImageUri = null,
+    photographyExperience = null,
+    photographyVibes = null,
 )

@@ -78,6 +78,10 @@ dependencies {
     // Dagger - Hilt dependencies
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.ui.v151)
+    implementation(libs.androidx.material3.v110)
+    implementation(libs.ui.tooling.preview)
 
     // Hilt Testing dependencies
     androidTestImplementation(libs.hilt.android.testing)

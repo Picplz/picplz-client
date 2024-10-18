@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
-import com.hm.picplz.ui.screen.common.CommonButton
+import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.Navigate
@@ -53,7 +53,7 @@ fun SignUpNicknameScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
-    signUpNavController: NavController,
+    signUpCommonNavController: NavController,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -95,7 +95,7 @@ fun SignUpNicknameScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
+                    .padding(horizontal = 15.dp)
                     .pointerInput(Unit) {
                         detectTapGestures(onTap = {
                             focusManager.clearFocus()
@@ -151,10 +151,10 @@ fun SignUpNicknameScreen(
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 15.dp),
                 contentAlignment = Alignment.Center
             ) {
-                CommonButton(
+                CommonBottomButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(Navigate("sign-up-profile")) },
                     enabled = currentState.nickname.isNotEmpty() && currentState.nicknameFieldErrors.isEmpty(),
@@ -170,7 +170,7 @@ fun SignUpNicknameScreen(
                     mainNavController.popBackStack()
                 }
                 is SignUpSideEffect.Navigate -> {
-                    signUpNavController.navigate(sideEffect.destination)
+                    signUpCommonNavController.navigate(sideEffect.destination)
                 }
                 else -> {}
             }
@@ -187,7 +187,7 @@ fun SignUpNicknameScreenPreview() {
     PicplzTheme {
         SignUpNicknameScreen(
             mainNavController = mainNavController,
-            signUpNavController = signUpNavController,
+            signUpCommonNavController = signUpNavController,
         )
     }
 }

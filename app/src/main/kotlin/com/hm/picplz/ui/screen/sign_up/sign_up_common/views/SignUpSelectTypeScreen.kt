@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,13 +36,11 @@ import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
-import com.hm.picplz.ui.screen.common.CommonButton
+import com.hm.picplz.navigation.navigateWithBundle
+import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.ClickUserTypeButton
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToPrev
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToSelected
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
@@ -55,7 +52,7 @@ fun SignUpSelectTypeScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
-    signUpNavController: NavController,
+    signUpCommonNavController: NavController,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -149,7 +146,7 @@ fun SignUpSelectTypeScreen(
                     .padding(horizontal = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                CommonButton(
+                CommonBottomButton(
                     text = "다음",
                     onClick = { viewModel.handleIntent(NavigateToSelected) },
                     enabled = currentState.selectedUserType != null,
@@ -163,27 +160,14 @@ fun SignUpSelectTypeScreen(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected -> {
-                    val bundle = bundleOf("userInfo" to sideEffect.user)
-                    mainNavController.navigate(sideEffect.destination.route, bundle)
+                    mainNavController.navigateWithBundle(sideEffect.destination, sideEffect.user)
                 }
                 is SignUpSideEffect.NavigateToPrev -> {
-                    signUpNavController.popBackStack()
+                    signUpCommonNavController.popBackStack()
                 }
                 else -> {}
             }
         }
-    }
-}
-
-fun NavController.navigate(
-    route: String,
-    args: Bundle,
-    navOptions: NavOptions? = null,
-    navigatorExtras: Navigator.Extras? = null
-) {
-    val nodeId = graph.findNode(route)?.id
-    if (nodeId != null) {
-        navigate(nodeId, args, navOptions, navigatorExtras)
     }
 }
 
@@ -192,11 +176,11 @@ fun NavController.navigate(
 fun SignUpSelectTypeScreenPreview() {
     PicplzTheme {
         val mainNavController = rememberNavController()
-        val signUpNavController = rememberNavController()
+        val signUpCommonNavController = rememberNavController()
 
         SignUpSelectTypeScreen(
             mainNavController = mainNavController,
-            signUpNavController = signUpNavController
+            signUpCommonNavController = signUpCommonNavController
         )
     }
 }

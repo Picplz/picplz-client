@@ -1,8 +1,5 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_common.views
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +13,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,20 +39,23 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
+import com.hm.picplz.data.model.User
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
+import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToPrev
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
+import com.hm.picplz.viewmodel.emptyUserData
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SignUpProfileImageScreen(
+fun SignUpCompletionScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
-    navController: NavController,
+    mainNavController: NavController,
+    userInfo: User,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -68,17 +67,6 @@ fun SignUpProfileImageScreen(
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
     }
-
-    /** 파일 피커 **/
-    val filePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            viewModel.handleIntent(SetProfileImageUri(uri))
-        }
-    }
-
-    val currentState = viewModel.state.collectAsState().value
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -92,7 +80,7 @@ fun SignUpProfileImageScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CommonTopBar(
-                text = "프로필 이미지 업로드",
+                text = "가입 완료",
                 onClickBack = { viewModel.handleIntent(NavigateToPrev) }
             )
 
@@ -109,68 +97,69 @@ fun SignUpProfileImageScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "안녕하세요 ${currentState.nickname}님!",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .height(30.dp)
-                    )
                     Box(
-                        modifier = Modifier.size(160.dp),
+                        modifier = Modifier.size(300.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        val painter = if (currentState.profileImageUri != null) {
-                            rememberAsyncImagePainter(model = currentState.profileImageUri)
+                        val painter = if (userInfo.profileImageUri != null) {
+                            rememberAsyncImagePainter(model = userInfo.profileImageUri)
                         } else {
-                            painterResource(id = R.drawable.default_profile)
+                            painterResource(id = R.drawable.default_profile_large)
                         }
-                        Image(
-                            painter = painter,
-                            contentDescription = "프로필 이미지",
-                            contentScale = ContentScale.Crop,
+                        Box(
                             modifier = Modifier
-                                .size(160.dp)
-                                .clip(CircleShape)
-                                .background(Color.Gray)
-                        )
-                        IconButton(
-                            onClick = { viewModel.handleIntent(ShowFileUploadDialog) },
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .size(33.dp)
-                                .offset(x = (-5).dp, y = (-5).dp)
+                                .offset(y = 30.dp)
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.camera_circle),
-                                contentDescription = "이미지 업로드",
+                                painter = painter,
+                                contentDescription = "프로필 이미지",
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .size(33.dp)
-                                    .background(Color.Gray, CircleShape)
+                                    .size(194.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray)
                             )
                         }
+                        Image(
+                            painter = painterResource(id = R.drawable.spicky1),
+                            contentDescription = "프로필 이미지",
+                            modifier = Modifier
+                                .offset(x= (-80).dp, y = (-100).dp)
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.spicky2),
+                            contentDescription = "프로필 이미지",
+                            modifier = Modifier
+                                .offset(x= (-25).dp, y = (-90).dp)
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.spicky3),
+                            contentDescription = "프로필 이미지",
+                            modifier = Modifier
+                                .offset(x= 112.dp, y = 112.dp)
+                        )
                     }
                     Spacer(
                         modifier = Modifier
-                            .height(80.dp)
+                            .height(10.dp)
                     )
                     Text(
-                        text = if (currentState.profileImageUri === null) {
-                            buildAnnotatedString {
-                                append("프로필 이미지를\n")
-                                append("설정해 주세요.\n")
-                            }
-                        } else {
-                            buildAnnotatedString {
-                                append("회원 타입 설정으로\n")
-                                append("넘어갈게요.\n")
-                            }
+                        text = buildAnnotatedString {
+                                append("${userInfo.nickname}님,\n")
+                                append("가입이 완료되었습니다!")
                         },
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "픽플즈와 인생샷을 건져보세요.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(200.dp))
                 }
 
             }
@@ -182,9 +171,8 @@ fun SignUpProfileImageScreen(
                 contentAlignment = Alignment.Center
             ) {
                 CommonBottomButton(
-                    text = if (currentState.profileImageUri === null) {"다음에 설정하기"} else {"다음"},
-                    onClick = { viewModel.handleIntent(Navigate("sign-up-select-type")) },
-                    enabled = currentState.nickname.isNotEmpty(),
+                    text = "픽플즈 시작하기",
+                    onClick = { },
                     containerColor = MainThemeColor.Black
                 )
             }
@@ -195,13 +183,10 @@ fun SignUpProfileImageScreen(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is SignUpSideEffect.NavigateToPrev -> {
-                    navController.popBackStack()
+                    mainNavController.popBackStack()
                 }
                 is SignUpSideEffect.Navigate -> {
-                    navController.navigate(sideEffect.destination)
-                }
-                is SignUpSideEffect.ShowFileUploadDialog -> {
-                    filePickerLauncher.launch("image/*")
+                    mainNavController.navigate(sideEffect.destination)
                 }
                 else -> {}
             }
@@ -211,9 +196,13 @@ fun SignUpProfileImageScreen(
 
 @Preview
 @Composable
-fun SignUpProfileImageScreenPreview() {
-    val signUpNavController = rememberNavController()
+fun SignUpCompletionScreenPreview() {
+    val mainNavController = rememberNavController()
+
     PicplzTheme {
-        SignUpProfileImageScreen(navController = signUpNavController)
+        SignUpCompletionScreen(
+            mainNavController = mainNavController,
+            userInfo = emptyUserData
+        )
     }
 }

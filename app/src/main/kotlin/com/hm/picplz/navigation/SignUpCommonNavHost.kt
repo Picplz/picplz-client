@@ -12,34 +12,34 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_common.views.SignUpSelectTypeScre
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
 
 @Composable
-fun SignUpNavHost(
+fun SignUpCommonNavHost(
     mainNavController: NavHostController,
-    signUpNavController: NavHostController,
+    signUpCommonNavController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
 ) {
     NavHost(
-        navController = signUpNavController,
+        navController = signUpCommonNavController,
         startDestination = "sign-up-nickname",
         modifier = modifier,
     ) {
         composable("sign-up-nickname") {
             SignUpNicknameScreen(
                 mainNavController = mainNavController,
-                signUpNavController = signUpNavController,
+                signUpCommonNavController = signUpCommonNavController,
                 viewModel = viewModel
             )
         }
         composable("sign-up-profile") {
             SignUpProfileImageScreen(
-                navController = signUpNavController,
+                navController = signUpCommonNavController,
                 viewModel = viewModel
             )
         }
         composable("sign-up-select-type") {
             SignUpSelectTypeScreen(
                 mainNavController = mainNavController,
-                signUpNavController = signUpNavController,
+                signUpCommonNavController = signUpCommonNavController,
                 viewModel = viewModel
             )
         }

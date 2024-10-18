@@ -18,7 +18,7 @@ import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
 
 @Composable
-fun CommonButton (
+fun CommonBottomButton (
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -55,10 +55,10 @@ fun CommonButton (
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CommonButtonPreview() {
     PicplzTheme {
-        CommonButton(text = "버튼", onClick = {})
+        CommonBottomButton(text = "버튼", onClick = {})
     }
 }

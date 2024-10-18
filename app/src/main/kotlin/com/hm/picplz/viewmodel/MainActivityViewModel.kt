@@ -20,7 +20,7 @@ class MainActivityViewModel @Inject constructor(
     private val mainRepository: MainRepository,
 ) : ViewModel() {
     val uiState: StateFlow<MainActivityUiState> = mainRepository.userData.map { user ->
-        if(user.id == 0) { Unauthenticated } else { Success(user) }
+        if(user.id == "0") { Unauthenticated } else { Success(user) }
     }.stateIn(
         scope = viewModelScope,
         initialValue = Loading,
