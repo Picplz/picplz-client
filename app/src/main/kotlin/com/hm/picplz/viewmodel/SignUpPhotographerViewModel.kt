@@ -3,6 +3,7 @@ package com.hm.picplz.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.ChipItem
+import com.hm.picplz.data.model.PhotographyExperience
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSideEffect
@@ -29,7 +30,9 @@ class SignUpPhotographerViewModel : ViewModel() {
                     _sideEffect.emit(SignUpPhotographerSideEffect.NavigateToPrev)
                 }
             }
-            is SetUserInfo -> {}
+            is SetUserInfo -> {
+                _state.update { it.copy(userInfo = intent.userInfo)}
+            }
             is SetHasPhotographyExperience -> {
                 val newPhotographyExperienceState = _state.value.copy(
                     hasPhotographyExperience = if (_state.value.hasPhotographyExperience == intent.hasExperience) {
@@ -88,6 +91,21 @@ class SignUpPhotographerViewModel : ViewModel() {
                         currentState.selectedVibeChipList + ChipItem(id = intent.chipId, label = intent.label)
                     }
                     currentState.copy(selectedVibeChipList = updateSelectedChipList)
+                }
+            }
+            is SetUserPhotographyExperience -> {
+                val experience = when (intent.photographyExperienceId) {
+                    "1" -> PhotographyExperience.PHOTO_MAJOR
+                    "2" -> PhotographyExperience.INCOME_GENERATION
+                    "3" -> PhotographyExperience.SNS_OPERATION
+                    else -> null
+                }
+
+                experience?.let { newExperience ->
+                    val updatedUser = _state.value.userInfo.copy(
+                        photographyExperience = newExperience
+                    )
+                    _state.update { it.copy(userInfo = updatedUser) }
                 }
             }
         }
