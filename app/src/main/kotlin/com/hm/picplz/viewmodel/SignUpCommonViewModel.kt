@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.hm.picplz.data.model.User
 import com.hm.picplz.data.model.UserType.*
+import java.util.UUID
 
 class SignUpCommonViewModel : ViewModel() {
 
@@ -30,7 +31,6 @@ class SignUpCommonViewModel : ViewModel() {
      * 임시 데이터
      * Todo: 카카오 로그인에서 반환받은 유저 정보 호출
      */
-    private var userData: User = emptyUserData
 
     fun handleIntent(intent: SignUpCommonIntent) {
         when (intent) {
@@ -74,8 +74,14 @@ class SignUpCommonViewModel : ViewModel() {
                             Photographer -> SignUpPhotographer
                         }
                         val userBundle = bundleOf(
-                            "nickname" to _state.value.nickname,
-                            "profileImageUri" to _state.value.profileImageUri
+                            "userInfo" to User(
+                                /**
+                                 * id 할당 방식은 차후 논의 후 설정
+                                 * **/
+                                id = UUID.randomUUID().toString(),
+                                nickname = _state.value.nickname,
+                                profileImageUri = _state.value.profileImageUri,
+                            )
                         )
                         _sideEffect.emit(SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected(destination, userBundle))
                     }
@@ -134,7 +140,7 @@ class SignUpCommonViewModel : ViewModel() {
 }
 
 val emptyUserData = User(
-    id = 0,
+    id = "0",
     nickname = "Unknown",
     email = "unknown@example.com",
     userType = null,

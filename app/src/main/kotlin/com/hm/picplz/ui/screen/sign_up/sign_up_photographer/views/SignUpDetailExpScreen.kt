@@ -57,7 +57,7 @@ fun SignUpDetailExpScreen(
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
     }
-    
+
     val currentState = viewModel.state.collectAsState().value
 
     Scaffold (
@@ -135,7 +135,10 @@ fun SignUpDetailExpScreen(
             ) {
                 CommonBottomButton(
                     text = "다음",
-                    onClick = { viewModel.handleIntent(Navigate("sign-up-photography-vibe"))},
+                    onClick = {
+                        viewModel.handleIntent(SetUserPhotographyExperience(currentState.selectedPhotographyExperienceId))
+                        viewModel.handleIntent(Navigate("sign-up-photography-vibe"))
+                    },
                     enabled = currentState.selectedPhotographyExperienceId != null,
                     containerColor = MainThemeColor.Black
                 )
