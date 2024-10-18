@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.NicknameFieldError
 import com.hm.picplz.data.model.SelectionState
-import com.hm.picplz.ui.screen.sign_up.sign_up_common.DestinationByUserType.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.*
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
@@ -70,8 +69,8 @@ class SignUpCommonViewModel : ViewModel() {
                 viewModelScope.launch {
                     _state.value.selectedUserType?.let { selectedUserType ->
                         val destination = when (selectedUserType) {
-                            User -> SignUpClient
-                            Photographer -> SignUpPhotographer
+                            User -> "sign-up-completion"
+                            Photographer -> "sign-up-photographer"
                         }
                         val userBundle = bundleOf(
                             "userInfo" to User(

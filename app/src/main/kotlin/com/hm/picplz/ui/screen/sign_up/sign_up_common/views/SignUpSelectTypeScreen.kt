@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
 import com.hm.picplz.data.model.UserType
+import com.hm.picplz.navigation.navigateWithBundle
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonSelectImageButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
@@ -159,7 +160,7 @@ fun SignUpSelectTypeScreen(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected -> {
-                    mainNavController.navigate(sideEffect.destination.route, sideEffect.user)
+                    mainNavController.navigateWithBundle(sideEffect.destination, sideEffect.user)
                 }
                 is SignUpSideEffect.NavigateToPrev -> {
                     signUpCommonNavController.popBackStack()
@@ -167,18 +168,6 @@ fun SignUpSelectTypeScreen(
                 else -> {}
             }
         }
-    }
-}
-
-fun NavController.navigate(
-    route: String,
-    args: Bundle,
-    navOptions: NavOptions? = null,
-    navigatorExtras: Navigator.Extras? = null
-) {
-    val nodeId = graph.findNode(route)?.id
-    if (nodeId != null) {
-        navigate(nodeId, args, navOptions, navigatorExtras)
     }
 }
 
