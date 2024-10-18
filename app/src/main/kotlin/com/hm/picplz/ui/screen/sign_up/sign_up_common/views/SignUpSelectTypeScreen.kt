@@ -159,8 +159,7 @@ fun SignUpSelectTypeScreen(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when (sideEffect) {
                 is SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected -> {
-                    val bundle = bundleOf("userInfo" to sideEffect.user)
-                    mainNavController.navigate(sideEffect.destination.route, bundle)
+                    mainNavController.navigate(sideEffect.destination.route, sideEffect.user)
                 }
                 is SignUpSideEffect.NavigateToPrev -> {
                     signUpCommonNavController.popBackStack()

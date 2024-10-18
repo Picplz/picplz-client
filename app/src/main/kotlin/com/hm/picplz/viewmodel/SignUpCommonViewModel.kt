@@ -1,5 +1,6 @@
 package com.hm.picplz.viewmodel
 
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.data.model.NicknameFieldError
@@ -72,7 +73,11 @@ class SignUpCommonViewModel : ViewModel() {
                             User -> SignUpClient
                             Photographer -> SignUpPhotographer
                         }
-                        _sideEffect.emit(SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected(destination, userData))
+                        val userBundle = bundleOf(
+                            "nickname" to _state.value.nickname,
+                            "profileImageUri" to _state.value.profileImageUri
+                        )
+                        _sideEffect.emit(SignUpSideEffect.SelectUserTypeScreenSideEffect.NavigateToSelected(destination, userBundle))
                     }
                 }
             }
@@ -130,6 +135,10 @@ class SignUpCommonViewModel : ViewModel() {
 
 val emptyUserData = User(
     id = 0,
-    name = "Unknown",
-    email = "unknown@example.com"
+    nickname = "Unknown",
+    email = "unknown@example.com",
+    userType = null,
+    profileImageUri = null,
+    photographyExperience = null,
+    photographyVibes = null,
 )

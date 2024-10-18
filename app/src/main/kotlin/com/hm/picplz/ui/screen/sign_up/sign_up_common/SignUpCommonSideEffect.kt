@@ -1,12 +1,12 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_common
 
-import com.hm.picplz.data.model.User
+import android.os.Bundle
 
 sealed class SignUpSideEffect {
     sealed class SelectUserTypeScreenSideEffect {
-        data class NavigateToSelected (
+        data class NavigateToSelected(
             val destination: DestinationByUserType,
-            val user: User
+            val user: Bundle
         ) : SignUpSideEffect()
     }
     data object NavigateToPrev : SignUpSideEffect()
