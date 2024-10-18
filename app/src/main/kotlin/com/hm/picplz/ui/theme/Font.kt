@@ -32,7 +32,7 @@ val pretendardTypography = Typography(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 19.6.sp,
+        lineHeight = 14.sp * 1.4,
         letterSpacing = 0.sp
     ),
     bodySmall = TextStyle(
@@ -107,7 +107,7 @@ val pretendardTypography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = Pretendard,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 24.sp * 1.4,
         letterSpacing = 0.0.sp
