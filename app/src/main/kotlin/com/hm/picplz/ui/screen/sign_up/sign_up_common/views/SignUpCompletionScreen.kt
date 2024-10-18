@@ -39,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.hm.picplz.MainActivity
 import com.hm.picplz.R
+import com.hm.picplz.data.model.User
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpCommonIntent.NavigateToPrev
@@ -46,6 +47,7 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_common.SignUpSideEffect
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
 import com.hm.picplz.viewmodel.SignUpCommonViewModel
+import com.hm.picplz.viewmodel.emptyUserData
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -53,6 +55,7 @@ fun SignUpCompletionScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpCommonViewModel = viewModel(),
     mainNavController: NavController,
+    userInfo: User,
 ) {
     /** 상태바 스타일 설정 **/
     val view = LocalView.current
@@ -64,8 +67,6 @@ fun SignUpCompletionScreen(
             WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = true
         }
     }
-
-    val currentState = viewModel.state.collectAsState().value
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -100,8 +101,8 @@ fun SignUpCompletionScreen(
                         modifier = Modifier.size(300.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        val painter = if (currentState.profileImageUri != null) {
-                            rememberAsyncImagePainter(model = currentState.profileImageUri)
+                        val painter = if (userInfo.profileImageUri != null) {
+                            rememberAsyncImagePainter(model = userInfo.profileImageUri)
                         } else {
                             painterResource(id = R.drawable.default_profile_large)
                         }
@@ -144,7 +145,7 @@ fun SignUpCompletionScreen(
                     )
                     Text(
                         text = buildAnnotatedString {
-                                append("${currentState.nickname}님,\n")
+                                append("${userInfo.nickname}님,\n")
                                 append("가입이 완료되었습니다!")
                         },
                         style = MaterialTheme.typography.titleLarge,
@@ -201,6 +202,7 @@ fun SignUpCompletionScreenPreview() {
     PicplzTheme {
         SignUpCompletionScreen(
             mainNavController = mainNavController,
+            userInfo = emptyUserData
         )
     }
 }

@@ -60,10 +60,19 @@ fun MainNavHost(
                 userInfo = userInfo ?: emptyUserData
             )
         }
-        composable("sign-up-completion") {
+
+        composable("sign-up-completion") { backStackEntry ->
+            val userInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                backStackEntry.arguments?.getParcelable("userInfo", User::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                backStackEntry.arguments?.getParcelable("userInfo")
+            }
             SignUpCompletionScreen(
                 mainNavController = navController,
+                userInfo = userInfo ?: emptyUserData
             )
         }
+
     }
 }
