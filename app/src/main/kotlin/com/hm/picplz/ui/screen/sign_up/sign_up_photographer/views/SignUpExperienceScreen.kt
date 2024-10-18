@@ -155,10 +155,8 @@ fun SignUpExperienceScreen(
                     onClick = {
                         if (currentState.hasPhotographyExperience == true) {
                             viewModel.handleIntent(Navigate("sign-up-detail-experience"))
-                        } else {
-                            /**
-                             * Todo: 경험 내용 스킵하고 자신있는 감성으로 바로 라우팅
-                             * **/
+                        } else if (currentState.hasPhotographyExperience == false){
+                            viewModel.handleIntent(Navigate("sign-up-photography-vibe"))
                         }
                     },
                     enabled = currentState.hasPhotographyExperience != null,
@@ -184,7 +182,7 @@ fun SignUpExperienceScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun SignUpExprienceScreenPreview() {
+fun SignUpExperienceScreenPreview() {
     PicplzTheme {
         val mainNavController = rememberNavController()
         val signUpPhotographerNavController = rememberNavController()
