@@ -95,7 +95,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                 }
             }
             is SetUserPhotographyExperience -> {
-                val experience = when (intent.photographyExperienceId) {
+                val experience = when (_state.value.selectedPhotographyExperienceId) {
                     "1" -> PhotographyExperience.PHOTO_MAJOR
                     "2" -> PhotographyExperience.INCOME_GENERATION
                     "3" -> PhotographyExperience.SNS_OPERATION
@@ -106,7 +106,7 @@ class SignUpPhotographerViewModel : ViewModel() {
                     val updatedUser = _state.value.userInfo.copy(
                         photographyExperience = newExperience
                     )
-                    _state.update { it.copy(userInfo = updatedUser) }
+                    _state.update { it.copy( userInfo = updatedUser ) }
                 }
             }
             is NavigateWithSubmit -> {
@@ -118,6 +118,12 @@ class SignUpPhotographerViewModel : ViewModel() {
                     } else bundleOf()
                     _sideEffect.emit(SignUpPhotographerSideEffect.NavigateWithSubmit(intent.destination, userBundle))
                 }
+            }
+            is SetUserPhotographyVibe -> {
+                val updatedUser = _state.value.userInfo.copy(
+                    photographyVibes = _state.value.selectedVibeChipList.map { chip -> chip.label }
+                )
+                _state.update { it.copy(userInfo = updatedUser) }
             }
         }
     }

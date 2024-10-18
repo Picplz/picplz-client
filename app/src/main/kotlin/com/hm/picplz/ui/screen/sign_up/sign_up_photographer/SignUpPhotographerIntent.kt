@@ -13,6 +13,7 @@ sealed class SignUpPhotographerIntent {
     data class DeleteVibeChip(val chipId: String) : SignUpPhotographerIntent()
     data class UpdateVibeChip(val chipId: String, val label: String) : SignUpPhotographerIntent()
     data class UpdateSelectedVibeChipList(val chipId: String, val label: String) : SignUpPhotographerIntent()
-    data class SetUserPhotographyExperience(val photographyExperienceId: String?) : SignUpPhotographerIntent()
+    data object SetUserPhotographyExperience : SignUpPhotographerIntent()
     data class NavigateWithSubmit(val destination: String) : SignUpPhotographerIntent()
+    data object SetUserPhotographyVibe: SignUpPhotographerIntent()
 }

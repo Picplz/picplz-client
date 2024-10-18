@@ -1,6 +1,7 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer.views
 
 import CommonChip
+import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -172,6 +173,7 @@ fun SignUpPhotographyVibeScreen(
                 CommonBottomButton(
                     text = "다음",
                     onClick = {
+                        viewModel.handleIntent(SetUserPhotographyVibe)
                         viewModel.handleIntent(NavigateWithSubmit("sign-up-completion"))
                     },
                     enabled = currentState.selectedVibeChipList != listOf<ChipItem>(),
