@@ -16,4 +16,5 @@ sealed class SignUpPhotographerIntent {
     data object SetUserPhotographyExperience : SignUpPhotographerIntent()
     data class NavigateWithSubmit(val destination: String) : SignUpPhotographerIntent()
     data object SetUserPhotographyVibe: SignUpPhotographerIntent()
+    data class SetIsOpenDialog(val isOpen: Boolean) : SignUpPhotographerIntent()
 }

@@ -1,7 +1,9 @@
 package com.hm.picplz.ui.screen.sign_up.sign_up_photographer.views
 
+import CommonDialog
 import CommonSelectButton
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,8 +26,15 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.hm.picplz.viewmodel.SignUpPhotographerViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -104,6 +113,9 @@ fun SignUpExperienceScreen(
                             contentDescription = "info icon",
                             modifier = Modifier
                                 .height(24.dp)
+                                .clickable {
+                                    viewModel.handleIntent(SetIsOpenDialog(true))
+                                }
                         )
                     }
                     Spacer(
@@ -164,6 +176,52 @@ fun SignUpExperienceScreen(
                 )
             }
         }
+
+        if (currentState.showInfoDialog) {
+            CommonDialog(
+                hasQuit = false,
+                onDismissRequest = {
+                    viewModel.handleIntent(SetIsOpenDialog(false))
+                }
+            ) {
+                Column {
+                    Text(
+                        text = "사진 촬영 경험이란?",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            lineHeight = 14.sp * 1.4,
+                            letterSpacing = 0.sp
+                        )
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .height(20.dp)
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 0.sp
+                                )
+                            ) {
+                                append("사진 전공 / 사진으로 수익 창출 / 사진 SNS계정 운영")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    letterSpacing = 0.sp
+                                )                        ) {
+                                append("등의 경험이 있는 경우를 말해요.")
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -192,5 +250,52 @@ fun SignUpExperienceScreenPreview() {
             mainNavController = mainNavController,
             signUpPhotographerNavController = signUpPhotographerNavController,
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ExperienceDialogPreview() {
+    PicplzTheme {
+        CommonDialog(
+            hasQuit = false,
+        ) {
+            Column {
+                Text(
+                    text = "사진 촬영 경험이란?",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        lineHeight = 14.sp * 1.4,
+                        letterSpacing = 0.sp
+                    )
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                )
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.sp
+                            )
+                        ) {
+                            append("사진 전공 / 사진으로 수익 창출 / 사진 SNS계정 운영")
+                        }
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal,
+                                letterSpacing = 0.sp
+                            )                        ) {
+                            append("등의 경험이 있는 경우를 말해요.")
+                        }
+                    }
+                )
+            }
+        }
     }
 }

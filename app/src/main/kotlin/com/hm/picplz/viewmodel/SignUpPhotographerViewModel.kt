@@ -125,6 +125,9 @@ class SignUpPhotographerViewModel : ViewModel() {
                 )
                 _state.update { it.copy(userInfo = updatedUser) }
             }
+            is SetIsOpenDialog -> {
+                _state.update { it.copy( showInfoDialog = intent.isOpen) }
+            }
         }
     }
 }

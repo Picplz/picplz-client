@@ -16,6 +16,7 @@ data class SignUpPhotographerState(
     val vibeChipList: List<ChipItem> = defaultVibeChipList(),
     val selectedVibeChipList: List<ChipItem> = listOf(),
     val editingChipId: String? = null,
+    val showInfoDialog: Boolean = false,
 ) {
     companion object {
         private fun defaultExperienceChipList(): List<ChipItem> {
@@ -48,6 +49,7 @@ data class SignUpPhotographerState(
                 vibeChipList = defaultVibeChipList(),
                 selectedVibeChipList = listOf(),
                 editingChipId = null,
+                showInfoDialog = false,
             )
         }
     }
