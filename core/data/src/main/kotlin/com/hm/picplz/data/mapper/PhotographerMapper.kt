@@ -23,8 +23,8 @@ fun NearbyPhotographerCard.toDomain(): Photographer {
         profileImageUri = profileImage,
         isActive = active == "Y",
         distance = distance,
-        photoMoods = photoMoods,
-        activeAreas = activeAreas,
+        photoMoods = photoMoods?.mapNotNull { it?.takeUnless(String::isBlank) } ?: emptyList(),
+        activeAreas = activeAreas ?: emptyList(),
         instagram = null,
         portfolioPhotos = emptyList(),
     )

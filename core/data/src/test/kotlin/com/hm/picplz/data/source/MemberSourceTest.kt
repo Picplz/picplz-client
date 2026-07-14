@@ -6,6 +6,7 @@ import com.hm.picplz.data.api.MemberApi
 import com.hm.picplz.data.model.ApiResponse
 import com.hm.picplz.data.model.MemberInfoResponseDto
 import com.hm.picplz.data.model.UpdateMemberInfoRequest
+import com.hm.picplz.data.model.UpdateMemberLocationRequest
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
@@ -151,9 +152,27 @@ class MemberSourceTest {
             assertEquals("member not found", error.serverMessage)
         }
 
+    @Test
+    fun `updateMemberLocation treats successful raw response as unit`() =
+        runTest {
+            val source = MemberSourceImpl(FakeMemberApi(updateLocationResponse = Response.success(Unit)))
+
+            val result =
+                source.updateMemberLocation(
+                    UpdateMemberLocationRequest(
+                        memberId = 3L,
+                        latitude = 37.5665,
+                        longitude = 126.978,
+                    ),
+                )
+
+            assertTrue(result.isSuccess)
+        }
+
     private class FakeMemberApi(
         private val checkNicknameResponse: Response<Unit> = Response.success(Unit),
         private val memberInfoResponse: Response<ApiResponse<MemberInfoResponseDto>>? = null,
+        private val updateLocationResponse: Response<Unit> = Response.success(Unit),
     ) : MemberApi {
         override suspend fun checkNickname(nickname: String): Response<Unit> = checkNicknameResponse
 
@@ -163,5 +182,8 @@ class MemberSourceTest {
         override suspend fun updateMemberInfo(request: UpdateMemberInfoRequest): Response<Unit> {
             throw NotImplementedError("Not used in test")
         }
+
+        override suspend fun updateMemberLocation(request: UpdateMemberLocationRequest): Response<Unit> =
+            updateLocationResponse
     }
 }

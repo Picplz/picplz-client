@@ -8,6 +8,7 @@ import com.hm.picplz.data.api.CustomerApi
 import com.hm.picplz.data.api.KakaoMapApi
 import com.hm.picplz.data.api.MemberApi
 import com.hm.picplz.data.api.PhotographerApi
+import com.hm.picplz.data.api.PortfolioApi
 import com.hm.picplz.data.api.ProductApi
 import com.hm.picplz.data.api.S3Api
 import com.hm.picplz.data.provider.AuthInterceptor
@@ -97,6 +98,14 @@ object NetworkModule {
         @PicplzApi retrofit: Retrofit,
     ): ProductApi {
         return retrofit.create(ProductApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePortfolioApi(
+        @PicplzApi retrofit: Retrofit,
+    ): PortfolioApi {
+        return retrofit.create(PortfolioApi::class.java)
     }
 
     @Provides

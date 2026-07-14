@@ -5,6 +5,7 @@ import com.hm.picplz.common.result.runCatchingAppError
 import com.hm.picplz.data.api.MemberApi
 import com.hm.picplz.data.model.MemberInfoResponseDto
 import com.hm.picplz.data.model.UpdateMemberInfoRequest
+import com.hm.picplz.data.model.UpdateMemberLocationRequest
 import com.hm.picplz.data.util.safeApiCall
 import com.hm.picplz.data.util.safeApiCallUnit
 import com.hm.picplz.data.util.toHttpAppError
@@ -16,6 +17,8 @@ interface MemberSource {
     suspend fun getMemberInfo(memberId: Long): AppResult<MemberInfoResponseDto>
 
     suspend fun updateMemberInfo(request: UpdateMemberInfoRequest): AppResult<Unit>
+
+    suspend fun updateMemberLocation(request: UpdateMemberLocationRequest): AppResult<Unit>
 }
 
 class MemberSourceImpl
@@ -38,4 +41,7 @@ class MemberSourceImpl
 
         override suspend fun updateMemberInfo(request: UpdateMemberInfoRequest): AppResult<Unit> =
             safeApiCallUnit { memberApi.updateMemberInfo(request) }
+
+        override suspend fun updateMemberLocation(request: UpdateMemberLocationRequest): AppResult<Unit> =
+            safeApiCallUnit { memberApi.updateMemberLocation(request) }
     }

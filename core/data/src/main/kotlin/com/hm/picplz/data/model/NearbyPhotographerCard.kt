@@ -6,6 +6,6 @@ data class NearbyPhotographerCard(
     val profileImage: String?,
     val active: String,
     val distance: Long,
-    val photoMoods: List<String>,
-    val activeAreas: List<String> = emptyList(),
+    val photoMoods: List<String?>? = null,
+    val activeAreas: List<String>? = null,
 )

@@ -21,6 +21,7 @@ import com.hm.picplz.navigation.model.Chat
 import com.hm.picplz.navigation.model.ChatRoom
 import com.hm.picplz.navigation.model.DetailReservation
 import com.hm.picplz.navigation.model.Dev
+import com.hm.picplz.navigation.model.DevMainSearchResultPreview
 import com.hm.picplz.navigation.model.DevMyPagePackageEdit
 import com.hm.picplz.navigation.model.DevMyPagePhotographerProfileAdded
 import com.hm.picplz.navigation.model.Feed
@@ -91,6 +92,15 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
 
     composable<MainSearch> {
         MainSearchScreen(navController = navController)
+    }
+
+    if (BuildConfig.DEBUG) {
+        composable<DevMainSearchResultPreview> {
+            MainSearchScreen(
+                navController = navController,
+                devMockResults = true,
+            )
+        }
     }
 
     composable<Reservation> {

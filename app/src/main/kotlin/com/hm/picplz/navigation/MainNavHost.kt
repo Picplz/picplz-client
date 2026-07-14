@@ -8,6 +8,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.hm.picplz.common.model.UserType
 import com.hm.picplz.navigation.graph.authNavGraph
 import com.hm.picplz.navigation.graph.mainNavGraph
 import com.hm.picplz.navigation.graph.photographerNavGraph
@@ -34,6 +35,7 @@ import com.hm.picplz.navigation.model.MyPageShootingHistory
 import com.hm.picplz.navigation.model.OrderDetail
 import com.hm.picplz.navigation.model.PhotographerChatRoom
 import com.hm.picplz.navigation.model.PhotographerDetailReservation
+import com.hm.picplz.navigation.model.PhotographerMainGraph
 import com.hm.picplz.navigation.model.Reservation
 import com.hm.picplz.ui.main.MainActivityUiState
 import kotlin.reflect.KClass
@@ -73,18 +75,23 @@ fun MainNavHost(
 ) {
     if (uiState is MainActivityUiState.Loading) return
 
-    val startDestination: Any =
-        when (uiState) {
-            is MainActivityUiState.Success -> Main
-            MainActivityUiState.Unauthenticated -> Login
-            MainActivityUiState.Loading -> Main
-        }
+    val startDestination: Any = startDestinationFor(uiState)
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
     LaunchedEffect(uiState, currentDestination) {
-        if (uiState == MainActivityUiState.Unauthenticated && currentDestination.requiresAuth()) {
-            navController.navigate(Login) {
-                launchSingleTop = true
+        when {
+            uiState == MainActivityUiState.Unauthenticated && currentDestination.requiresAuth() -> {
+                navController.navigate(Login) {
+                    launchSingleTop = true
+                }
+            }
+            uiState is MainActivityUiState.Success && currentDestination?.hasRoute(Login::class) == true -> {
+                navController.navigate(startDestinationFor(uiState)) {
+                    popUpTo(Login) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
             }
         }
     }
@@ -96,12 +103,21 @@ fun MainNavHost(
     ) {
         authNavGraph(
             navController = navController,
+            onLoginCompleted = refreshUserData,
             onSignupCompleted = refreshUserData,
         )
         mainNavGraph(navController)
         photographerNavGraph(navController)
     }
 }
+
+fun startDestinationFor(uiState: MainActivityUiState): Any =
+    when (uiState) {
+        is MainActivityUiState.Success ->
+            if (uiState.userData.userType == UserType.Photographer) PhotographerMainGraph else Main
+        MainActivityUiState.Unauthenticated -> Login
+        MainActivityUiState.Loading -> Main
+    }
 
 private fun NavDestination?.requiresAuth(): Boolean {
     if (this == null) return false

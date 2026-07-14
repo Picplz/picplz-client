@@ -18,11 +18,13 @@ import com.hm.picplz.ui.screen.sign_up.sign_up_photographer.SignUpPhotographerSc
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavHostController,
+    onLoginCompleted: () -> Unit,
     onSignupCompleted: () -> Unit,
 ) {
     composable<Login> {
         LoginIntroScreen(
             navController = navController,
+            onLoginCompleted = onLoginCompleted,
             enableDevEntry = BuildConfig.DEBUG,
         )
     }
