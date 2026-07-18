@@ -44,8 +44,8 @@ fun ReservationStatusHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ReservationStatusInfo(
-            title = stringResource(currentReservationStatus.titleResId),
-            description = stringResource(currentReservationStatus.descriptionResId),
+            title = stringResource(currentReservationStatus.customerTitleResId),
+            description = stringResource(currentReservationStatus.customerDescriptionResId),
         )
 
         if (currentReservationStatus.showCancelButton()) {
@@ -69,8 +69,8 @@ fun PhotographerReservationStatusHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ReservationStatusInfo(
-            title = stringResource(currentReservationStatus.titleResId),
-            description = stringResource(currentReservationStatus.descriptionResId),
+            title = stringResource(currentReservationStatus.photographerTitleResId),
+            description = stringResource(currentReservationStatus.photographerDescriptionResId),
         )
 
         when (currentReservationStatus) {
@@ -81,7 +81,7 @@ fun PhotographerReservationStatusHeader(
                 )
             }
 
-            ReservationStatus.WAITING_PAYMENT,
+            ReservationStatus.WAITING_SCHEDULE,
             ReservationStatus.RESERVED,
             -> {
                 ReservationCancelButton(
@@ -175,9 +175,9 @@ private fun ReservationStatusHeaderWaitingApprovalPreview() {
 
 @Preview
 @Composable
-private fun ReservationStatusHeaderWaitingPaymentPreview() {
+private fun ReservationStatusHeaderWaitingSchedulePreview() {
     ReservationStatusHeader(
-        currentReservationStatus = ReservationStatus.WAITING_PAYMENT,
+        currentReservationStatus = ReservationStatus.WAITING_SCHEDULE,
         onCancelClick = { },
     )
 }

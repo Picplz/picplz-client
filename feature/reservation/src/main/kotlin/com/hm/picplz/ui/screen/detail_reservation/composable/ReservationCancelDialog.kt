@@ -135,7 +135,7 @@ private fun getDescriptionText(
         }
 
         ReservationStatus.WAITING_APPROVAL,
-        ReservationStatus.WAITING_PAYMENT,
+        ReservationStatus.WAITING_SCHEDULE,
         -> {
             stringResource(R.string.reservation_cancel_dialog_desc_waiting_approval)
         }

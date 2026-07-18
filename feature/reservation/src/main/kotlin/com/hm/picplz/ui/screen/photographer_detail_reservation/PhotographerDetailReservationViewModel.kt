@@ -74,7 +74,7 @@ class PhotographerDetailReservationViewModel @Inject constructor() : ViewModel()
                 viewModelScope.launch {
                     when (state.value.reservationStatus) {
                         ReservationStatus.WAITING_APPROVAL,
-                        ReservationStatus.WAITING_PAYMENT,
+                        ReservationStatus.WAITING_SCHEDULE,
                         -> {
                             _sideEffect.emit(PhotographerDetailReservationSideEffect.NavigateToRejectReservationConfirm)
                         }
@@ -117,8 +117,8 @@ class PhotographerDetailReservationViewModel @Inject constructor() : ViewModel()
     // 상태 변경 확인 테스트를 위한 코드입니다.
     private fun ReservationStatus.next(): ReservationStatus =
         when (this) {
-            ReservationStatus.WAITING_APPROVAL -> ReservationStatus.WAITING_PAYMENT
-            ReservationStatus.WAITING_PAYMENT -> ReservationStatus.RESERVED
+            ReservationStatus.WAITING_APPROVAL -> ReservationStatus.WAITING_SCHEDULE
+            ReservationStatus.WAITING_SCHEDULE -> ReservationStatus.RESERVED
             ReservationStatus.RESERVED -> ReservationStatus.COMPLETED
             ReservationStatus.COMPLETED -> ReservationStatus.COMPLETED
         }
