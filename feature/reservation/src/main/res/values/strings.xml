@@ -7,23 +7,24 @@
     <string name="reservation_step_in_progress">촬영 진행</string>
     <string name="reservation_step_confirmed">거래 완료</string>
 
-    <!-- 예약 상태 헤더 - 공통 -->
+    <!-- 예약 상태 헤더 - 공통 (양 role 동일 문구) -->
     <string name="reservation_status_title_waiting_approval">예약 승인 대기중…</string>
     <string name="reservation_status_description_waiting_approval">24시간 이내로 승인되지 않으면 자동 취소됩니다.</string>
-    <string name="reservation_status_description_reserved">작가와 촬영을 진행해주세요!</string>
     <string name="reservation_status_description_completed">이미 완료된 촬영입니다.</string>
 
     <!-- 예약 상태 헤더 - 고객 -->
     <string name="reservation_status_customer_title_waiting_schedule">일시 확정 대기중…</string>
     <string name="reservation_status_customer_description_waiting_schedule">촬영 일시를 확정해 주세요.</string>
     <string name="reservation_status_customer_title_reserved">촬영 진행중…</string>
+    <string name="reservation_status_description_reserved">작가와 촬영을 진행해주세요!</string>
     <string name="reservation_status_customer_title_completed">거래 완료</string>
 
-    <!-- 예약 상태 헤더 - 작가 (기존 유지, 작가 피그마 확보 후 후속 정리) -->
-    <string name="reservation_status_title_waiting_payment">결제 및 촬영 일시 확정 대기중…</string>
-    <string name="reservation_status_description_waiting_payment">결제 및 촬영 일시 확정을 진행해 주세요.</string>
-    <string name="reservation_status_title_reserved">예약 확정</string>
-    <string name="reservation_status_title_completed">거래 확정</string>
+    <!-- 예약 상태 헤더 - 작가 -->
+    <string name="reservation_status_photographer_title_waiting_schedule">일시 확정 대기중…</string>
+    <string name="reservation_status_photographer_description_waiting_schedule">고객의 촬영 일시를 확정을 기다리고 있어요.</string>
+    <string name="reservation_status_photographer_title_reserved">촬영 진행중…</string>
+    <string name="reservation_status_photographer_description_reserved">고객과 촬영을 진행해주세요!</string>
+    <string name="reservation_status_photographer_title_completed">거래 완료</string>
 
     <!-- 하단 버튼 -->
     <string name="reservation_button_chat">채팅 바로가기</string>
