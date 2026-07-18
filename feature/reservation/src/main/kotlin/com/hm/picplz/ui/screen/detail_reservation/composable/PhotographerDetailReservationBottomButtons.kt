@@ -16,20 +16,22 @@ import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 
 /**
  * 작가 예약 상세 하단 버튼.
- * 고객 버튼과 구성이 다르므로 별도 관리하며, 현재는 기존 동작을 유지합니다.
- * (작가 피그마 확보 후 후속 이슈에서 정리)
+ * - WAITING_APPROVAL: 화면에서 예약 승인 버튼(ReservationApproveButton)으로 대체됨
+ * - WAITING_SCHEDULE: 채팅 바로가기 단독
+ * - RESERVED: 거래 완료하기(보조) + 채팅 바로가기(주)
+ * - COMPLETED: 채팅 바로가기 단독
  */
 @Composable
 fun PhotographerDetailReservationBottomButtons(
     currentReservationStatus: ReservationStatus,
     onChatClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onDealCompleteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (currentReservationStatus) {
         ReservationStatus.WAITING_APPROVAL,
         ReservationStatus.WAITING_SCHEDULE,
+        ReservationStatus.COMPLETED,
         -> {
             ChatButton(
                 modifier = modifier,
@@ -42,26 +44,9 @@ fun PhotographerDetailReservationBottomButtons(
                 modifier = modifier,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                HistoryButton(
+                DealCompleteButton(
                     modifier = Modifier.weight(1f),
-                    onClick = onHistoryClick,
-                )
-
-                ConfirmButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = onConfirmClick,
-                )
-            }
-        }
-
-        ReservationStatus.COMPLETED -> {
-            Row(
-                modifier = modifier,
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-            ) {
-                HistoryButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = onHistoryClick,
+                    onClick = onDealCompleteClick,
                 )
 
                 ChatButton(
@@ -98,26 +83,24 @@ private fun ChatButton(
 }
 
 @Composable
-private fun HistoryButton(
+private fun DealCompleteButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CommonBottomOutlinedButton(
         modifier = modifier,
-        text = stringResource(R.string.reservation_button_history),
+        text = stringResource(R.string.reservation_button_deal_complete),
         onClick = onClick,
     )
 }
 
+@Preview
 @Composable
-private fun ConfirmButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    CommonBottomButton(
-        modifier = modifier,
-        text = stringResource(R.string.reservation_button_confirm),
-        onClick = onClick,
+private fun PhotographerDetailReservationBottomButtonsWaitingSchedulePreview() {
+    PhotographerDetailReservationBottomButtons(
+        currentReservationStatus = ReservationStatus.WAITING_SCHEDULE,
+        onChatClick = {},
+        onDealCompleteClick = {},
     )
 }
 
@@ -127,8 +110,7 @@ private fun PhotographerDetailReservationBottomButtonsReservedPreview() {
     PhotographerDetailReservationBottomButtons(
         currentReservationStatus = ReservationStatus.RESERVED,
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
     )
 }
 
@@ -138,7 +120,6 @@ private fun PhotographerDetailReservationBottomButtonsCompletedPreview() {
     PhotographerDetailReservationBottomButtons(
         currentReservationStatus = ReservationStatus.COMPLETED,
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
     )
 }

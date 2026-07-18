@@ -28,8 +28,6 @@
 
     <!-- 하단 버튼 -->
     <string name="reservation_button_chat">채팅 바로가기</string>
-    <string name="reservation_button_history">내역 보기</string>
-    <string name="reservation_button_confirm">거래 확정하기</string>
     <string name="reservation_button_deal_complete">거래 완료하기</string>
     <string name="reservation_button_review">리뷰 쓰기</string>
     <string name="reservation_button_reservation_approve">예약 승인</string>

@@ -11,10 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hm.picplz.common.util.DateTimeUtil
+import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationMap
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerDetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerReservationStatusHeader
@@ -60,10 +63,7 @@ fun PhotographerDetailReservationScreen(
         onChatClick = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.NavigateToChat)
         },
-        onHistoryClick = {
-            viewModel.handelIntent(PhotographerDetailReservationIntent.NavigateToHistory)
-        },
-        onConfirmClick = {
+        onDealCompleteClick = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.ConfirmReservation)
         },
         onCancelClick = {
@@ -73,7 +73,7 @@ fun PhotographerDetailReservationScreen(
             // TODO
         },
         onReservationApproveClick = {
-            // TODO
+            viewModel.handelIntent(PhotographerDetailReservationIntent.ApproveReservation)
         },
         onCancelDialogDismiss = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.DismissCancelDialog)
@@ -98,8 +98,7 @@ fun PhotographerDetailReservationScreen(
 private fun PhotographerDetailReservationScreen(
     state: PhotographerDetailReservationState,
     onChatClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onDealCompleteClick: () -> Unit,
     onCancelClick: () -> Unit,
     onCancelReject: () -> Unit,
     onReservationApproveClick: () -> Unit,
@@ -167,6 +166,7 @@ private fun PhotographerDetailReservationScreen(
                     ReservationInfoSection(
                         modifier = Modifier.padding(top = 28.dp, bottom = 24.dp),
                         customerName = state.customerName,
+                        shootingDateText = state.reservationStatus.shootingDateText(state.confirmedDateTimeMillis),
                     )
                 }
             }
@@ -176,8 +176,7 @@ private fun PhotographerDetailReservationScreen(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 48.dp),
                     currentReservationStatus = state.reservationStatus,
                     onChatClick = onChatClick,
-                    onHistoryClick = onHistoryClick,
-                    onConfirmClick = onConfirmClick,
+                    onDealCompleteClick = onDealCompleteClick,
                 )
             } else {
                 ReservationApproveButton(
@@ -189,6 +188,22 @@ private fun PhotographerDetailReservationScreen(
     }
 }
 
+/**
+ * 촬영 일시 표시 텍스트.
+ * 일시 미확정(예약 대기) 단계는 "작가와 협의", 확정 이후(촬영 진행/거래 완료)는 확정된 일시를 표시합니다.
+ */
+@Composable
+private fun ReservationStatus.shootingDateText(confirmedDateTimeMillis: Long): String =
+    when (this) {
+        ReservationStatus.RESERVED,
+        ReservationStatus.COMPLETED,
+        -> DateTimeUtil.getFormattedReservationDateTime(confirmedDateTimeMillis)
+
+        ReservationStatus.WAITING_APPROVAL,
+        ReservationStatus.WAITING_SCHEDULE,
+        -> stringResource(R.string.reservation_schedule_tbd)
+    }
+
 @Suppress("UnusedPrivateMember")
 @Preview
 @Composable
@@ -196,8 +211,7 @@ private fun PhotographerDetailReservationScreenPreview() {
     PhotographerDetailReservationScreen(
         state = PhotographerDetailReservationState(),
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
         onCancelClick = {},
         onCancelReject = {},
         onReservationApproveClick = {},

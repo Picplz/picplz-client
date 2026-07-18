@@ -3,7 +3,7 @@ package com.hm.picplz.ui.screen.photographer_detail_reservation
 sealed interface PhotographerDetailReservationIntent {
     data object NavigateToChat : PhotographerDetailReservationIntent
 
-    data object NavigateToHistory : PhotographerDetailReservationIntent
+    data object ApproveReservation : PhotographerDetailReservationIntent
 
     data object ConfirmReservation : PhotographerDetailReservationIntent
 
