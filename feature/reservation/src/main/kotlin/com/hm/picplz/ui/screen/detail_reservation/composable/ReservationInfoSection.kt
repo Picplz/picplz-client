@@ -19,6 +19,7 @@ import com.hm.picplz.ui.theme.MainThemeFont.Body
 fun ReservationInfoSection(
     modifier: Modifier = Modifier,
     customerName: String = "",
+    shootingDateText: String = "작가와 협의",
 ) {
     Column(
         modifier = modifier,
@@ -40,7 +41,7 @@ fun ReservationInfoSection(
         )
         ReservationInfoItem(
             title = "촬영 일시",
-            description = "작가와 협의",
+            description = shootingDateText,
         )
     }
 }

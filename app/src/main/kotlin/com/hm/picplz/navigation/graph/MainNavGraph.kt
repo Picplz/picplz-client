@@ -305,6 +305,9 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             onNavigateToOrderDetail = { orderId ->
                 navController.navigate(OrderDetail(orderId = orderId))
             },
+            onNavigateToWriteReview = {
+                // TODO: 리뷰 작성 화면 구현 후 네비게이션 연결
+            },
         )
     }
 

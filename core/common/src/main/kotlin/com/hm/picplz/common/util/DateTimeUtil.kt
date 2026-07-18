@@ -10,6 +10,7 @@ object DateTimeUtil {
     private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
     private val deadlineFormat = SimpleDateFormat("yyyy.MM.dd | hh:mm까지", Locale.KOREA)
     private val dateTimeFormat = SimpleDateFormat("MM월 dd일 hh:mm", Locale.KOREA)
+    private val reservationDateTimeFormat = SimpleDateFormat("yy.MM.dd a h:mm", Locale.KOREA)
 
     fun getFormattedTime(timestamp: Long): String {
         return timeFormat.format(Date(timestamp))
@@ -25,6 +26,13 @@ object DateTimeUtil {
 
     fun getFormattedDateTime(timestamp: Long): String {
         return dateTimeFormat.format(Date(timestamp))
+    }
+
+    /**
+     * 예약 확정 일시 표기용 포맷. (예: "25.12.12 오후 2:00")
+     */
+    fun getFormattedReservationDateTime(timestamp: Long): String {
+        return reservationDateTimeFormat.format(Date(timestamp))
     }
 
     fun getTimeAgoText(timestamp: Long): String {

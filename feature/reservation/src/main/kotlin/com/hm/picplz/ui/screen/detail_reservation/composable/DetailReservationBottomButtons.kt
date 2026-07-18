@@ -14,37 +14,44 @@ import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonBottomOutlinedButton
 import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 
+/**
+ * 고객 예약 상세 하단 버튼.
+ * - WAITING_APPROVAL: 채팅 바로가기 단독
+ * - WAITING_SCHEDULE / RESERVED: 거래 완료하기(보조) + 채팅 바로가기(주)
+ * - COMPLETED: 리뷰 쓰기(보조, 작성 완료 시 비활성) + 채팅 바로가기(주)
+ */
 @Composable
 fun DetailReservationBottomButtons(
     currentReservationStatus: ReservationStatus,
+    hasWrittenReview: Boolean,
     onChatClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onDealCompleteClick: () -> Unit,
+    onReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (currentReservationStatus) {
-        ReservationStatus.WAITING_APPROVAL,
-        ReservationStatus.WAITING_PAYMENT,
-        -> {
+        ReservationStatus.WAITING_APPROVAL -> {
             ChatButton(
                 modifier = modifier,
                 onClick = onChatClick,
             )
         }
 
-        ReservationStatus.RESERVED -> {
+        ReservationStatus.WAITING_SCHEDULE,
+        ReservationStatus.RESERVED,
+        -> {
             Row(
                 modifier = modifier,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                HistoryButton(
+                DealCompleteButton(
                     modifier = Modifier.weight(1f),
-                    onClick = onHistoryClick,
+                    onClick = onDealCompleteClick,
                 )
 
-                ConfirmButton(
+                ChatButton(
                     modifier = Modifier.weight(1f),
-                    onClick = onConfirmClick,
+                    onClick = onChatClick,
                 )
             }
         }
@@ -54,9 +61,10 @@ fun DetailReservationBottomButtons(
                 modifier = modifier,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                HistoryButton(
+                ReviewButton(
                     modifier = Modifier.weight(1f),
-                    onClick = onHistoryClick,
+                    enabled = !hasWrittenReview,
+                    onClick = onReviewClick,
                 )
 
                 ChatButton(
@@ -66,18 +74,6 @@ fun DetailReservationBottomButtons(
             }
         }
     }
-}
-
-@Composable
-fun ReservationApproveButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    CommonBottomButton(
-        modifier = modifier,
-        text = stringResource(R.string.reservation_button_reservation_approve),
-        onClick = onClick,
-    )
 }
 
 @Composable
@@ -93,25 +89,27 @@ private fun ChatButton(
 }
 
 @Composable
-private fun HistoryButton(
+private fun DealCompleteButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CommonBottomOutlinedButton(
         modifier = modifier,
-        text = stringResource(R.string.reservation_button_history),
+        text = stringResource(R.string.reservation_button_deal_complete),
         onClick = onClick,
     )
 }
 
 @Composable
-private fun ConfirmButton(
+private fun ReviewButton(
+    enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    CommonBottomButton(
+    CommonBottomOutlinedButton(
         modifier = modifier,
-        text = stringResource(R.string.reservation_button_confirm),
+        text = stringResource(R.string.reservation_button_review),
+        enabled = enabled,
         onClick = onClick,
     )
 }
@@ -121,20 +119,22 @@ private fun ConfirmButton(
 private fun DetailReservationBottomButtonsWaitingApprovalPreview() {
     DetailReservationBottomButtons(
         currentReservationStatus = ReservationStatus.WAITING_APPROVAL,
+        hasWrittenReview = false,
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
+        onReviewClick = {},
     )
 }
 
 @Preview
 @Composable
-private fun DetailReservationBottomButtonsWaitingPaymentPreview() {
+private fun DetailReservationBottomButtonsWaitingSchedulePreview() {
     DetailReservationBottomButtons(
-        currentReservationStatus = ReservationStatus.WAITING_PAYMENT,
+        currentReservationStatus = ReservationStatus.WAITING_SCHEDULE,
+        hasWrittenReview = false,
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
+        onReviewClick = {},
     )
 }
 
@@ -143,9 +143,10 @@ private fun DetailReservationBottomButtonsWaitingPaymentPreview() {
 private fun DetailReservationBottomButtonsReservedPreview() {
     DetailReservationBottomButtons(
         currentReservationStatus = ReservationStatus.RESERVED,
+        hasWrittenReview = false,
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
+        onReviewClick = {},
     )
 }
 
@@ -154,8 +155,21 @@ private fun DetailReservationBottomButtonsReservedPreview() {
 private fun DetailReservationBottomButtonsCompletedPreview() {
     DetailReservationBottomButtons(
         currentReservationStatus = ReservationStatus.COMPLETED,
+        hasWrittenReview = false,
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
+        onReviewClick = {},
+    )
+}
+
+@Preview
+@Composable
+private fun DetailReservationBottomButtonsCompletedReviewedPreview() {
+    DetailReservationBottomButtons(
+        currentReservationStatus = ReservationStatus.COMPLETED,
+        hasWrittenReview = true,
+        onChatClick = {},
+        onDealCompleteClick = {},
+        onReviewClick = {},
     )
 }

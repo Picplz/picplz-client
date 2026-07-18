@@ -41,10 +41,15 @@ class DetailReservationViewModel @Inject constructor() : ViewModel() {
         when (intent) {
             // 상태 변경 확인 테스트를 위한 코드입니다.
             is DetailReservationIntent.NavigateToChat,
-            is DetailReservationIntent.NavigateToHistory,
             is DetailReservationIntent.ConfirmReservation,
             -> {
                 _state.update { it.copy(reservationStatus = it.reservationStatus.next()) }
+            }
+
+            is DetailReservationIntent.NavigateToWriteReview -> {
+                viewModelScope.launch {
+                    _sideEffect.emit(DetailReservationSideEffect.NavigateToWriteReview)
+                }
             }
 
             is DetailReservationIntent.ShowCancelDialog -> {
@@ -74,7 +79,7 @@ class DetailReservationViewModel @Inject constructor() : ViewModel() {
                 viewModelScope.launch {
                     when (state.value.reservationStatus) {
                         ReservationStatus.WAITING_APPROVAL,
-                        ReservationStatus.WAITING_PAYMENT,
+                        ReservationStatus.WAITING_SCHEDULE,
                         -> {
                             _sideEffect.emit(DetailReservationSideEffect.NavigateToCancelReservationConfirm)
                         }
@@ -117,8 +122,8 @@ class DetailReservationViewModel @Inject constructor() : ViewModel() {
     // 상태 변경 확인 테스트를 위한 코드입니다.
     private fun ReservationStatus.next(): ReservationStatus =
         when (this) {
-            ReservationStatus.WAITING_APPROVAL -> ReservationStatus.WAITING_PAYMENT
-            ReservationStatus.WAITING_PAYMENT -> ReservationStatus.RESERVED
+            ReservationStatus.WAITING_APPROVAL -> ReservationStatus.WAITING_SCHEDULE
+            ReservationStatus.WAITING_SCHEDULE -> ReservationStatus.RESERVED
             ReservationStatus.RESERVED -> ReservationStatus.COMPLETED
             ReservationStatus.COMPLETED -> ReservationStatus.COMPLETED
         }
