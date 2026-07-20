@@ -3,12 +3,15 @@ package com.hm.picplz.data.repository
 import com.hm.picplz.common.result.AppResult
 import com.hm.picplz.common.result.runCatchingAppError
 import com.hm.picplz.data.mapper.toShootingPackage
+import com.hm.picplz.data.service.PhotographerSearchService
 import com.hm.picplz.data.service.PhotographerService
 import com.hm.picplz.data.service.ProductService
 import com.hm.picplz.domain.model.Area
 import com.hm.picplz.domain.model.FilteredPhotographers
 import com.hm.picplz.domain.model.PhotographerDetail
+import com.hm.picplz.domain.model.PhotographerPage
 import com.hm.picplz.domain.repository.PhotographerRepository
+import com.hm.picplz.domain.repository.PhotographerSearchRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
@@ -17,13 +20,22 @@ class PhotographerRepositoryImpl
     @Inject
     constructor(
         private val photographerService: PhotographerService,
+        private val photographerSearchService: PhotographerSearchService,
         private val productService: ProductService,
-    ) : PhotographerRepository {
+    ) : PhotographerRepository,
+        PhotographerSearchRepository {
         override suspend fun getNearbyPhotographers(
             longitude: Double,
             latitude: Double,
             distance: Long,
         ): AppResult<FilteredPhotographers> = photographerService.getNearbyPhotographers(longitude, latitude, distance)
+
+        override suspend fun searchPhotographers(
+            keyword: String,
+            sortType: String,
+            page: Int,
+            size: Int,
+        ): AppResult<PhotographerPage> = photographerSearchService.searchPhotographers(keyword, sortType, page, size)
 
         override suspend fun getPhotographerDetail(
             photographerId: Long,

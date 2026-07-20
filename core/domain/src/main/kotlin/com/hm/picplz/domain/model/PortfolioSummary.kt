@@ -7,3 +7,10 @@ data class PortfolioSummary(
     val location: String?,
     val uploadDate: String?,
 )
+
+data class PortfolioDetail(
+    val id: Long,
+    val imageUris: List<String>,
+    val location: String?,
+    val uploadDate: String?,
+)

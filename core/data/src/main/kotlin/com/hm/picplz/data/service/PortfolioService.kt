@@ -2,6 +2,7 @@ package com.hm.picplz.data.service
 
 import com.hm.picplz.common.result.AppResult
 import com.hm.picplz.data.model.PortfolioListResponseDto
+import com.hm.picplz.data.model.PortfolioResponseDto
 import com.hm.picplz.data.source.PortfolioSource
 import javax.inject.Inject
 
@@ -11,6 +12,8 @@ interface PortfolioService {
         page: Int = 0,
         size: Int = 9,
     ): AppResult<PortfolioListResponseDto>
+
+    suspend fun getPortfolio(portfolioId: Long): AppResult<PortfolioResponseDto>
 }
 
 class PortfolioServiceImpl
@@ -28,4 +31,7 @@ class PortfolioServiceImpl
                 page = page,
                 size = size,
             )
+
+        override suspend fun getPortfolio(portfolioId: Long): AppResult<PortfolioResponseDto> =
+            portfolioSource.getPortfolio(portfolioId)
     }

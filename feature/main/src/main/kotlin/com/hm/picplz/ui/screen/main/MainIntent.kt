@@ -9,6 +9,8 @@ sealed interface MainIntent {
 
     data object RetryLoad : MainIntent
 
+    data object LoadNextPage : MainIntent
+
     data object SearchClicked : MainIntent
 
     data class PhotographerClicked(val photographerId: Long) : MainIntent

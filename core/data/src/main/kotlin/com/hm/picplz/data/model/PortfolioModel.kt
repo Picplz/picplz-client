@@ -14,3 +14,18 @@ data class PortfolioSummaryResponseDto(
     val location: String?,
     val uploadDate: String?,
 )
+
+data class PortfolioResponseDto(
+    val portfolioId: Long?,
+    val photos: List<PortfolioPhotoResponseDto>?,
+    val location: String?,
+    val uploadDate: String?,
+    val scrapCount: Long?,
+    val scrapYN: Boolean?,
+)
+
+data class PortfolioPhotoResponseDto(
+    val portfolioPhotoId: Long?,
+    val image: String?,
+    val photoOrder: Int?,
+)

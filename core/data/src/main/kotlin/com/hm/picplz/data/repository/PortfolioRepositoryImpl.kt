@@ -3,6 +3,7 @@ package com.hm.picplz.data.repository
 import com.hm.picplz.common.result.AppResult
 import com.hm.picplz.data.mapper.toDomain
 import com.hm.picplz.data.service.PortfolioService
+import com.hm.picplz.domain.model.PortfolioDetail
 import com.hm.picplz.domain.model.PortfolioSummary
 import com.hm.picplz.domain.repository.PortfolioRepository
 import javax.inject.Inject
@@ -24,4 +25,7 @@ class PortfolioRepositoryImpl
             ).map { response ->
                 response.portfolios.orEmpty().map { it.toDomain() }
             }
+
+        override suspend fun getPortfolio(portfolioId: Long): AppResult<PortfolioDetail> =
+            portfolioService.getPortfolio(portfolioId).map { it.toDomain() }
     }
