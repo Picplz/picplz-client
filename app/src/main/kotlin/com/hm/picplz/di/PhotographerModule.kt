@@ -1,10 +1,10 @@
 package com.hm.picplz.di
 
 import com.hm.picplz.data.repository.PhotographerRepositoryImpl
-import com.hm.picplz.data.service.PhotographerService
-import com.hm.picplz.data.service.PhotographerServiceImpl
 import com.hm.picplz.data.service.PhotographerSearchService
 import com.hm.picplz.data.service.PhotographerSearchServiceImpl
+import com.hm.picplz.data.service.PhotographerService
+import com.hm.picplz.data.service.PhotographerServiceImpl
 import com.hm.picplz.data.source.PhotographerSource
 import com.hm.picplz.data.source.PhotographerSourceImpl
 import com.hm.picplz.domain.repository.PhotographerRepository
