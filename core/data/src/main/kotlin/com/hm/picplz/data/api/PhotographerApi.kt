@@ -5,7 +5,6 @@ import com.hm.picplz.data.model.CreatePhotographerRequest
 import com.hm.picplz.data.model.NearbyPhotographerCard
 import com.hm.picplz.data.model.PhotoMoodRequest
 import com.hm.picplz.data.model.PhotographerDetailDto
-import com.hm.picplz.data.model.PhotographerSearchPageDto
 import com.hm.picplz.data.model.ReviewListDto
 import com.hm.picplz.data.model.UpdateActiveAreaRequest
 import com.hm.picplz.data.model.UpdateActiveAreaResponse
@@ -45,14 +44,6 @@ interface PhotographerApi {
         @Query("latitude") latitude: Double,
         @Query("distance") distance: Long,
     ): Response<ApiResponse<List<NearbyPhotographerCard>>>
-
-    @GET("api/v1/photographers/search")
-    suspend fun searchPhotographers(
-        @Query("keyword") keyword: String,
-        @Query("sortType") sortType: String = "RATING",
-        @Query("page") page: Int,
-        @Query("size") size: Int,
-    ): Response<ApiResponse<PhotographerSearchPageDto>>
 
     @GET("api/v1/photographers/{photographerId}/info")
     suspend fun getPhotographerInfo(

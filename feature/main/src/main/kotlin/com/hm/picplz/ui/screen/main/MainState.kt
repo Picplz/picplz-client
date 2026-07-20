@@ -21,14 +21,13 @@ data class CustomerHomeItem(
     val photographerId: Long,
     val photographerName: String,
     val profileImageUri: String?,
+    val activeArea: String,
     val portfolioId: Long?,
     val portfolioImageUris: List<String>,
     val location: String,
     val uploadDate: String?,
     val photoCount: Int,
     val isActive: Boolean,
-    val distance: Long,
-    val moodTags: List<String>,
 )
 
 enum class MainLoadError {

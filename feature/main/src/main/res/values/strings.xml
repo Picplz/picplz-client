@@ -84,7 +84,6 @@
     <string name="main_photographer_inactive">일정문의</string>
     <string name="main_location_unknown">위치 정보 없음</string>
     <string name="main_location_with_date_format">%1$s  |  %2$s</string>
-    <string name="main_distance_format">%1$d m 근처</string>
 
     <string-array name="main_region_tabs">
         <item>서울</item>

@@ -2,16 +2,20 @@ package com.hm.picplz.ui.screen.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hm.picplz.domain.model.Area
 import com.hm.picplz.domain.model.LocationCoordinate
 import com.hm.picplz.domain.model.Photographer
 import com.hm.picplz.domain.usecase.GetCurrentLocationUseCase
 import com.hm.picplz.domain.usecase.GetCurrentMemberIdUseCase
+import com.hm.picplz.domain.usecase.GetNearbyPhotographersUseCase
+import com.hm.picplz.domain.usecase.GetPhotographerActiveAreasUseCase
 import com.hm.picplz.domain.usecase.GetPhotographerPortfoliosUseCase
 import com.hm.picplz.domain.usecase.GetPortfolioUseCase
-import com.hm.picplz.domain.usecase.SearchPhotographersUseCase
 import com.hm.picplz.domain.usecase.UpdateMemberLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val HOME_FEED_PAGE_SIZE = 5
-private const val HOME_FEED_SORT_TYPE = "RATING"
+private const val NEARBY_DISTANCE_METERS = 2_000L
 
 @HiltViewModel
 class MainViewModel
@@ -30,7 +34,8 @@ class MainViewModel
         private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
         private val getCurrentMemberIdUseCase: GetCurrentMemberIdUseCase,
         private val updateMemberLocationUseCase: UpdateMemberLocationUseCase,
-        private val searchPhotographersUseCase: SearchPhotographersUseCase,
+        private val getNearbyPhotographersUseCase: GetNearbyPhotographersUseCase,
+        private val getPhotographerActiveAreasUseCase: GetPhotographerActiveAreasUseCase,
         private val getPhotographerPortfoliosUseCase: GetPhotographerPortfoliosUseCase,
         private val getPortfolioUseCase: GetPortfolioUseCase,
     ) : ViewModel() {
@@ -39,6 +44,7 @@ class MainViewModel
 
         private val _sideEffect = Channel<MainSideEffect>(Channel.BUFFERED)
         val sideEffect = _sideEffect.receiveAsFlow()
+        private var nearbyPhotographers = emptyList<Photographer>()
         private val portfolioRequestsInFlight = mutableSetOf<Long>()
         private val resolvedPhotographerIds = mutableSetOf<Long>()
 
@@ -147,7 +153,7 @@ class MainViewModel
                     location = location,
                 )
 
-                loadFeedPage(page = 0, append = false)
+                loadNearbyPhotographers(location)
             }
         }
 
@@ -160,72 +166,60 @@ class MainViewModel
                 return
             }
 
+            val nextItems =
+                nearbyPhotographers
+                    .drop(currentState.homeItems.size)
+                    .take(HOME_FEED_PAGE_SIZE)
+                    .map { it.toHomeItem() }
+            val mergedItems = currentState.homeItems + nextItems
             _state.update {
                 it.copy(
-                    isLoadingMore = true,
+                    isLoadingMore = false,
+                    hasNextPage = mergedItems.size < nearbyPhotographers.size,
+                    nextPage = currentState.nextPage + 1,
                     loadMoreFailed = false,
+                    homeItems = mergedItems,
                 )
-            }
-            viewModelScope.launch {
-                loadFeedPage(page = currentState.nextPage, append = true)
             }
         }
 
-        private suspend fun loadFeedPage(
-            page: Int,
-            append: Boolean,
-        ) {
-            if (!append) {
-                portfolioRequestsInFlight.clear()
-                resolvedPhotographerIds.clear()
+        private suspend fun loadNearbyPhotographers(location: LocationCoordinate) {
+            portfolioRequestsInFlight.clear()
+            resolvedPhotographerIds.clear()
+            getNearbyPhotographersUseCase(
+                longitude = location.longitude,
+                latitude = location.latitude,
+                distance = NEARBY_DISTANCE_METERS,
+            ).onSuccess { filtered ->
+                nearbyPhotographers =
+                    (filtered.active + filtered.inactive)
+                        .distinctBy(Photographer::id)
+                val initialItems =
+                    nearbyPhotographers
+                        .take(HOME_FEED_PAGE_SIZE)
+                        .map { it.toHomeItem() }
                 _state.update {
                     it.copy(
-                        isLoading = true,
-                        loadMoreFailed = false,
-                        errorMessage = null,
-                    )
-                }
-            }
-
-            searchPhotographersUseCase(
-                keyword = "",
-                sortType = HOME_FEED_SORT_TYPE,
-                page = page,
-                size = HOME_FEED_PAGE_SIZE,
-            ).onSuccess { result ->
-                val newItems = result.photographers.map { it.toHomeItem() }
-                _state.update { current ->
-                    val mergedItems =
-                        if (append) {
-                            (current.homeItems + newItems).distinctBy(CustomerHomeItem::photographerId)
-                        } else {
-                            newItems.distinctBy(CustomerHomeItem::photographerId)
-                        }
-                    current.copy(
                         isLoading = false,
                         isLoadingMore = false,
-                        hasNextPage = result.hasNext,
-                        nextPage = result.page + 1,
+                        hasNextPage = initialItems.size < nearbyPhotographers.size,
+                        nextPage = 1,
                         loadMoreFailed = false,
                         errorMessage = null,
-                        homeItems = mergedItems,
+                        homeItems = initialItems,
                     )
                 }
             }.onFailure {
-                _state.update { current ->
-                    if (append) {
-                        current.copy(
-                            isLoadingMore = false,
-                            loadMoreFailed = true,
-                        )
-                    } else {
-                        current.copy(
-                            isLoading = false,
-                            hasNextPage = false,
-                            errorMessage = MainLoadError.NearbyPhotographers,
-                            homeItems = emptyList(),
-                        )
-                    }
+                nearbyPhotographers = emptyList()
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        isLoadingMore = false,
+                        hasNextPage = false,
+                        loadMoreFailed = false,
+                        errorMessage = MainLoadError.NearbyPhotographers,
+                        homeItems = emptyList(),
+                    )
                 }
             }
         }
@@ -235,14 +229,13 @@ class MainViewModel
                 photographerId = id,
                 photographerName = name.removeSuffix(" 작가").trim(),
                 profileImageUri = profileImageUri,
+                activeArea = activeAreas.toAreaNamesText(),
                 portfolioId = null,
                 portfolioImageUris = emptyList(),
-                location = activeAreas.firstOrNull().orEmpty(),
+                location = "",
                 uploadDate = null,
                 photoCount = 0,
                 isActive = isActive,
-                distance = distance,
-                moodTags = photoMoods,
             )
 
         private fun loadPortfolioDetail(photographerId: Long) {
@@ -257,12 +250,39 @@ class MainViewModel
 
             portfolioRequestsInFlight += photographerId
             viewModelScope.launch {
-                val portfolioSummary =
-                    getPhotographerPortfoliosUseCase(
-                        photographerId = photographerId,
-                        page = 0,
-                        size = 1,
-                    ).getOrNull()?.firstOrNull()
+                val (activeAreas, portfolioSummary) =
+                    coroutineScope {
+                        val activeAreasDeferred =
+                            async {
+                                getPhotographerActiveAreasUseCase(photographerId)
+                                    .getOrNull()
+                                    .orEmpty()
+                            }
+                        val portfolioDeferred =
+                            async {
+                                getPhotographerPortfoliosUseCase(
+                                    photographerId = photographerId,
+                                    page = 0,
+                                    size = 1,
+                                ).getOrNull()?.firstOrNull()
+                            }
+                        activeAreasDeferred.await() to portfolioDeferred.await()
+                    }
+                val activeArea = activeAreas.toActivityAreaText()
+                if (activeArea.isNotEmpty()) {
+                    _state.update { current ->
+                        current.copy(
+                            homeItems =
+                                current.homeItems.map { homeItem ->
+                                    if (homeItem.photographerId == photographerId) {
+                                        homeItem.copy(activeArea = activeArea)
+                                    } else {
+                                        homeItem
+                                    }
+                                },
+                        )
+                    }
+                }
                 if (portfolioSummary != null) {
                     _state.update { current ->
                         current.copy(
@@ -313,3 +333,15 @@ class MainViewModel
             }
         }
     }
+
+private fun List<Area>.toActivityAreaText(): String = map(Area::displayName).toAreaNamesText()
+
+private fun List<String>.toAreaNamesText(): String =
+    map { area ->
+        area
+            .split(" ")
+            .firstOrNull { part -> part.endsWith("구") || part.endsWith("군") }
+            ?: area
+    }.distinct()
+        .take(2)
+        .joinToString(" · ")

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -26,12 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.hm.picplz.feature.main.R
 import com.hm.picplz.ui.screen.common.CommonIconButton
 import com.hm.picplz.ui.theme.MainThemeColor
@@ -68,8 +74,30 @@ internal fun CustomerHomeCard(
             item.portfolioImageUris
         }
     val pagerState = rememberPagerState(pageCount = { portfolioImages.size })
+    val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val prefetchWidth =
+        with(density) {
+            (configuration.screenWidthDp.dp - 32.dp).roundToPx()
+        }
+    val prefetchHeight =
+        with(density) {
+            420.dp.roundToPx()
+        }
     LaunchedEffect(item.photographerId) {
         onVisible()
+    }
+    LaunchedEffect(item.portfolioImageUris, prefetchWidth, prefetchHeight) {
+        item.portfolioImageUris.drop(1).forEach { imageUri ->
+            context.imageLoader.enqueue(
+                ImageRequest
+                    .Builder(context)
+                    .data(imageUri)
+                    .size(prefetchWidth, prefetchHeight)
+                    .build(),
+            )
+        }
     }
 
     Column(
@@ -108,7 +136,7 @@ internal fun CustomerHomeCard(
                     color = MainThemeColor.Gray5,
                 )
                 Text(
-                    text = item.moodTags.take(2).joinToString(" · "),
+                    text = item.activeArea,
                     style = MainThemeFont.Caption,
                     color = MainThemeColor.Gray4,
                 )
@@ -155,7 +183,8 @@ internal fun CustomerHomeCard(
                         Modifier
                             .align(Alignment.TopEnd)
                             .padding(top = 12.dp, end = 12.dp)
-                            .size(width = 36.dp, height = 24.dp)
+                            .height(24.dp)
+                            .widthIn(min = 36.dp)
                             .clip(RoundedCornerShape(5.dp))
                             .background(MainThemeColor.Black.copy(alpha = 0.6f))
                             .padding(horizontal = 7.dp, vertical = 2.dp),
@@ -206,14 +235,6 @@ internal fun CustomerHomeCard(
                 color = MainThemeColor.Gray3,
             )
         }
-        if (item.distance > 0) {
-            Text(
-                text = stringResource(R.string.main_distance_format, item.distance),
-                style = MainThemeFont.Caption,
-                color = MainThemeColor.Gray3,
-            )
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalDivider(color = MainThemeColor.Gray2)
     }

@@ -201,6 +201,7 @@ private fun MainScreenPreview() {
                                 photographerId = 1L,
                                 photographerName = "유가영",
                                 profileImageUri = null,
+                                activeArea = "마포구 · 동작구",
                                 portfolioId = 1L,
                                 portfolioImageUris =
                                     listOf(
@@ -211,8 +212,6 @@ private fun MainScreenPreview() {
                                 uploadDate = "2026-06-11",
                                 photoCount = 4,
                                 isActive = true,
-                                distance = 340,
-                                moodTags = listOf("무드", "필름"),
                             ),
                         ),
                 ),

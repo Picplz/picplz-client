@@ -6,7 +6,6 @@ import com.hm.picplz.data.model.CreatePhotographerRequest
 import com.hm.picplz.data.model.NearbyPhotographerCard
 import com.hm.picplz.data.model.PhotoMoodRequest
 import com.hm.picplz.data.model.PhotographerDetailDto
-import com.hm.picplz.data.model.PhotographerSearchPageDto
 import com.hm.picplz.data.model.ReviewListDto
 import com.hm.picplz.data.model.UpdateActiveAreaRequest
 import com.hm.picplz.data.model.UpdateActiveAreaResponse
@@ -28,13 +27,6 @@ interface PhotographerSource {
         latitude: Double,
         distance: Long,
     ): AppResult<List<NearbyPhotographerCard>>
-
-    suspend fun searchPhotographers(
-        keyword: String,
-        sortType: String,
-        page: Int,
-        size: Int,
-    ): AppResult<PhotographerSearchPageDto>
 
     suspend fun getPhotographerInfo(photographerId: Long): AppResult<PhotographerDetailDto>
 
@@ -69,14 +61,6 @@ class PhotographerSourceImpl
             distance: Long,
         ): AppResult<List<NearbyPhotographerCard>> =
             safeApiCall({ photographerApi.getNearbyPhotographers(longitude, latitude, distance) }) { it.data }
-
-        override suspend fun searchPhotographers(
-            keyword: String,
-            sortType: String,
-            page: Int,
-            size: Int,
-        ): AppResult<PhotographerSearchPageDto> =
-            safeApiCall({ photographerApi.searchPhotographers(keyword, sortType, page, size) }) { it.data }
 
         override suspend fun getPhotographerInfo(photographerId: Long): AppResult<PhotographerDetailDto> =
             safeApiCall({ photographerApi.getPhotographerInfo(photographerId) }) { it.data }

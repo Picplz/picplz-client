@@ -4,8 +4,6 @@ import com.hm.picplz.common.model.PhotoReview
 import com.hm.picplz.data.model.ActiveAreaResponse
 import com.hm.picplz.data.model.NearbyPhotographerCard
 import com.hm.picplz.data.model.PhotographerDetailDto
-import com.hm.picplz.data.model.PhotographerSearchItemDto
-import com.hm.picplz.data.model.PhotographerSearchPageDto
 import com.hm.picplz.data.model.ProductDto
 import com.hm.picplz.data.model.ReviewListDto
 import com.hm.picplz.data.model.ReviewPhotoDto
@@ -13,7 +11,6 @@ import com.hm.picplz.data.model.ReviewSummaryDto
 import com.hm.picplz.domain.model.Area
 import com.hm.picplz.domain.model.Photographer
 import com.hm.picplz.domain.model.PhotographerInfo
-import com.hm.picplz.domain.model.PhotographerPage
 import com.hm.picplz.domain.model.PhotographerReview
 import com.hm.picplz.domain.model.PhotographerReviewData
 import com.hm.picplz.domain.model.PhotographerReviewSummary
@@ -35,27 +32,6 @@ fun NearbyPhotographerCard.toDomain(): Photographer {
 
 fun List<NearbyPhotographerCard>.toDomain(): List<Photographer> {
     return map { it.toDomain() }
-}
-
-fun PhotographerSearchPageDto.toDomain(): PhotographerPage {
-    val currentPage = number ?: 0
-    return PhotographerPage(
-        photographers = content.orEmpty().mapNotNull(PhotographerSearchItemDto::toDomain),
-        page = currentPage,
-        hasNext = last?.not() ?: (currentPage + 1 < (totalPages ?: 0)),
-    )
-}
-
-private fun PhotographerSearchItemDto.toDomain(): Photographer? {
-    val id = photographerId ?: return null
-    return Photographer(
-        id = id,
-        name = nickname.orEmpty(),
-        profileImageUri = profileImage,
-        isActive = isActive == "Y",
-        distance = 0,
-        photoMoods = photoMoods.orEmpty().mapNotNull { it?.takeUnless(String::isBlank) },
-    )
 }
 
 fun PhotographerDetailDto.toPhotographerInfo(): PhotographerInfo {
