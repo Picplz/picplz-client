@@ -24,6 +24,120 @@
     <string name="equipment_setting_duplicate_device_message">이미 추가된 기기입니다.</string>
     <string name="equipment_setting_phone_brand_apple">애플</string>
     <string name="equipment_setting_phone_brand_samsung">삼성</string>
+    <string name="main_search_no_result">검색 결과가 없습니다</string>
+    <string name="main_search_empty_image_content_description">검색 결과 없음</string>
+    <string name="main_search_photographer_profile_content_description">%1$s 프로필 이미지</string>
+    <string name="main_search_result_metric_format">리뷰 %1$d · 팔로워 %2$d</string>
+    <string name="main_search_available_now">바로 가능</string>
+    <string name="main_search_available_later">일정 문의</string>
+    <string name="main_search_back_content_description">뒤로가기</string>
+    <string name="main_search_icon_content_description">검색</string>
+    <string name="main_search_clear_content_description">검색어 지우기</string>
+    <string name="main_search_placeholder">촬영을 하고 싶은 작가를 검색해보세요</string>
+    <string name="main_search_filter_region">촬영 지역</string>
+    <string name="main_search_filter_device">촬영 기기</string>
+    <string name="main_search_filter_mood">분위기 태그</string>
+    <string name="main_search_recent_title">최근 검색어</string>
+    <string name="main_search_recent_clear_all">모두 삭제</string>
+    <string name="main_search_popular_spot_title">인기 촬영지</string>
+    <string name="main_search_popular_spot_updated_at">04.22 12:00 기준</string>
+    <string name="main_search_result_active_status">바로촬영</string>
+    <string name="main_search_result_profile_content_description">%1$s 프로필 이미지</string>
+    <string name="main_search_result_empty">검색 결과가 없습니다</string>
+    <string name="main_search_result_empty_content_description">검색 결과 없음</string>
+    <string name="main_search_suggestion_location_dogok">서울 강남구 도곡동</string>
+    <string name="main_search_suggestion_location_dogok_one">서울 강남구 도곡1동</string>
+    <string name="main_search_suggestion_location_dogok_two">서울 강남구 도곡2동</string>
+    <string name="main_search_suggestion_photographer_kang_jueun">강주은 작가</string>
+    <string name="main_search_suggestion_photographer_dog">강아지 작가</string>
+    <string name="main_search_suggestion_tag_dog">강아지랑 촬영</string>
+    <string name="main_search_suggestion_tag_strong">강한 컨셉</string>
+    <string name="main_search_sort_popular">인기순</string>
+    <string name="main_search_sort_rating">별점순</string>
+    <string name="main_search_sort_follower">팔로워순</string>
+    <string name="main_home_title">홈</string>
+    <string name="main_region_all_seoul">서울 전체</string>
+    <string name="main_region_all_format">%1$s 전체</string>
+    <string name="main_region_selection_format">%1$s %2$s</string>
+    <string name="main_region_explore_title">지역별 작가 탐색</string>
+    <string name="main_region_apply">적용하기</string>
+    <string name="main_region_select_content_description">지역 선택</string>
+    <string name="main_location_rationale_title_prefix">주변 작가를 찾으려면</string>
+    <string name="main_location_rationale_title_permission">위치 권한</string>
+    <string name="main_location_rationale_title_suffix">이 필요해요</string>
+    <string name="main_location_rationale_description">현재 위치를 기준으로 가까운 작가와 포트폴리오를 보여드려요</string>
+    <string name="main_location_rationale_button">다음</string>
+    <string name="main_location_rationale_icon_desc">위치 권한 안내</string>
+    <string name="main_location_denied_title">위치 접근 권한이</string>
+    <string name="main_location_denied_subtitle">꺼져 있어요</string>
+    <string name="main_location_denied_guide_prefix">설정 → 앱 → [픽플즈]에서</string>
+    <string name="main_location_denied_guide_suffix">위치 권한을 활성화 해주세요</string>
+    <string name="main_location_denied_image_desc">위치 권한 꺼짐 이미지</string>
+    <string name="main_retry_button">다시 시도</string>
+    <string name="main_empty_title">주변 작가를 불러오지 못했어요</string>
+    <string name="main_empty_subtitle">잠시 후 다시 시도해주세요</string>
+    <string name="main_photographer_profile_content_description">%1$s 프로필 이미지</string>
+    <string name="main_portfolio_image_content_description">포트폴리오 대표 이미지</string>
+    <string name="main_photographer_active">바로촬영</string>
+    <string name="main_photographer_inactive">일정문의</string>
+    <string name="main_location_unknown">위치 정보 없음</string>
+    <string name="main_distance_format">%1$d m 근처</string>
+
+    <string-array name="main_region_tabs">
+        <item>서울</item>
+        <item>경기</item>
+        <item>인천</item>
+        <item>부산</item>
+        <item>제주</item>
+    </string-array>
+    <string-array name="main_region_districts_seoul">
+        <item>강남구</item>
+        <item>강동구</item>
+        <item>강북구</item>
+        <item>강서구</item>
+        <item>관악구</item>
+        <item>광진구</item>
+        <item>구로구</item>
+        <item>금천구</item>
+        <item>노원구</item>
+        <item>도봉구</item>
+        <item>동대문구</item>
+        <item>동작구</item>
+        <item>마포구</item>
+        <item>서대문구</item>
+        <item>서초구</item>
+        <item>성동구</item>
+        <item>성북구</item>
+        <item>송파구</item>
+        <item>양천구</item>
+        <item>영등포구</item>
+        <item>용산구</item>
+        <item>은평구</item>
+        <item>종로구</item>
+        <item>중구</item>
+        <item>중랑구</item>
+    </string-array>
+    <string-array name="main_region_districts_gyeonggi">
+        <item>성남시</item>
+        <item>수원시</item>
+        <item>고양시</item>
+        <item>용인시</item>
+        <item>부천시</item>
+    </string-array>
+    <string-array name="main_region_districts_incheon">
+        <item>연수구</item>
+        <item>남동구</item>
+        <item>부평구</item>
+    </string-array>
+    <string-array name="main_region_districts_busan">
+        <item>해운대구</item>
+        <item>수영구</item>
+        <item>부산진구</item>
+    </string-array>
+    <string-array name="main_region_districts_jeju">
+        <item>제주시</item>
+        <item>서귀포시</item>
+    </string-array>
 
     <string-array name="equipment_setting_apple_phone_models">
         <item>아이폰 15 Pro Max</item>

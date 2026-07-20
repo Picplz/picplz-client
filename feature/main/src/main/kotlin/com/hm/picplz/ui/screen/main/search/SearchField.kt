@@ -3,12 +3,10 @@ package com.hm.picplz.ui.screen.main.search
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,26 +20,40 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hm.picplz.core.ui.R
+import androidx.compose.ui.unit.sp
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.MainThemeFont
 import com.hm.picplz.ui.theme.PicplzTheme
+import com.hm.picplz.feature.main.R as FeatureMainR
+
+private object SearchFieldDefaults {
+    val HorizontalPadding = 16.dp
+    val VerticalPadding = 10.dp
+    val CornerRadius = 50.dp
+    val StrokeWidth = 1.dp
+    val TextLineHeight = 20.sp
+    val ClearButtonSize = 20.dp
+    val ClearIconSize = 13.dp
+    val IconSize = 20.dp
+    val IconGap = 10.dp
+    val TextIconGap = 8.dp
+}
 
 @Composable
 fun SearchField(
@@ -54,25 +66,31 @@ fun SearchField(
     enabled: Boolean = true,
     imeAction: ImeAction = ImeAction.Search,
     keyboardActions: (() -> Unit)? = null,
+    autoFocus: Boolean = false,
 ) {
     val focusManager = LocalFocusManager.current
-    var isFocused by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(autoFocus) {
+        if (autoFocus) {
+            focusRequester.requestFocus()
+        }
+    }
 
     Box(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(50.dp)
-                .clip(RoundedCornerShape(50.dp))
+                .clip(RoundedCornerShape(SearchFieldDefaults.CornerRadius))
                 .border(
-                    width = 1.dp,
-                    color = if (isFocused) MainThemeColor.Olive else MainThemeColor.Gray6,
-                    shape = RoundedCornerShape(50.dp),
+                    width = SearchFieldDefaults.StrokeWidth,
+                    color = MainThemeColor.Gray6,
+                    shape = RoundedCornerShape(SearchFieldDefaults.CornerRadius),
                 )
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = { focusManager.clearFocus() })
-                }
-                .padding(horizontal = 16.dp),
+                .padding(
+                    horizontal = SearchFieldDefaults.HorizontalPadding,
+                    vertical = SearchFieldDefaults.VerticalPadding,
+                ),
         contentAlignment = Alignment.Center,
     ) {
         Row(
@@ -85,13 +103,17 @@ fun SearchField(
                 modifier =
                     Modifier
                         .weight(1f)
-                        .padding(end = 8.dp)
+                        .padding(end = SearchFieldDefaults.TextIconGap)
+                        .focusRequester(focusRequester)
                         .onFocusChanged { focusState ->
-                            isFocused = focusState.isFocused
                             onFocusChanged?.invoke(focusState.isFocused)
                         },
                 enabled = enabled,
-                textStyle = MainThemeFont.Body.copy(color = MainThemeColor.Black),
+                textStyle =
+                    MainThemeFont.Body.copy(
+                        color = MainThemeColor.Black,
+                        lineHeight = SearchFieldDefaults.TextLineHeight,
+                    ),
                 keyboardOptions =
                     KeyboardOptions(
                         keyboardType = KeyboardType.Text,
@@ -114,7 +136,7 @@ fun SearchField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            style = MainThemeFont.Body,
+                            style = MainThemeFont.Body.copy(lineHeight = SearchFieldDefaults.TextLineHeight),
                             color = MainThemeColor.Gray3,
                         )
                     }
@@ -126,7 +148,7 @@ fun SearchField(
                 Box(
                     modifier =
                         Modifier
-                            .size(20.dp)
+                            .size(SearchFieldDefaults.ClearButtonSize)
                             .clip(CircleShape)
                             .background(MainThemeColor.Gray2)
                             .clickable {
@@ -137,27 +159,28 @@ fun SearchField(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "clear",
-                        Modifier.size(13.dp),
+                        contentDescription =
+                            stringResource(FeatureMainR.string.main_search_clear_content_description),
+                        Modifier.size(SearchFieldDefaults.ClearIconSize),
                         tint = MainThemeColor.Gray4,
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(SearchFieldDefaults.IconGap))
 
             Icon(
-                painter = painterResource(id = R.drawable.search),
-                contentDescription = "검색",
+                painter = painterResource(id = FeatureMainR.drawable.main_search_icon),
+                contentDescription = stringResource(FeatureMainR.string.main_search_icon_content_description),
                 modifier =
                     Modifier
-                        .size(14.dp)
+                        .size(SearchFieldDefaults.IconSize)
                         .clickable {
                             onSearchClick?.invoke()
                                 ?: keyboardActions?.invoke()
                             focusManager.clearFocus()
                         },
-                tint = if (isFocused) MainThemeColor.Olive else MainThemeColor.Black,
+                tint = MainThemeColor.Gray6,
             )
         }
     }

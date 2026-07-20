@@ -12,6 +12,12 @@ data class UpdateMemberInfoRequest(
     val instagram: String?,
 )
 
+data class UpdateMemberLocationRequest(
+    val memberId: Long,
+    val latitude: Double,
+    val longitude: Double,
+)
+
 data class MemberInfoResponseDto(
     val id: Long,
     val nickname: String,

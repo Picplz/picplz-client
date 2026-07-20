@@ -43,7 +43,7 @@ interface PhotographerApi {
         @Query("longitude") longitude: Double,
         @Query("latitude") latitude: Double,
         @Query("distance") distance: Long,
-    ): Response<List<NearbyPhotographerCard>>
+    ): Response<ApiResponse<List<NearbyPhotographerCard>>>
 
     @GET("api/v1/photographers/{photographerId}/info")
     suspend fun getPhotographerInfo(

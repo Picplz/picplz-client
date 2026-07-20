@@ -156,7 +156,7 @@ fun SignUpCompletionScreen(
 
                 is SignUpSideEffect.SignupCompleted -> {
                     onSignupCompleted()
-                    mainNavController.navigate(Main) {
+                    mainNavController.navigate(signupCompletionDestination()) {
                         popUpTo(Login) { inclusive = true }
                         launchSingleTop = true
                     }
@@ -171,6 +171,8 @@ fun SignUpCompletionScreen(
         }
     }
 }
+
+fun signupCompletionDestination(): Any = Main
 
 @Composable
 private fun CompletionProfileImage(profileImageUri: String?) {

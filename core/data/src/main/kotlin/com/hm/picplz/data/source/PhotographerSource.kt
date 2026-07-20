@@ -60,7 +60,7 @@ class PhotographerSourceImpl
             latitude: Double,
             distance: Long,
         ): AppResult<List<NearbyPhotographerCard>> =
-            safeApiCall { photographerApi.getNearbyPhotographers(longitude, latitude, distance) }
+            safeApiCall({ photographerApi.getNearbyPhotographers(longitude, latitude, distance) }) { it.data }
 
         override suspend fun getPhotographerInfo(photographerId: Long): AppResult<PhotographerDetailDto> =
             safeApiCall({ photographerApi.getPhotographerInfo(photographerId) }) { it.data }

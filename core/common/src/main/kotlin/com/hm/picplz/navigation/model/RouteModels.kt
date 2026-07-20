@@ -57,6 +57,8 @@ data class SignUpAddDevice(val category: String = "phone") : NavigationRoute
 // === Dev ===
 @Serializable object Dev : NavigationRoute
 
+@Serializable object DevMainSearchResultPreview : NavigationRoute
+
 // === Main Screens ===
 @Serializable object Main : NavigationRoute
 

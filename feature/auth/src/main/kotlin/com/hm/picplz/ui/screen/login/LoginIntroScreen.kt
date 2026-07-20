@@ -36,7 +36,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hm.picplz.core.ui.R
 import com.hm.picplz.navigation.model.Dev
-import com.hm.picplz.navigation.model.Main
 import com.hm.picplz.navigation.model.SignUpIntro
 import com.hm.picplz.ui.screen.common.CommonHorizontalPager
 import com.hm.picplz.ui.screen.common.KakaoLoginButton
@@ -68,6 +67,7 @@ private const val DEV_ENTRY_TAP_COUNT = 5
 fun LoginIntroScreen(
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel(),
+    onLoginCompleted: () -> Unit = {},
     enableDevEntry: Boolean = false,
 ) {
     val context = LocalContext.current
@@ -128,13 +128,7 @@ fun LoginIntroScreen(
 
                 LoginSideEffect.LoginSuccess -> {
                     Toast.makeText(context, "로그인 성공", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Main) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    onLoginCompleted()
                 }
 
                 is LoginSideEffect.NavigateToSignUp -> {

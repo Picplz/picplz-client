@@ -37,6 +37,7 @@ import com.hm.picplz.navigation.model.DetailPhotographer
 import com.hm.picplz.navigation.model.DetailPhotographerPhotoPortfolios
 import com.hm.picplz.navigation.model.DetailPhotographerPhotoReviews
 import com.hm.picplz.navigation.model.DetailReservation
+import com.hm.picplz.navigation.model.DevMainSearchResultPreview
 import com.hm.picplz.navigation.model.DevMyPagePackageEdit
 import com.hm.picplz.navigation.model.DevMyPagePhotographerProfileAdded
 import com.hm.picplz.navigation.model.Feed
@@ -188,6 +189,8 @@ fun DevScreen(
             // === Main Tabs ===
             SectionTitle("Main Tabs")
             DevButton("Main (홈)") { navController.navigate(Main) }
+            DevButton("MainSearch (검색)") { navController.navigate(MainSearch) }
+            DevButton("MainSearch (검색완료 카드 목업)") { navController.navigate(DevMainSearchResultPreview) }
             DevButton("Feed (피드)") { navController.navigate(Feed) }
             DevButton("Reservation (예약)") { navController.navigate(Reservation) }
             DevButton("Chat (채팅)") { navController.navigate(Chat) }
