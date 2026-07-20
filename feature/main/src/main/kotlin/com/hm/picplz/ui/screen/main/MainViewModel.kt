@@ -11,9 +11,7 @@ import com.hm.picplz.domain.usecase.GetPortfolioUseCase
 import com.hm.picplz.domain.usecase.SearchPhotographersUseCase
 import com.hm.picplz.domain.usecase.UpdateMemberLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +39,8 @@ class MainViewModel
 
         private val _sideEffect = Channel<MainSideEffect>(Channel.BUFFERED)
         val sideEffect = _sideEffect.receiveAsFlow()
+        private val portfolioRequestsInFlight = mutableSetOf<Long>()
+        private val resolvedPhotographerIds = mutableSetOf<Long>()
 
         fun handleIntent(intent: MainIntent) {
             when (intent) {
@@ -81,12 +81,18 @@ class MainViewModel
 
                 MainIntent.LoadNextPage -> loadNextPage()
 
+                is MainIntent.PortfolioVisible -> loadPortfolioDetail(intent.photographerId)
+
                 MainIntent.SearchClicked -> {
                     sendSideEffect(MainSideEffect.NavigateToSearch)
                 }
 
                 is MainIntent.PhotographerClicked -> {
                     sendSideEffect(MainSideEffect.NavigateToPhotographerDetail(intent.photographerId))
+                }
+
+                MainIntent.ReportClicked -> {
+                    sendSideEffect(MainSideEffect.ShowReportUnavailable)
                 }
 
                 MainIntent.DevEntryClicked -> {
@@ -170,6 +176,8 @@ class MainViewModel
             append: Boolean,
         ) {
             if (!append) {
+                portfolioRequestsInFlight.clear()
+                resolvedPhotographerIds.clear()
                 _state.update {
                     it.copy(
                         isLoading = true,
@@ -185,7 +193,7 @@ class MainViewModel
                 page = page,
                 size = HOME_FEED_PAGE_SIZE,
             ).onSuccess { result ->
-                val newItems = result.photographers.toHomeItems()
+                val newItems = result.photographers.map { it.toHomeItem() }
                 _state.update { current ->
                     val mergedItems =
                         if (append) {
@@ -222,43 +230,86 @@ class MainViewModel
             }
         }
 
-        private suspend fun List<Photographer>.toHomeItems(): List<CustomerHomeItem> =
-            coroutineScope {
-                map { photographer ->
-                    async { photographer.toHomeItem() }
-                }.map { it.await() }
-            }
-
-        private suspend fun Photographer.toHomeItem(): CustomerHomeItem {
-            val portfolioSummary =
-                getPhotographerPortfoliosUseCase(
-                    photographerId = id,
-                    page = 0,
-                    size = 1,
-                ).getOrNull()?.firstOrNull()
-            val portfolio =
-                portfolioSummary
-                    ?.takeIf { it.id > 0L }
-                    ?.let { getPortfolioUseCase(it.id).getOrNull() }
-            val imageUris =
-                portfolio?.imageUris
-                    ?.takeIf { it.isNotEmpty() }
-                    ?: listOfNotNull(portfolioSummary?.representativeImage)
-            val locationText =
-                portfolio?.location
-                    ?: portfolioSummary?.location
-                    ?: activeAreas.firstOrNull().orEmpty()
-            return CustomerHomeItem(
+        private fun Photographer.toHomeItem(): CustomerHomeItem =
+            CustomerHomeItem(
                 photographerId = id,
-                photographerName = name,
+                photographerName = name.removeSuffix(" 작가").trim(),
                 profileImageUri = profileImageUri,
-                portfolioImageUris = imageUris,
-                location = locationText,
-                uploadDate = portfolio?.uploadDate ?: portfolioSummary?.uploadDate,
-                photoCount = portfolioSummary?.photoCount ?: imageUris.size,
+                portfolioId = null,
+                portfolioImageUris = emptyList(),
+                location = activeAreas.firstOrNull().orEmpty(),
+                uploadDate = null,
+                photoCount = 0,
                 isActive = isActive,
                 distance = distance,
                 moodTags = photoMoods,
             )
+
+        private fun loadPortfolioDetail(photographerId: Long) {
+            if (state.value.homeItems.none { it.photographerId == photographerId }) {
+                return
+            }
+            if (photographerId in portfolioRequestsInFlight ||
+                photographerId in resolvedPhotographerIds
+            ) {
+                return
+            }
+
+            portfolioRequestsInFlight += photographerId
+            viewModelScope.launch {
+                val portfolioSummary =
+                    getPhotographerPortfoliosUseCase(
+                        photographerId = photographerId,
+                        page = 0,
+                        size = 1,
+                    ).getOrNull()?.firstOrNull()
+                if (portfolioSummary != null) {
+                    _state.update { current ->
+                        current.copy(
+                            homeItems =
+                                current.homeItems.map { homeItem ->
+                                    if (homeItem.photographerId == photographerId) {
+                                        homeItem.copy(
+                                            portfolioId = portfolioSummary.id.takeIf { it > 0L },
+                                            portfolioImageUris = listOfNotNull(portfolioSummary.representativeImage),
+                                            location = portfolioSummary.location ?: homeItem.location,
+                                            uploadDate = portfolioSummary.uploadDate,
+                                            photoCount = portfolioSummary.photoCount,
+                                        )
+                                    } else {
+                                        homeItem
+                                    }
+                                },
+                        )
+                    }
+                }
+
+                val portfolio =
+                    portfolioSummary
+                        ?.takeIf { it.id > 0L && it.photoCount > 1 }
+                        ?.let { getPortfolioUseCase(it.id).getOrNull() }
+                if (portfolio != null) {
+                    _state.update { current ->
+                        current.copy(
+                            homeItems =
+                                current.homeItems.map { homeItem ->
+                                    if (homeItem.photographerId == photographerId) {
+                                        homeItem.copy(
+                                            portfolioImageUris =
+                                                portfolio.imageUris.takeIf { it.isNotEmpty() }
+                                                    ?: homeItem.portfolioImageUris,
+                                            location = portfolio.location ?: homeItem.location,
+                                            uploadDate = portfolio.uploadDate ?: homeItem.uploadDate,
+                                        )
+                                    } else {
+                                        homeItem
+                                    }
+                                },
+                        )
+                    }
+                }
+                portfolioRequestsInFlight -= photographerId
+                resolvedPhotographerIds += photographerId
+            }
         }
     }

@@ -21,6 +21,7 @@ data class CustomerHomeItem(
     val photographerId: Long,
     val photographerName: String,
     val profileImageUri: String?,
+    val portfolioId: Long?,
     val portfolioImageUris: List<String>,
     val location: String,
     val uploadDate: String?,

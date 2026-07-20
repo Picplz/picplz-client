@@ -52,7 +52,7 @@ class MainViewModelTest {
         }
 
     @Test
-    fun `permission granted loads first photographer page and portfolios`() =
+    fun `permission granted loads first photographer page without eager portfolio requests`() =
         runTest {
             val locationRepository = FakeLocationRepository(location = LocationCoordinate(37.5, 127.0))
             val photographerRepository =
@@ -85,21 +85,6 @@ class MainViewModelTest {
                                 ),
                             )
                         },
-                    detailResults =
-                        (1L..5L).associateWith { id ->
-                            Result.success(
-                                PortfolioDetail(
-                                    id = id,
-                                    imageUris =
-                                        listOf(
-                                            "https://image/$id-1.jpg",
-                                            "https://image/$id-2.jpg",
-                                        ),
-                                    location = "서울 강남구",
-                                    uploadDate = "2026-06-11",
-                                ),
-                            )
-                        },
                 )
             val viewModel =
                 createViewModel(
@@ -118,12 +103,9 @@ class MainViewModelTest {
             assertEquals(5, state.homeItems.size)
             assertTrue(state.hasNextPage)
             assertEquals(1, state.nextPage)
-            assertEquals(
-                listOf("https://image/1-1.jpg", "https://image/1-2.jpg"),
-                state.homeItems.first().portfolioImageUris,
-            )
-            assertEquals(listOf(1L, 2L, 3L, 4L, 5L), portfolioRepository.requestedPhotographerIds)
-            assertEquals(listOf(1L, 2L, 3L, 4L, 5L), portfolioRepository.requestedPortfolioIds)
+            assertTrue(state.homeItems.first().portfolioImageUris.isEmpty())
+            assertTrue(portfolioRepository.requestedPhotographerIds.isEmpty())
+            assertTrue(portfolioRepository.requestedPortfolioIds.isEmpty())
         }
 
     @Test
@@ -179,7 +161,7 @@ class MainViewModelTest {
             val state = viewModel.state.value
             assertFalse(state.isLoading)
             assertNull(state.errorMessage)
-            assertEquals("유가영 작가", state.homeItems.single().photographerName)
+            assertEquals("유가영", state.homeItems.single().photographerName)
         }
 
     @Test
@@ -210,10 +192,85 @@ class MainViewModelTest {
 
             viewModel.handleIntent(MainIntent.LocationPermissionResult(granted = true))
             advanceUntilIdle()
+            viewModel.handleIntent(MainIntent.PortfolioVisible(photographerId = 1L))
+            advanceUntilIdle()
 
             val item = viewModel.state.value.homeItems.single()
-            assertEquals("유가영 작가", item.photographerName)
+            assertEquals("유가영", item.photographerName)
             assertTrue(item.portfolioImageUris.isEmpty())
+        }
+
+    @Test
+    fun `visible portfolio loads detail once and replaces representative image`() =
+        runTest {
+            val portfolioRepository =
+                FakePortfolioRepository(
+                    results =
+                        mapOf(
+                            1L to
+                                Result.success(
+                                    listOf(
+                                        PortfolioSummary(
+                                            id = 11L,
+                                            representativeImage = "https://image/summary.jpg",
+                                            photoCount = 2,
+                                            location = "서울 강남구",
+                                            uploadDate = "2026-06-11",
+                                        ),
+                                    ),
+                                ),
+                        ),
+                    detailResults =
+                        mapOf(
+                            11L to
+                                Result.success(
+                                    PortfolioDetail(
+                                        id = 11L,
+                                        imageUris =
+                                            listOf(
+                                                "https://image/detail-1.jpg",
+                                                "https://image/detail-2.jpg",
+                                            ),
+                                        location = "서울 마포구",
+                                        uploadDate = "2026-07-21",
+                                    ),
+                                ),
+                        ),
+                )
+            val viewModel =
+                createViewModel(
+                    locationRepository = FakeLocationRepository(location = LocationCoordinate(37.5, 127.0)),
+                    photographerRepository =
+                        FakePhotographerRepository(
+                            searchResults =
+                                mapOf(
+                                    0 to
+                                        Result.success(
+                                            PhotographerPage(
+                                                photographers = listOf(photographer(1L)),
+                                                page = 0,
+                                                hasNext = false,
+                                            ),
+                                        ),
+                                ),
+                        ),
+                    portfolioRepository = portfolioRepository,
+                )
+
+            viewModel.handleIntent(MainIntent.LocationPermissionResult(granted = true))
+            advanceUntilIdle()
+            viewModel.handleIntent(MainIntent.PortfolioVisible(photographerId = 1L))
+            viewModel.handleIntent(MainIntent.PortfolioVisible(photographerId = 1L))
+            advanceUntilIdle()
+
+            val item = viewModel.state.value.homeItems.single()
+            assertEquals(listOf(11L), portfolioRepository.requestedPortfolioIds)
+            assertEquals(
+                listOf("https://image/detail-1.jpg", "https://image/detail-2.jpg"),
+                item.portfolioImageUris,
+            )
+            assertEquals("서울 마포구", item.location)
+            assertEquals("2026-07-21", item.uploadDate)
         }
 
     @Test
@@ -351,6 +408,17 @@ class MainViewModelTest {
             advanceUntilIdle()
 
             assertEquals(MainSideEffect.NavigateToPhotographerDetail(7L), viewModel.sideEffect.first())
+        }
+
+    @Test
+    fun `report click emits unavailable side effect`() =
+        runTest {
+            val viewModel = createViewModel()
+
+            viewModel.handleIntent(MainIntent.ReportClicked)
+            advanceUntilIdle()
+
+            assertEquals(MainSideEffect.ShowReportUnavailable, viewModel.sideEffect.first())
         }
 
     private fun createViewModel(

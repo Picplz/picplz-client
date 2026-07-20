@@ -11,9 +11,13 @@ sealed interface MainIntent {
 
     data object LoadNextPage : MainIntent
 
+    data class PortfolioVisible(val photographerId: Long) : MainIntent
+
     data object SearchClicked : MainIntent
 
     data class PhotographerClicked(val photographerId: Long) : MainIntent
+
+    data object ReportClicked : MainIntent
 
     data object DevEntryClicked : MainIntent
 
