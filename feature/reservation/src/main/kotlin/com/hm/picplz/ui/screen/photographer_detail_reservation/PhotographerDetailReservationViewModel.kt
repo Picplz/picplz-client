@@ -41,7 +41,7 @@ class PhotographerDetailReservationViewModel @Inject constructor() : ViewModel()
         when (intent) {
             // 상태 변경 확인 테스트를 위한 코드입니다.
             is PhotographerDetailReservationIntent.NavigateToChat,
-            is PhotographerDetailReservationIntent.NavigateToHistory,
+            is PhotographerDetailReservationIntent.ApproveReservation,
             is PhotographerDetailReservationIntent.ConfirmReservation,
             -> {
                 _state.update { it.copy(reservationStatus = it.reservationStatus.next()) }
