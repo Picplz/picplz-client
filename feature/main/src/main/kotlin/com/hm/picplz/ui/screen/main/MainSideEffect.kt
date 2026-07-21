@@ -7,5 +7,7 @@ sealed interface MainSideEffect {
 
     data class NavigateToPhotographerDetail(val photographerId: Long) : MainSideEffect
 
+    data object ShowReportUnavailable : MainSideEffect
+
     data object NavigateToDev : MainSideEffect
 }
