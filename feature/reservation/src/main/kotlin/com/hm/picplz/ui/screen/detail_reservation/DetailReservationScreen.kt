@@ -11,10 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.hm.picplz.common.util.DateTimeUtil
+import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationMap
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationCancelDialog
@@ -22,6 +25,7 @@ import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationInfoSect
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationProgressStepper
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationRefundPolicyDialog
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationStatusHeader
+import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 import com.hm.picplz.ui.theme.MainThemeColor
 
 @Suppress("LongParameterList")
@@ -30,6 +34,7 @@ fun DetailReservationScreen(
     onNavigateBack: () -> Unit,
     onNavigateCancelReservationConfirm: () -> Unit,
     onNavigateToOrderDetail: (orderId: String) -> Unit,
+    onNavigateToWriteReview: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailReservationViewModel = hiltViewModel(),
 ) {
@@ -45,6 +50,8 @@ fun DetailReservationScreen(
                 }
 
                 is DetailReservationSideEffect.NavigateToOrderDetail -> onNavigateToOrderDetail(state.orderId)
+
+                is DetailReservationSideEffect.NavigateToWriteReview -> onNavigateToWriteReview()
             }
         }
     }
@@ -55,11 +62,11 @@ fun DetailReservationScreen(
         onChatClick = {
             viewModel.handelIntent(DetailReservationIntent.NavigateToChat)
         },
-        onHistoryClick = {
-            viewModel.handelIntent(DetailReservationIntent.NavigateToHistory)
-        },
-        onConfirmClick = {
+        onDealCompleteClick = {
             viewModel.handelIntent(DetailReservationIntent.ConfirmReservation)
+        },
+        onReviewClick = {
+            viewModel.handelIntent(DetailReservationIntent.NavigateToWriteReview)
         },
         onCancelClick = {
             viewModel.handelIntent(DetailReservationIntent.ShowCancelDialog)
@@ -87,8 +94,8 @@ fun DetailReservationScreen(
 private fun DetailReservationScreen(
     state: DetailReservationState,
     onChatClick: () -> Unit,
-    onHistoryClick: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onDealCompleteClick: () -> Unit,
+    onReviewClick: () -> Unit,
     onCancelClick: () -> Unit,
     onCancelDialogDismiss: () -> Unit,
     onCancelDialogConfirm: () -> Unit,
@@ -150,20 +157,40 @@ private fun DetailReservationScreen(
                 }
 
                 item {
-                    ReservationInfoSection(modifier = Modifier.padding(top = 28.dp, bottom = 24.dp))
+                    ReservationInfoSection(
+                        modifier = Modifier.padding(top = 28.dp, bottom = 24.dp),
+                        shootingDateText = state.reservationStatus.shootingDateText(state.confirmedDateTimeMillis),
+                    )
                 }
             }
 
             DetailReservationBottomButtons(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 48.dp),
                 currentReservationStatus = state.reservationStatus,
+                hasWrittenReview = state.hasWrittenReview,
                 onChatClick = onChatClick,
-                onHistoryClick = onHistoryClick,
-                onConfirmClick = onConfirmClick,
+                onDealCompleteClick = onDealCompleteClick,
+                onReviewClick = onReviewClick,
             )
         }
     }
 }
+
+/**
+ * 촬영 일시 표시 텍스트.
+ * 일시 미확정(예약 대기) 단계는 "작가와 협의", 확정 이후(촬영 진행/거래 완료)는 확정된 일시를 표시합니다.
+ */
+@Composable
+private fun ReservationStatus.shootingDateText(confirmedDateTimeMillis: Long): String =
+    when (this) {
+        ReservationStatus.RESERVED,
+        ReservationStatus.COMPLETED,
+        -> DateTimeUtil.getFormattedReservationDateTime(confirmedDateTimeMillis)
+
+        ReservationStatus.WAITING_APPROVAL,
+        ReservationStatus.WAITING_SCHEDULE,
+        -> stringResource(R.string.reservation_schedule_tbd)
+    }
 
 @Suppress("UnusedPrivateMember")
 @Preview
@@ -172,8 +199,8 @@ private fun DetailReservationScreenPreview() {
     DetailReservationScreen(
         state = DetailReservationState(),
         onChatClick = {},
-        onHistoryClick = {},
-        onConfirmClick = {},
+        onDealCompleteClick = {},
+        onReviewClick = {},
         onCancelClick = {},
         onCancelDialogDismiss = {},
         onCancelDialogConfirm = {},

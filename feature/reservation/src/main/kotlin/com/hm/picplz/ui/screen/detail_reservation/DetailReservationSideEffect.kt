@@ -6,4 +6,6 @@ sealed interface DetailReservationSideEffect {
     data object NavigateToCancelReservationConfirm : DetailReservationSideEffect
 
     data object NavigateToOrderDetail : DetailReservationSideEffect
+
+    data object NavigateToWriteReview : DetailReservationSideEffect
 }

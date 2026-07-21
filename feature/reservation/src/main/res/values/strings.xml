@@ -2,21 +2,39 @@
 <resources>
     <string name="reservation_cancel">예약 취소</string>
     <string name="reservation_reject">예약 거절</string>
+    <!-- 진행 스텝 (고객·작가 공통) -->
     <string name="reservation_step_waiting">예약 대기</string>
     <string name="reservation_step_in_progress">촬영 진행</string>
-    <string name="reservation_step_confirmed">거래 확정</string>
+    <string name="reservation_step_confirmed">거래 완료</string>
+
+    <!-- 예약 상태 헤더 - 공통 -->
     <string name="reservation_status_title_waiting_approval">예약 승인 대기중…</string>
-    <string name="reservation_status_title_waiting_payment">결제 및 촬영 일시 확정 대기중…</string>
-    <string name="reservation_status_title_reserved">예약 확정</string>
-    <string name="reservation_status_title_completed">거래 확정</string>
-    <string name="reservation_status_description_waiting_approval">n분 이내로 승인되지 않으면 자동 취소됩니다.</string>
-    <string name="reservation_status_description_waiting_payment">결제 및 촬영 일시 확정을 진행해 주세요.</string>
+    <string name="reservation_status_description_waiting_approval">24시간 이내로 승인되지 않으면 자동 취소됩니다.</string>
     <string name="reservation_status_description_reserved">작가와 촬영을 진행해주세요!</string>
     <string name="reservation_status_description_completed">이미 완료된 촬영입니다.</string>
+
+    <!-- 예약 상태 헤더 - 고객 -->
+    <string name="reservation_status_customer_title_waiting_schedule">일시 확정 대기중…</string>
+    <string name="reservation_status_customer_description_waiting_schedule">촬영 일시를 확정해 주세요.</string>
+    <string name="reservation_status_customer_title_reserved">촬영 진행중…</string>
+    <string name="reservation_status_customer_title_completed">거래 완료</string>
+
+    <!-- 예약 상태 헤더 - 작가 (기존 유지, 작가 피그마 확보 후 후속 정리) -->
+    <string name="reservation_status_title_waiting_payment">결제 및 촬영 일시 확정 대기중…</string>
+    <string name="reservation_status_description_waiting_payment">결제 및 촬영 일시 확정을 진행해 주세요.</string>
+    <string name="reservation_status_title_reserved">예약 확정</string>
+    <string name="reservation_status_title_completed">거래 확정</string>
+
+    <!-- 하단 버튼 -->
     <string name="reservation_button_chat">채팅 바로가기</string>
     <string name="reservation_button_history">내역 보기</string>
     <string name="reservation_button_confirm">거래 확정하기</string>
+    <string name="reservation_button_deal_complete">거래 완료하기</string>
+    <string name="reservation_button_review">리뷰 쓰기</string>
     <string name="reservation_button_reservation_approve">예약 승인</string>
+
+    <!-- 촬영 일시 미확정 -->
+    <string name="reservation_schedule_tbd">작가와 협의</string>
 
     <!-- 예약 취소 다이얼로그 -->
     <string name="reservation_cancel_dialog_title">예약을 취소하시겠습니까?</string>

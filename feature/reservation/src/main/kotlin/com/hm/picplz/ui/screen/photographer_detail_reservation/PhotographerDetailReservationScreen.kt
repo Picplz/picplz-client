@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationMap
+import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerDetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerReservationStatusHeader
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationApproveButton
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationCancelDialog
@@ -172,7 +172,7 @@ private fun PhotographerDetailReservationScreen(
             }
 
             if (state.reservationStatus != ReservationStatus.WAITING_APPROVAL) {
-                DetailReservationBottomButtons(
+                PhotographerDetailReservationBottomButtons(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 48.dp),
                     currentReservationStatus = state.reservationStatus,
                     onChatClick = onChatClick,
