@@ -1,6 +1,5 @@
 package com.hm.picplz.ui.screen.main
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.hm.picplz.feature.main.R
 import com.hm.picplz.navigation.model.DetailPhotographer
 import com.hm.picplz.ui.screen.common.AreaTag
@@ -240,20 +241,22 @@ fun PopularSpotSection(
 
 @Composable
 fun TypingResultSection(
-    query: String,
-    onSuggestionClick: (String) -> Unit,
+    suggestions: List<MainSearchPhotographerItem>,
+    isLoading: Boolean,
+    onSuggestionClick: (MainSearchPhotographerItem) -> Unit,
 ) {
-    val trimmedQuery = query.trim()
-    if (trimmedQuery.isBlank()) return
-
-    val photographerSuggestions =
-        listOf(
-            stringResource(R.string.main_search_suggestion_photographer_kang_jueun),
-            stringResource(R.string.main_search_suggestion_photographer_dog),
-            stringResource(R.string.main_search_suggestion_photographer_dog),
-            stringResource(R.string.main_search_suggestion_photographer_dog),
-            stringResource(R.string.main_search_suggestion_photographer_dog),
-        ).filter { it.contains(trimmedQuery, ignoreCase = true) }
+    if (isLoading && suggestions.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = MainThemeColor.Black,
+            )
+        }
+        return
+    }
 
     LazyColumn(
         modifier =
@@ -261,7 +264,10 @@ fun TypingResultSection(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
     ) {
-        itemsIndexed(photographerSuggestions) { index, photographer ->
+        itemsIndexed(
+            items = suggestions,
+            key = { _, photographer -> photographer.id },
+        ) { index, photographer ->
             Row(
                 modifier =
                     Modifier
@@ -271,20 +277,27 @@ fun TypingResultSection(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Image(
-                    painter = painterResource(id = CoreR.drawable.user_undefined),
-                    contentDescription = null,
+                AsyncImage(
+                    model = photographer.profileImageUri,
+                    placeholder = painterResource(id = CoreR.drawable.user_undefined),
+                    error = painterResource(id = CoreR.drawable.user_undefined),
+                    fallback = painterResource(id = CoreR.drawable.user_undefined),
+                    contentDescription =
+                        stringResource(
+                            R.string.main_search_photographer_profile_content_description,
+                            photographer.name,
+                        ),
                     modifier =
                         Modifier
                             .size(20.dp)
                             .clip(CircleShape),
                 )
                 Text(
-                    text = photographer,
+                    text = stringResource(R.string.main_photographer_name_format, photographer.name),
                     style = MainThemeFont.BodyBold,
                 )
             }
-            if (index < photographerSuggestions.lastIndex) {
+            if (index < suggestions.lastIndex) {
                 HorizontalDivider(thickness = 1.dp, color = MainThemeColor.Gray2)
             }
         }
@@ -359,15 +372,16 @@ fun MainSearchScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     SearchResultSection(
-                        results = state.results,
-                        isLoading = state.isLoading,
-                        selectedSortType = state.selectedSortType,
+                        state = state,
                         onSortSelected = { sortType ->
                             if (devMockResults) {
                                 devPreviewState =
                                     MainSearchReducer.reduce(
                                         devPreviewState,
                                         MainSearchIntent.SortSelected(sortType),
+                                    ).copy(
+                                        isLoading = false,
+                                        results = devSearchPreviewPhotographers(),
                                     )
                             } else {
                                 viewModel.handleIntent(MainSearchIntent.SortSelected(sortType))
@@ -378,6 +392,13 @@ fun MainSearchScreen(
                                 navController.navigate(DetailPhotographer(photographerId))
                             }
                         },
+                        onLoadNextPage = {
+                            if (!devMockResults) {
+                                viewModel.handleIntent(MainSearchIntent.LoadNextPage)
+                            }
+                        },
+                        onRetrySearch = { doSearch(state.query) },
+                        modifier = Modifier.weight(1f),
                     )
                 }
 
@@ -385,8 +406,9 @@ fun MainSearchScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     TypingResultSection(
-                        query = state.query,
-                        onSuggestionClick = { sug -> doSearch(sug) },
+                        suggestions = state.suggestions,
+                        isLoading = state.isPreviewLoading,
+                        onSuggestionClick = { suggestion -> doSearch(suggestion.name) },
                     )
                 }
             }

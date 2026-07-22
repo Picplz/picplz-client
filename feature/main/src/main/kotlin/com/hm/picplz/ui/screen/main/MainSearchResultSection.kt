@@ -15,11 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hm.picplz.feature.main.R
 import com.hm.picplz.ui.screen.main.modalBottomSheet.SortFilterModalBottomSheet
@@ -44,17 +48,33 @@ private object SearchResultDefaults {
 
 @Composable
 fun SearchResultSection(
-    results: List<MainSearchPhotographerItem>,
-    isLoading: Boolean,
-    selectedSortType: SortType,
+    state: MainSearchState,
     onSortSelected: (SortType) -> Unit,
     onPhotographerClick: (MainSearchPhotographerItem) -> Unit,
+    onLoadNextPage: () -> Unit,
+    onRetrySearch: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var visibleSortFilter by remember { mutableStateOf(false) }
-    val selectedSortLabel = stringResource(selectedSortType.labelResId)
+    val selectedSortLabel = stringResource(state.selectedSortType.labelResId)
+    val listState = rememberLazyListState()
+    val shouldLoadNextPage by remember {
+        derivedStateOf {
+            val lastVisibleIndex =
+                listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                    ?: return@derivedStateOf false
+            lastVisibleIndex >= listState.layoutInfo.totalItemsCount - 2
+        }
+    }
+
+    LaunchedEffect(shouldLoadNextPage, state.hasNextPage, state.isLoadingMore, state.loadMoreFailed) {
+        if (shouldLoadNextPage && state.hasNextPage && !state.isLoadingMore && !state.loadMoreFailed) {
+            onLoadNextPage()
+        }
+    }
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         SortButton(
             label = selectedSortLabel,
@@ -62,25 +82,63 @@ fun SearchResultSection(
             modifier = Modifier.padding(horizontal = SearchResultDefaults.HorizontalPadding),
         )
 
-        if (isLoading) {
+        if (state.isLoading) {
             SearchLoadingResult()
-        } else if (results.isEmpty()) {
+        } else if (state.searchFailed) {
+            SearchErrorResult(onRetry = onRetrySearch)
+        } else if (state.results.isEmpty()) {
             SearchEmptyResult()
         } else {
-            LazyColumn {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+            ) {
                 itemsIndexed(
-                    items = results,
+                    items = state.results,
                     key = { _, item -> item.id },
                 ) { index, item ->
                     PhotographerListItem(
                         item = item,
                         onClick = { onPhotographerClick(item) },
                     )
-                    if (index < results.lastIndex) {
+                    if (index < state.results.lastIndex) {
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = SearchResultDefaults.HorizontalPadding),
                             color = MainThemeColor.Gray2,
                             thickness = 1.dp,
+                        )
+                    }
+                }
+
+                if (state.isLoadingMore) {
+                    item(key = "search-result-loading") {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(28.dp),
+                                color = MainThemeColor.Black,
+                            )
+                        }
+                    }
+                }
+
+                if (state.loadMoreFailed) {
+                    item(key = "search-result-retry") {
+                        Text(
+                            text = stringResource(R.string.main_search_load_more_retry),
+                            style = MainThemeFont.BodyBold,
+                            color = MainThemeColor.Black,
+                            textAlign = TextAlign.Center,
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable(onClick = onLoadNextPage)
+                                    .padding(vertical = 16.dp),
                         )
                     }
                 }
@@ -92,6 +150,31 @@ fun SearchResultSection(
             visible = visibleSortFilter,
             onSelect = onSortSelected,
         )
+    }
+}
+
+@Composable
+private fun SearchErrorResult(onRetry: () -> Unit) {
+    Box(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(top = 163.dp),
+        contentAlignment = Alignment.TopCenter,
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.main_search_load_failed),
+                style = MainThemeFont.TitleSmall,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(R.string.main_retry_button),
+                style = MainThemeFont.BodyBold,
+                color = MainThemeColor.Black,
+                modifier = Modifier.clickable(onClick = onRetry).padding(12.dp),
+            )
+        }
     }
 }
 

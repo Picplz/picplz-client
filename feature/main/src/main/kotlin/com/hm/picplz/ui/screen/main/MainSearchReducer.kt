@@ -1,7 +1,5 @@
 package com.hm.picplz.ui.screen.main
 
-import com.hm.picplz.ui.screen.main.modalBottomSheet.SortType
-
 object MainSearchReducer {
     fun reduce(
         state: MainSearchState,
@@ -12,6 +10,14 @@ object MainSearchReducer {
                 state.copy(
                     query = intent.query,
                     hasSearched = false,
+                    isPreviewLoading = intent.query.isNotBlank(),
+                    isLoading = false,
+                    searchFailed = false,
+                    isLoadingMore = false,
+                    hasNextPage = false,
+                    nextPage = 0,
+                    loadMoreFailed = false,
+                    suggestions = emptyList(),
                     results = emptyList(),
                 )
             }
@@ -26,34 +32,125 @@ object MainSearchReducer {
                     query = submittedQuery,
                     isFocused = false,
                     hasSearched = true,
+                    isPreviewLoading = false,
                     isLoading = submittedQuery.isNotBlank(),
+                    searchFailed = false,
+                    isLoadingMore = false,
+                    hasNextPage = false,
+                    nextPage = 0,
+                    loadMoreFailed = false,
                     recentSearchQueries = state.recentSearchQueries.withSubmittedQuery(submittedQuery),
-                    results = state.nearbyPhotographers.searchResultsFor(submittedQuery, state.selectedSortType),
-                )
-            }
-
-            is MainSearchIntent.NearbyPhotographersLoaded -> {
-                val nearbyPhotographers = intent.photographers
-                state.copy(
-                    isLoading = false,
-                    nearbyPhotographers = nearbyPhotographers,
-                    results = nearbyPhotographers.searchResultsFor(state.query, state.selectedSortType),
-                )
-            }
-
-            MainSearchIntent.SearchLoadFailed -> {
-                state.copy(
-                    isLoading = false,
+                    suggestions = emptyList(),
                     results = emptyList(),
                 )
+            }
+
+            is MainSearchIntent.PreviewLoading -> {
+                if (state.hasSearched || state.query.trim() != intent.query) {
+                    state
+                } else {
+                    state.copy(isPreviewLoading = true)
+                }
+            }
+
+            is MainSearchIntent.PreviewLoaded -> {
+                if (state.hasSearched || state.query.trim() != intent.query) {
+                    state
+                } else {
+                    state.copy(
+                        isPreviewLoading = false,
+                        suggestions = intent.photographers,
+                    )
+                }
+            }
+
+            is MainSearchIntent.PreviewLoadFailed -> {
+                if (state.hasSearched || state.query.trim() != intent.query) {
+                    state
+                } else {
+                    state.copy(
+                        isPreviewLoading = false,
+                        suggestions = emptyList(),
+                    )
+                }
+            }
+
+            is MainSearchIntent.SearchLoading -> {
+                if (intent.append) {
+                    state.copy(
+                        isLoadingMore = true,
+                        loadMoreFailed = false,
+                    )
+                } else {
+                    state.copy(
+                        isLoading = true,
+                        searchFailed = false,
+                        isLoadingMore = false,
+                        hasNextPage = false,
+                        nextPage = 0,
+                        loadMoreFailed = false,
+                        results = emptyList(),
+                    )
+                }
+            }
+
+            is MainSearchIntent.SearchPageLoaded -> {
+                if (
+                    !state.hasSearched ||
+                    state.query != intent.query ||
+                    state.selectedSortType != intent.sortType
+                ) {
+                    state
+                } else {
+                    val results =
+                        if (intent.append) {
+                            (state.results + intent.photographers).distinctBy(MainSearchPhotographerItem::id)
+                        } else {
+                            intent.photographers.distinctBy(MainSearchPhotographerItem::id)
+                        }
+                    state.copy(
+                        isLoading = false,
+                        searchFailed = false,
+                        isLoadingMore = false,
+                        hasNextPage = intent.hasNextPage,
+                        nextPage = intent.page + 1,
+                        loadMoreFailed = false,
+                        results = results,
+                    )
+                }
+            }
+
+            is MainSearchIntent.SearchLoadFailed -> {
+                if (intent.append) {
+                    state.copy(
+                        isLoadingMore = false,
+                        loadMoreFailed = true,
+                    )
+                } else {
+                    state.copy(
+                        isLoading = false,
+                        searchFailed = true,
+                        isLoadingMore = false,
+                        hasNextPage = false,
+                        results = emptyList(),
+                    )
+                }
             }
 
             is MainSearchIntent.SortSelected -> {
                 state.copy(
                     selectedSortType = intent.sortType,
-                    results = state.results.sortedBy(intent.sortType),
+                    isLoading = state.hasSearched && state.query.isNotBlank(),
+                    searchFailed = false,
+                    isLoadingMore = false,
+                    hasNextPage = false,
+                    nextPage = 0,
+                    loadMoreFailed = false,
+                    results = if (state.hasSearched) emptyList() else state.results,
                 )
             }
+
+            MainSearchIntent.LoadNextPage -> state
 
             is MainSearchIntent.RecentSearchRemoved -> {
                 state.copy(recentSearchQueries = state.recentSearchQueries - intent.query)
@@ -68,30 +165,4 @@ object MainSearchReducer {
         if (query.isBlank() || query in this) return this
         return listOf(query) + this
     }
-
-    private fun List<MainSearchPhotographerItem>.searchResultsFor(
-        query: String,
-        sortType: SortType,
-    ): List<MainSearchPhotographerItem> {
-        if (query.isBlank()) return emptyList()
-
-        val normalizedQuery = query.lowercase()
-        return filter { item ->
-            item.id.lowercase().contains(normalizedQuery) ||
-                item.areaSummary.lowercase().contains(normalizedQuery) ||
-                item.name.lowercase().contains(normalizedQuery) ||
-                item.moodTags.any { it.lowercase().contains(normalizedQuery) }
-        }.sortedBy(sortType)
-    }
-
-    private fun List<MainSearchPhotographerItem>.sortedBy(sortType: SortType): List<MainSearchPhotographerItem> =
-        when (sortType) {
-            SortType.POPULAR ->
-                sortedWith(
-                    compareByDescending<MainSearchPhotographerItem> { it.isAvailableNow }
-                        .thenBy { it.distance },
-                )
-            SortType.RATING -> sortedByDescending { it.moodTags.size }
-            SortType.FOLLOWER -> sortedBy { it.distance }
-        }
 }

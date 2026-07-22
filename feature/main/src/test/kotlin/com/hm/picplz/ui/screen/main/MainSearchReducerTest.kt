@@ -18,157 +18,166 @@ class MainSearchReducerTest {
     }
 
     @Test
-    fun `query change with non-empty focused text moves to typing and clears prior searched state`() {
-        val searchedState =
-            MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("연남동"),
-            )
-
+    fun `query change moves to typing and clears prior search`() {
         val state =
             MainSearchReducer.reduce(
-                searchedState.copy(isFocused = true),
-                MainSearchIntent.QueryChanged("성수"),
-            )
+                searchedState(),
+                MainSearchIntent.QueryChanged("유가"),
+            ).copy(isFocused = true)
 
         assertEquals(SearchUiState.Typing, state.uiState)
-        assertEquals("성수", state.query)
-        assertFalse(state.hasSearched)
+        assertEquals("유가", state.query)
+        assertTrue(state.isPreviewLoading)
+        assertTrue(state.results.isEmpty())
     }
 
     @Test
-    fun `search submit with non-blank query moves to complete and adds recent once`() {
-        val state =
+    fun `preview result is applied only to current typing query`() {
+        val typingState = MainSearchState.idle().copy(query = "유가", isFocused = true)
+        val stale =
             MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("도곡동"),
+                typingState,
+                MainSearchIntent.PreviewLoaded("유", listOf(item(1))),
+            )
+        val current =
+            MainSearchReducer.reduce(
+                stale,
+                MainSearchIntent.PreviewLoaded("유가", listOf(item(2))),
             )
 
-        assertEquals(SearchUiState.Complete(query = "도곡동", hasResults = true), state.uiState)
+        assertTrue(stale.suggestions.isEmpty())
+        assertEquals(listOf("2"), current.suggestions.map(MainSearchPhotographerItem::id))
+    }
+
+    @Test
+    fun `preview result accepts trimmed typing query`() {
+        val state =
+            MainSearchReducer.reduce(
+                MainSearchState.idle().copy(query = "유가 ", isFocused = true),
+                MainSearchIntent.PreviewLoaded("유가", listOf(item(1))),
+            )
+
+        assertEquals(listOf("1"), state.suggestions.map(MainSearchPhotographerItem::id))
+        assertFalse(state.isPreviewLoading)
+    }
+
+    @Test
+    fun `search submit trims query and starts first page loading`() {
+        val state =
+            MainSearchReducer.reduce(
+                MainSearchState.idle(),
+                MainSearchIntent.SearchSubmitted(" 도곡동 "),
+            )
+
+        assertEquals(SearchUiState.Complete("도곡동", hasResults = false), state.uiState)
         assertEquals("도곡동", state.query)
-        assertTrue(state.hasSearched)
-        assertEquals(
-            listOf("도곡동", "연희동", "성수", "홍익대", "연남동", "송파구"),
-            state.recentSearchQueries,
-        )
+        assertTrue(state.isLoading)
+        assertEquals("도곡동", state.recentSearchQueries.first())
     }
 
     @Test
-    fun `search submit with duplicate query does not duplicate recent`() {
+    fun `first search page replaces results and exposes next page`() {
         val state =
             MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("성수"),
+                MainSearchState.idle().copy(
+                    query = "작가",
+                    hasSearched = true,
+                    isLoading = true,
+                ),
+                MainSearchIntent.SearchPageLoaded(
+                    query = "작가",
+                    sortType = SortType.POPULAR,
+                    page = 0,
+                    photographers = listOf(item(1)),
+                    hasNextPage = true,
+                    append = false,
+                ),
             )
 
-        assertEquals(1, state.recentSearchQueries.count { it == "성수" })
-        assertEquals(listOf("연희동", "성수", "홍익대", "연남동", "송파구"), state.recentSearchQueries)
+        assertEquals(SearchUiState.Complete("작가", hasResults = true), state.uiState)
+        assertEquals(listOf("1"), state.results.map(MainSearchPhotographerItem::id))
+        assertEquals(1, state.nextPage)
+        assertTrue(state.hasNextPage)
+        assertFalse(state.isLoading)
     }
 
     @Test
-    fun `blank search moves to no-result complete without adding blank recent`() {
+    fun `additional page deduplicates photographers`() {
         val state =
             MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("   "),
+                searchedState(),
+                MainSearchIntent.SearchPageLoaded(
+                    query = "작가",
+                    sortType = SortType.POPULAR,
+                    page = 1,
+                    photographers = listOf(item(1), item(2)),
+                    hasNextPage = false,
+                    append = true,
+                ),
             )
 
-        assertEquals(SearchUiState.Complete(query = "", hasResults = false), state.uiState)
-        assertTrue(state.hasSearched)
-        assertFalse(state.recentSearchQueries.any { it.isBlank() })
-        assertEquals(listOf("연희동", "성수", "홍익대", "연남동", "송파구"), state.recentSearchQueries)
+        assertEquals(listOf("1", "2"), state.results.map(MainSearchPhotographerItem::id))
+        assertFalse(state.hasNextPage)
+        assertEquals(2, state.nextPage)
     }
 
     @Test
-    fun `non-empty search exposes deterministic photographer results`() {
+    fun `additional load failure keeps existing results`() {
         val state =
             MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("강남"),
+                searchedState().copy(isLoadingMore = true),
+                MainSearchIntent.SearchLoadFailed(append = true),
             )
 
-        assertTrue(state.uiState is SearchUiState.Complete)
-        assertEquals(3, state.results.size)
-        assertTrue(state.results.all { it.name.endsWith("작가") })
+        assertEquals(listOf("1"), state.results.map(MainSearchPhotographerItem::id))
+        assertTrue(state.loadMoreFailed)
+        assertFalse(state.isLoadingMore)
     }
 
     @Test
-    fun `ascii gangnam search exposes deterministic photographer results for adb input`() {
+    fun `initial load failure exposes retry state`() {
         val state =
             MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("gangnam"),
+                searchedState().copy(isLoading = true),
+                MainSearchIntent.SearchLoadFailed(append = false),
             )
 
-        assertEquals(SearchUiState.Complete(query = "gangnam", hasResults = true), state.uiState)
-        assertEquals(3, state.results.size)
+        assertTrue(state.searchFailed)
+        assertFalse(state.isLoading)
+        assertTrue(state.results.isEmpty())
     }
 
     @Test
-    fun `no-match search exposes only empty result state`() {
+    fun `sort selection resets result pagination for server reload`() {
         val state =
             MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("ㅁㄴㅇㄹ없는검색어"),
-            )
-
-        assertEquals(SearchUiState.Complete(query = "ㅁㄴㅇㄹ없는검색어", hasResults = false), state.uiState)
-        assertEquals(emptyList<MainSearchPhotographerItem>(), state.results)
-    }
-
-    @Test
-    fun `sort selection changes deterministic result order`() {
-        val searchedState =
-            MainSearchReducer.reduce(
-                stateWithNearbyPhotographers(),
-                MainSearchIntent.SearchSubmitted("강남"),
-            )
-
-        val followerSortedState =
-            MainSearchReducer.reduce(
-                searchedState,
+                searchedState(),
                 MainSearchIntent.SortSelected(SortType.FOLLOWER),
             )
 
-        assertEquals(SortType.FOLLOWER, followerSortedState.selectedSortType)
-        assertEquals(
-            followerSortedState.results.minBy { it.distance }.name,
-            followerSortedState.results.first().name,
-        )
-        assertFalse(searchedState.results.first().name == followerSortedState.results.first().name)
+        assertEquals(SortType.FOLLOWER, state.selectedSortType)
+        assertTrue(state.isLoading)
+        assertTrue(state.results.isEmpty())
+        assertEquals(0, state.nextPage)
     }
 
-    private fun stateWithNearbyPhotographers(): MainSearchState =
+    private fun searchedState() =
         MainSearchState.idle().copy(
-            nearbyPhotographers =
-                listOf(
-                    MainSearchPhotographerItem(
-                        id = "gangnam-studio",
-                        name = "윤서 작가",
-                        profileImageUri = null,
-                        areaSummary = "서울 강남구 도곡동",
-                        isAvailableNow = true,
-                        moodTags = listOf("도시 감성", "프로필"),
-                        distance = 300,
-                    ),
-                    MainSearchPhotographerItem(
-                        id = "gangnam-film",
-                        name = "민재 작가",
-                        profileImageUri = null,
-                        areaSummary = "서울 강남구 역삼동",
-                        isAvailableNow = false,
-                        moodTags = listOf("필름 무드", "커플"),
-                        distance = 120,
-                    ),
-                    MainSearchPhotographerItem(
-                        id = "gangnam-pet",
-                        name = "가은 작가",
-                        profileImageUri = null,
-                        areaSummary = "서울 강남구 신사동",
-                        isAvailableNow = true,
-                        moodTags = listOf("반려동물", "자연광"),
-                        distance = 520,
-                    ),
-                ),
+            query = "작가",
+            hasSearched = true,
+            results = listOf(item(1)),
+            hasNextPage = true,
+            nextPage = 1,
+        )
+
+    private fun item(id: Int) =
+        MainSearchPhotographerItem(
+            id = id.toString(),
+            name = "작가 $id",
+            profileImageUri = null,
+            areaSummary = "",
+            isAvailableNow = true,
+            moodTags = listOf("필름"),
+            distance = 0,
         )
 }
