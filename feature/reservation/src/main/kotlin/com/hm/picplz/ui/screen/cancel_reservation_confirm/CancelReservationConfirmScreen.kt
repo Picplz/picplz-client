@@ -28,6 +28,7 @@ import com.hm.picplz.core.ui.R as CoreR
 @Composable
 fun CancelReservationConfirmScreen(
     modifier: Modifier = Modifier,
+    isPhotographer: Boolean = false,
     onNavigateBack: () -> Unit,
     onNavigateHome: () -> Unit,
     viewModel: CancelReservationConfirmViewModel = hiltViewModel(),
@@ -44,6 +45,7 @@ fun CancelReservationConfirmScreen(
 
     CancelReservationConfirmScreenContent(
         modifier = modifier,
+        isPhotographer = isPhotographer,
         onNavigateBack = onNavigateBack,
         onHistoryClick = { viewModel.handleIntent(CancelReservationConfirmIntent.NavigateToHistory) },
         onHomeClick = { viewModel.handleIntent(CancelReservationConfirmIntent.NavigateToHome) },
@@ -54,6 +56,7 @@ fun CancelReservationConfirmScreen(
 private fun CancelReservationConfirmScreenContent(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    isPhotographer: Boolean = false,
     onHistoryClick: () -> Unit = {},
     onHomeClick: () -> Unit = {},
 ) {
@@ -83,10 +86,11 @@ private fun CancelReservationConfirmScreenContent(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            CancelReservationGuide()
+            CancelReservationGuide(isPhotographer = isPhotographer)
 
             CancelReservationButtons(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 64.dp, bottom = 48.dp),
+                isPhotographer = isPhotographer,
                 onHistoryClick = onHistoryClick,
                 onHomeClick = onHomeClick,
             )
@@ -133,12 +137,22 @@ private fun CancelReservationDescription(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CancelReservationGuide(modifier: Modifier = Modifier) {
+private fun CancelReservationGuide(
+    isPhotographer: Boolean,
+    modifier: Modifier = Modifier,
+) {
     Text(
         modifier =
             modifier
                 .padding(horizontal = 16.dp),
-        text = stringResource(R.string.cancel_reservation_guide),
+        text =
+            stringResource(
+                if (isPhotographer) {
+                    R.string.cancel_reservation_guide_photographer
+                } else {
+                    R.string.cancel_reservation_guide
+                },
+            ),
         style = pretendardTypography.bodyMedium,
         color = MainThemeColor.Gray4,
     )
@@ -146,10 +160,22 @@ private fun CancelReservationGuide(modifier: Modifier = Modifier) {
 
 @Composable
 private fun CancelReservationButtons(
+    isPhotographer: Boolean,
     onHistoryClick: () -> Unit,
     onHomeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (isPhotographer) {
+        // 작가 취소 완료: "취소 내역 확인하기" 단일 버튼
+        // TODO: '받은 예약 > 완료됨' 탭 라우트 연결 시 onHomeClick 대신 해당 목적지로 이동
+        CommonBottomButton(
+            modifier = modifier.fillMaxWidth(),
+            text = stringResource(R.string.cancel_reservation_button_check_history),
+            onClick = onHomeClick,
+        )
+        return
+    }
+
     Row(
         modifier =
             modifier

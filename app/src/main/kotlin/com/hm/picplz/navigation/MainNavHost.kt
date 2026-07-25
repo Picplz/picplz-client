@@ -33,6 +33,7 @@ import com.hm.picplz.navigation.model.MyPagePhotographerKeywordEdit
 import com.hm.picplz.navigation.model.MyPagePhotographerModifyProfile
 import com.hm.picplz.navigation.model.MyPageShootingHistory
 import com.hm.picplz.navigation.model.OrderDetail
+import com.hm.picplz.navigation.model.PhotographerCancelReservation
 import com.hm.picplz.navigation.model.PhotographerChatRoom
 import com.hm.picplz.navigation.model.PhotographerDetailReservation
 import com.hm.picplz.navigation.model.PhotographerMainGraph
@@ -64,6 +65,7 @@ private val authRequiredRoutes: List<KClass<out Any>> =
         CancelReservationConfirm::class,
         OrderDetail::class,
         CancelReservation::class,
+        PhotographerCancelReservation::class,
     )
 
 @Composable

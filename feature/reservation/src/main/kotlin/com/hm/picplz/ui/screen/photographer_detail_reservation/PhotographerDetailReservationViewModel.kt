@@ -3,7 +3,6 @@ package com.hm.picplz.ui.screen.photographer_detail_reservation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hm.picplz.common.util.DateTimeUtil
-import com.hm.picplz.ui.screen.detail_reservation.model.RefundCondition
 import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,61 +46,12 @@ class PhotographerDetailReservationViewModel @Inject constructor() : ViewModel()
                 _state.update { it.copy(reservationStatus = it.reservationStatus.next()) }
             }
 
-            is PhotographerDetailReservationIntent.ShowCancelDialog -> {
-                val currentState = _state.value
-                val refundCondition =
-                    RefundCondition.calculate(
-                        currentMillis = System.currentTimeMillis(),
-                        shootingMillis = currentState.shootingDateTimeMillis,
-                        confirmedMillis = currentState.confirmedDateTimeMillis,
-                    )
-
-                _state.update {
-                    it.copy(
-                        showCancelDialog = true,
-                        refundCondition = refundCondition,
-                    )
-                }
-            }
-
-            is PhotographerDetailReservationIntent.DismissCancelDialog -> {
-                _state.update { it.copy(showCancelDialog = false) }
-            }
-
-            is PhotographerDetailReservationIntent.ConfirmCancel -> {
-                _state.update { it.copy(showCancelDialog = false) }
-
+            is PhotographerDetailReservationIntent.NavigateToCancelReservation -> {
                 viewModelScope.launch {
-                    when (state.value.reservationStatus) {
-                        ReservationStatus.WAITING_APPROVAL,
-                        ReservationStatus.WAITING_SCHEDULE,
-                        -> {
-                            _sideEffect.emit(PhotographerDetailReservationSideEffect.NavigateToRejectReservationConfirm)
-                        }
-
-                        ReservationStatus.RESERVED,
-                        ReservationStatus.COMPLETED,
-                        -> {
-                            _sideEffect.emit(PhotographerDetailReservationSideEffect.NavigateToOrderDetail)
-                        }
-                    }
-                }
-            }
-
-            is PhotographerDetailReservationIntent.ShowRefundPolicyDialog -> {
-                _state.update {
-                    it.copy(
-                        showRefundPolicyTooltip = true,
-                        showCancelDialog = false,
-                    )
-                }
-            }
-
-            is PhotographerDetailReservationIntent.DismissRefundPolicyTooltip -> {
-                _state.update {
-                    it.copy(
-                        showRefundPolicyTooltip = false,
-                        showCancelDialog = true,
+                    _sideEffect.emit(
+                        PhotographerDetailReservationSideEffect.NavigateToCancelReservation(
+                            orderId = _state.value.orderId,
+                        ),
                     )
                 }
             }
