@@ -36,7 +36,7 @@ fun CancelReasonInputContent(
         Text(
             text = stringResource(R.string.cancel_reason_input_title),
             style = MainThemeFont.Title,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp),
         )
 
         LazyColumn(
