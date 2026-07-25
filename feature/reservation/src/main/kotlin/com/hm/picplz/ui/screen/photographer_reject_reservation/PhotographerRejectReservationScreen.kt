@@ -142,8 +142,8 @@ private fun PhotographerRejectConfirmDialog(
         ) {
             Text(
                 text = stringResource(R.string.reject_dialog_desc),
-                style = MainThemeFont.TitleSmall,
-                color = MainThemeColor.Black,
+                style = MainThemeFont.Body,
+                color = MainThemeColor.Gray5,
                 textAlign = TextAlign.Center,
             )
         }
