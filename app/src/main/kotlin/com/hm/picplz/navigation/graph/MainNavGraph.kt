@@ -40,6 +40,7 @@ import com.hm.picplz.navigation.model.MyPagePhotographerKeywordEdit
 import com.hm.picplz.navigation.model.MyPagePhotographerModifyProfile
 import com.hm.picplz.navigation.model.MyPageShootingHistory
 import com.hm.picplz.navigation.model.OrderDetail
+import com.hm.picplz.navigation.model.PhotographerCancelReservation
 import com.hm.picplz.navigation.model.PhotographerChatRoom
 import com.hm.picplz.navigation.model.PhotographerDetailReservation
 import com.hm.picplz.navigation.model.Reservation
@@ -69,6 +70,7 @@ import com.hm.picplz.ui.screen.my_page.MyPageScreen
 import com.hm.picplz.ui.screen.my_page.MyPageShootingHistoryScreen
 import com.hm.picplz.ui.screen.my_page.MyReviewScreen
 import com.hm.picplz.ui.screen.order_detail.OrderDetailScreen
+import com.hm.picplz.ui.screen.photographer_cancel_reservation.PhotographerCancelReservationScreen
 import com.hm.picplz.ui.screen.photographer_chat_room.PhotographerChatRoomScreen
 import com.hm.picplz.ui.screen.photographer_detail_reservation.PhotographerDetailReservationScreen
 import com.hm.picplz.ui.screen.photographer_main.PhotographerMainViewModel
@@ -325,17 +327,27 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             onNavigateBack = {
                 navController.popBackStack()
             },
-            onNavigateRejectReservationConfirm = {
-                // TODO
-            },
-            onNavigateToOrderDetail = { orderId ->
-                navController.navigate(OrderDetail(orderId = orderId))
+            onNavigateToCancelReservation = { orderId ->
+                navController.navigate(PhotographerCancelReservation(orderId = orderId))
             },
         )
     }
 
-    composable<CancelReservationConfirm> {
+    composable<PhotographerCancelReservation> {
+        PhotographerCancelReservationScreen(
+            onNavigateBack = {
+                navController.popBackStack()
+            },
+            onNavigateToCancelConfirm = {
+                navController.navigate(CancelReservationConfirm(isPhotographer = true))
+            },
+        )
+    }
+
+    composable<CancelReservationConfirm> { backStackEntry ->
+        val args = backStackEntry.toRoute<CancelReservationConfirm>()
         CancelReservationConfirmScreen(
+            isPhotographer = args.isPhotographer,
             onNavigateBack = {
                 navController.popBackStack()
             },
@@ -365,7 +377,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 navController.popBackStack()
             },
             onNavigateToCancelConfirm = {
-                navController.navigate(CancelReservationConfirm)
+                navController.navigate(CancelReservationConfirm(isPhotographer = false))
             },
         )
     }

@@ -95,6 +95,51 @@
     <string name="cancel_reservation_top_bar_title">예약 취소</string>
     <string name="cancel_reservation_button_submit">예약 취소</string>
 
+    <!-- 취소 완료 화면 - 작가 -->
+    <string name="cancel_reservation_guide_photographer">자세한 거래내역은 \'받은 예약 > 완료됨\' 탭에서\n확인할 수 있습니다.</string>
+    <string name="cancel_reservation_button_check_history">취소 내역 확인하기</string>
+
+    <!-- 작가 예약 취소 - 공통 -->
+    <string name="photographer_cancel_reservation_top_bar_title">예약 취소</string>
+
+    <!-- 작가 예약 취소 - 사유 입력 (1/2) -->
+    <string name="photographer_cancel_reason_title">취소 사유를 알려주세요</string>
+    <string name="photographer_cancel_reason_subtitle">* 중복 선택 가능</string>
+    <string name="photographer_cancel_reason_schedule">갑작스럽게 다른 일정이 생겼어요</string>
+    <string name="photographer_cancel_reason_health">컨디션이나 건강 문제로 촬영이 어려워졌어요</string>
+    <string name="photographer_cancel_reason_customer_response">고객의 답변이 늦거나 불확실했어요</string>
+    <string name="photographer_cancel_reason_mistake">실수로 예약을 수락했어요</string>
+    <string name="photographer_cancel_reason_equipment">장비에 문제가 생겨 촬영이 불가능해졌어요</string>
+    <string name="photographer_cancel_reason_external">외부 요인(날씨, 장소 확보 등)으로 진행이 어려워요</string>
+    <string name="photographer_cancel_reason_direct_input">직접 입력</string>
+    <string name="photographer_cancel_reason_agreement">고객과 취소에 대해 사전 합의를 진행했어요.</string>
+    <string name="photographer_cancel_reason_button_next">다음</string>
+
+    <!-- 작가 예약 취소 - 취소 규정 확인 (2/2) -->
+    <string name="photographer_cancel_policy_title">취소 규정을 확인해주세요.</string>
+    <string name="photographer_cancel_policy_penalty_criteria_title">취소 페널티 부여 기준</string>
+    <string name="photographer_cancel_policy_table_header_situation">취소 상황</string>
+    <string name="photographer_cancel_policy_table_header_penalty">패널티</string>
+    <string name="photographer_cancel_policy_table_not_agreed">고객과 합의되지 않음</string>
+    <string name="photographer_cancel_policy_table_not_agreed_penalty">경고 0.5회</string>
+    <string name="photographer_cancel_policy_table_agreed">고객과 사전 합의됨</string>
+    <string name="photographer_cancel_policy_table_agreed_penalty">경고 없음</string>
+    <string name="photographer_cancel_policy_table_note">* 외부 요인 : 날씨, 장소 확보 불가 등 정당한 사유 인정 시</string>
+    <string name="photographer_cancel_policy_guide_title">취소 페널티 안내</string>
+    <string name="photographer_cancel_policy_guide_activity_label">[활동 페널티]</string>
+    <string name="photographer_cancel_policy_guide_activity_1">누적 경고 횟수 3회: 14일간 작가 활동 제한</string>
+    <string name="photographer_cancel_policy_guide_activity_2">누적 경고 횟수 7회: 작가 활동 영구 정지</string>
+    <string name="photographer_cancel_policy_guide_system_label">[추가 시스템 적용 사항]</string>
+    <string name="photographer_cancel_policy_guide_system_1">작가의 누적 경고 점수에 따라, 작가 List 내 노출 순서가 하단으로 조정될 수 있습니다. 또한 허위 사실 기재 시 별도의 통보 없이 활동이 제한될 수 있습니다.</string>
+    <string name="photographer_cancel_policy_agreement">위 내용을 모두 확인하였으며, 이에 동의합니다.</string>
+    <string name="photographer_cancel_policy_button_submit">예약 취소</string>
+
+    <!-- 작가 예약 취소 - 확인 다이얼로그 -->
+    <string name="photographer_cancel_dialog_title">예약을 취소하시겠습니까?</string>
+    <string name="photographer_cancel_dialog_desc">예약 취소 후에는 이를 변경할 수 없으며,\n취소 규정에 따라 패널티가 부여될 수 있습니다.</string>
+    <string name="photographer_cancel_dialog_button_no">아니오</string>
+    <string name="photographer_cancel_dialog_button_yes">취소할게요</string>
+
     <!-- 포맷 문자열 -->
     <string name="amount_format">%,d원</string>
 </resources>

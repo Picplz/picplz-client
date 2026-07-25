@@ -7,15 +7,8 @@ sealed interface PhotographerDetailReservationIntent {
 
     data object ConfirmReservation : PhotographerDetailReservationIntent
 
-    data object ShowCancelDialog : PhotographerDetailReservationIntent
-
-    data object DismissCancelDialog : PhotographerDetailReservationIntent
-
-    data object ConfirmCancel : PhotographerDetailReservationIntent
-
-    data object ShowRefundPolicyDialog : PhotographerDetailReservationIntent
-
-    data object DismissRefundPolicyTooltip : PhotographerDetailReservationIntent
+    /** "예약 취소" 버튼 → 작가 취소 사유 입력 플로우로 이동 */
+    data object NavigateToCancelReservation : PhotographerDetailReservationIntent
 
     data object NavigateBack : PhotographerDetailReservationIntent
 }

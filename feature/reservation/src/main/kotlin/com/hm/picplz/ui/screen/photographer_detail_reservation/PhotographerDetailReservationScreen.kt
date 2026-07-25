@@ -22,19 +22,15 @@ import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationMa
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerDetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerReservationStatusHeader
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationApproveButton
-import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationCancelDialog
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationInfoSection
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationProgressStepper
-import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationRefundPolicyDialog
 import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 import com.hm.picplz.ui.theme.MainThemeColor
 
-@Suppress("LongParameterList")
 @Composable
 fun PhotographerDetailReservationScreen(
     onNavigateBack: () -> Unit,
-    onNavigateRejectReservationConfirm: () -> Unit,
-    onNavigateToOrderDetail: (orderId: String) -> Unit,
+    onNavigateToCancelReservation: (orderId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PhotographerDetailReservationViewModel = hiltViewModel(),
 ) {
@@ -45,14 +41,8 @@ fun PhotographerDetailReservationScreen(
             when (sideEffect) {
                 is PhotographerDetailReservationSideEffect.NavigateToPrev -> onNavigateBack()
 
-                is PhotographerDetailReservationSideEffect.NavigateToRejectReservationConfirm -> {
-                    onNavigateRejectReservationConfirm()
-                }
-
-                is PhotographerDetailReservationSideEffect.NavigateToOrderDetail ->
-                    onNavigateToOrderDetail(
-                        state.orderId,
-                    )
+                is PhotographerDetailReservationSideEffect.NavigateToCancelReservation ->
+                    onNavigateToCancelReservation(sideEffect.orderId)
             }
         }
     }
@@ -67,25 +57,13 @@ fun PhotographerDetailReservationScreen(
             viewModel.handelIntent(PhotographerDetailReservationIntent.ConfirmReservation)
         },
         onCancelClick = {
-            viewModel.handelIntent(PhotographerDetailReservationIntent.ShowCancelDialog)
+            viewModel.handelIntent(PhotographerDetailReservationIntent.NavigateToCancelReservation)
         },
         onCancelReject = {
-            // TODO
+            // TODO: 예약 거절 플로우 연결 (별도 작업)
         },
         onReservationApproveClick = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.ApproveReservation)
-        },
-        onCancelDialogDismiss = {
-            viewModel.handelIntent(PhotographerDetailReservationIntent.DismissCancelDialog)
-        },
-        onCancelDialogConfirm = {
-            viewModel.handelIntent(PhotographerDetailReservationIntent.ConfirmCancel)
-        },
-        onInfoClick = {
-            viewModel.handelIntent(PhotographerDetailReservationIntent.ShowRefundPolicyDialog)
-        },
-        onRefundPolicyDismiss = {
-            viewModel.handelIntent(PhotographerDetailReservationIntent.DismissRefundPolicyTooltip)
         },
         onCloseClick = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.NavigateBack)
@@ -102,10 +80,6 @@ private fun PhotographerDetailReservationScreen(
     onCancelClick: () -> Unit,
     onCancelReject: () -> Unit,
     onReservationApproveClick: () -> Unit,
-    onCancelDialogDismiss: () -> Unit,
-    onCancelDialogConfirm: () -> Unit,
-    onInfoClick: () -> Unit,
-    onRefundPolicyDismiss: () -> Unit,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -113,23 +87,6 @@ private fun PhotographerDetailReservationScreen(
         modifier = modifier,
         containerColor = MainThemeColor.White,
     ) { innerPadding ->
-        if (state.showCancelDialog) {
-            ReservationCancelDialog(
-                status = state.reservationStatus,
-                refundCondition = state.refundCondition,
-                onDismiss = onCancelDialogDismiss,
-                onCancel = onCancelDialogDismiss,
-                onConfirm = onCancelDialogConfirm,
-                onInfoClick = onInfoClick,
-            )
-        }
-
-        if (state.showRefundPolicyTooltip) {
-            ReservationRefundPolicyDialog(
-                onDismissRequest = onRefundPolicyDismiss,
-            )
-        }
-
         Column(modifier = Modifier.padding(innerPadding)) {
             DetailReservationMap(
                 modifier =
@@ -215,10 +172,6 @@ private fun PhotographerDetailReservationScreenPreview() {
         onCancelClick = {},
         onCancelReject = {},
         onReservationApproveClick = {},
-        onCancelDialogDismiss = {},
-        onCancelDialogConfirm = {},
-        onInfoClick = {},
-        onRefundPolicyDismiss = {},
         onCloseClick = {},
     )
 }

@@ -170,13 +170,16 @@ data object DetailReservation : NavigationRoute
 data object PhotographerDetailReservation : NavigationRoute
 
 @Serializable
-data object CancelReservationConfirm : NavigationRoute
+data class CancelReservationConfirm(val isPhotographer: Boolean = false) : NavigationRoute
 
 @Serializable
 data class OrderDetail(val orderId: String) : NavigationRoute
 
 @Serializable
 data class CancelReservation(val orderId: String) : NavigationRoute
+
+@Serializable
+data class PhotographerCancelReservation(val orderId: String) : NavigationRoute
 
 @Serializable
 data class PhotographerChatRoom(val roomId: String) : NavigationRoute
