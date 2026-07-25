@@ -95,6 +95,20 @@
     <string name="cancel_reservation_top_bar_title">예약 취소</string>
     <string name="cancel_reservation_button_submit">예약 취소</string>
 
+    <!-- 예약 거절 사유 입력 화면 (작가) -->
+    <string name="reject_reason_input_title">거절 사유를 알려주세요</string>
+    <string name="reject_reason_option_area">해당 지역은 촬영이 어려워요</string>
+    <string name="reject_reason_option_time">희망한 시간대에 촬영이 어려워요</string>
+    <string name="reject_reason_option_time_note">* 수락 후, 시간대를 변경할 수도 있어요.\n채팅으로 일정을 조정해 보시는 건 어떨까요?</string>
+    <string name="reject_reason_option_equipment">장비 문제로 촬영이 불가해요</string>
+    <string name="reject_reason_option_direct_input">직접 입력</string>
+    <string name="reject_reason_direct_input_label">거절 사유를 적어주세요</string>
+    <string name="reject_reason_input_placeholder">거절 사유를 적어주세요. (최대 %1$d자)</string>
+    <string name="reject_button_next">다음</string>
+    <string name="reject_dialog_desc">예약 거절 후에는 이를 변경할 수 없습니다.\n거절하시겠습니까?</string>
+    <string name="reject_dialog_button_no">취소</string>
+    <string name="reject_dialog_button_yes">확인</string>
+
     <!-- 취소 완료 화면 - 작가 -->
     <string name="cancel_reservation_guide_photographer">자세한 거래내역은 \'받은 예약 > 완료됨\' 탭에서\n확인할 수 있습니다.</string>
     <string name="cancel_reservation_button_check_history">취소 내역 확인하기</string>
