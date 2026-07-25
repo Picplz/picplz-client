@@ -37,6 +37,7 @@ import com.hm.picplz.navigation.model.PhotographerCancelReservation
 import com.hm.picplz.navigation.model.PhotographerChatRoom
 import com.hm.picplz.navigation.model.PhotographerDetailReservation
 import com.hm.picplz.navigation.model.PhotographerMainGraph
+import com.hm.picplz.navigation.model.PhotographerRejectReservation
 import com.hm.picplz.navigation.model.Reservation
 import com.hm.picplz.ui.main.MainActivityUiState
 import kotlin.reflect.KClass
@@ -62,6 +63,7 @@ private val authRequiredRoutes: List<KClass<out Any>> =
         MyPageOrderSheet::class,
         DetailReservation::class,
         PhotographerDetailReservation::class,
+        PhotographerRejectReservation::class,
         CancelReservationConfirm::class,
         OrderDetail::class,
         CancelReservation::class,

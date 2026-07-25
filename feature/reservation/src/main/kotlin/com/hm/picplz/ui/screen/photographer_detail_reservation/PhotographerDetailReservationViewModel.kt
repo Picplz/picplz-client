@@ -46,6 +46,16 @@ class PhotographerDetailReservationViewModel @Inject constructor() : ViewModel()
                 _state.update { it.copy(reservationStatus = it.reservationStatus.next()) }
             }
 
+            is PhotographerDetailReservationIntent.RejectReservation -> {
+                viewModelScope.launch {
+                    _sideEffect.emit(
+                        PhotographerDetailReservationSideEffect.NavigateToRejectReason(
+                            orderId = _state.value.orderId,
+                        ),
+                    )
+                }
+            }
+
             is PhotographerDetailReservationIntent.NavigateToCancelReservation -> {
                 viewModelScope.launch {
                     _sideEffect.emit(
