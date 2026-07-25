@@ -37,7 +37,7 @@
 
     <!-- 예약 취소 다이얼로그 -->
     <string name="reservation_cancel_dialog_title">예약을 취소하시겠습니까?</string>
-    <string name="reservation_cancel_dialog_desc_waiting_approval">결제 전에는 자유롭게 예약을\n취소할 수 있습니다.\n취소 후에는 이를 변경할 수 없어요.</string>
+    <string name="reservation_cancel_dialog_desc_waiting_approval">자유롭게 예약을 취소할 수 있습니다.\n취소 후에는 이를 변경할 수 없어요.</string>
     <string name="reservation_cancel_dialog_desc_full_refund">취소 시 결제 금액이\n전액 환불됩니다. 취소 후에는 이를\n변경할 수 없어요.</string>
     <string name="reservation_cancel_dialog_desc_partial_refund">지금 취소하시면\n결제 금액의 %1$d%%가 환불됩니다.\n취소 후에는 이를 변경할 수 없어요.</string>
     <string name="reservation_cancel_dialog_desc_partial_refund_prefix">지금 취소하시면\n</string>
@@ -63,10 +63,8 @@
     <!-- 취소 완료 화면 -->
     <string name="cancel_reservation_title">예약이 취소되었습니다</string>
     <string name="cancel_reservation_description">예약이 정상적으로 취소되었습니다.</string>
-    <string name="cancel_reservation_description_with_refund">환불은 이용하신 카드사를 통해\n영업일 기준 5~7일 이내로 처리됩니다.</string>
-    <string name="cancel_reservation_guide">자세한 구매내역은 \'마이페이지 > 촬영내역\' 에서\n확인할 수 있습니다.</string>
-    <string name="cancel_reservation_notice_prefix">추가 안내해야할 사항들~</string>
-    <string name="cancel_reservation_notice_suffix">추가 안내해야할 사항들~</string>
+    <string name="cancel_reservation_guide">자세한 거래내역은 \'마이페이지 > 촬영내역\' 에서\n확인할 수 있습니다.</string>
+    <string name="cancel_reservation_confirm_top_bar_title">예약 정보 확인</string>
     <string name="cancel_reservation_button_history">취소내역 확인</string>
     <string name="cancel_reservation_button_home">홈으로</string>
 
@@ -85,30 +83,17 @@
     <string name="cancel_reason_input_title">취소 사유를 알려주세요</string>
     <string name="cancel_reason_input_subtitle">* 중복 선택 가능</string>
     <string name="cancel_reason_input_placeholder">취소 사유를 입력해주세요. (%1$d자 이내)</string>
-    <string name="cancel_reason_option_schedule">촬영 스케줄 다른 일정이 생겼어요</string>
-    <string name="cancel_reason_option_product">원금 상품을 변경하고 싶어요</string>
-    <string name="cancel_reason_option_photographer_late">자기의 단벌 늦거나 놀랐싶었어요</string>
-    <string name="cancel_reason_option_location">촬영 위치 문제가 생겼어요</string>
-    <string name="cancel_reason_option_other">자기가 추기 결체를 유도해요</string>
+    <string name="cancel_reason_option_schedule">갑작스럽게 다른 일정이 생겼어요</string>
+    <string name="cancel_reason_option_product">촬영 상품을 변경하고 싶어요</string>
+    <string name="cancel_reason_option_location">장소에 문제가 생겼어요</string>
     <string name="cancel_reason_option_mind">그냥 마음이 바뀌었어요</string>
+    <string name="cancel_reason_option_photographer_response">작가의 답변이 늦거나 불확실했어요</string>
+    <string name="cancel_reason_option_photographer_extra_payment">작가가 추가 결제를 유도해요</string>
     <string name="cancel_reason_option_direct_input">직접 입력</string>
 
     <!-- 예약 취소 화면 -->
     <string name="cancel_reservation_top_bar_title">예약 취소</string>
-
-    <!-- 환불 안내 화면 -->
-    <string name="refund_guide_title">환불 예정 금액을 확인해주세요.</string>
-    <string name="refund_shooting_date">촬영 예정일</string>
-    <string name="refund_cancel_date">취소일</string>
-    <string name="refund_amount_title">환불 금액</string>
-    <string name="refund_total_amount">총 환불 금액</string>
-    <string name="refund_paid_amount">결제 금액</string>
-    <string name="refund_cancellation_fee_label">취소 수수료</string>
-    <string name="refund_cancellation_fee_rate">10%</string>
-    <string name="refund_policy_title">취소/환불 규정</string>
-    <string name="refund_policy_list">• 촬영 기준 7일 전까지: 100% 환불\n• 촬영 기준 3일 전까지: 90% 환불\n• 촬영 기준 2일 전까지: 70% 환불\n• 촬영 기준 1일 전까지: 50% 환불\n• 당일 취소 또는 No-show: 환불 불가</string>
-    <string name="refund_agreement_text">위 내용을 모두 확인하였으며, 이에 동의합니다.</string>
-    <string name="refund_button_next">다음</string>
+    <string name="cancel_reservation_button_submit">예약 취소</string>
 
     <!-- 포맷 문자열 -->
     <string name="amount_format">%,d원</string>

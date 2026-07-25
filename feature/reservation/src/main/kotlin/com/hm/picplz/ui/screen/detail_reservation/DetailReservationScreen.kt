@@ -32,7 +32,7 @@ import com.hm.picplz.ui.theme.MainThemeColor
 @Composable
 fun DetailReservationScreen(
     onNavigateBack: () -> Unit,
-    onNavigateCancelReservationConfirm: () -> Unit,
+    onNavigateToCancelReservation: (orderId: String) -> Unit,
     onNavigateToOrderDetail: (orderId: String) -> Unit,
     onNavigateToWriteReview: () -> Unit,
     modifier: Modifier = Modifier,
@@ -45,8 +45,8 @@ fun DetailReservationScreen(
             when (sideEffect) {
                 is DetailReservationSideEffect.NavigateToPrev -> onNavigateBack()
 
-                is DetailReservationSideEffect.NavigateToCancelReservationConfirm -> {
-                    onNavigateCancelReservationConfirm()
+                is DetailReservationSideEffect.NavigateToCancelReservation -> {
+                    onNavigateToCancelReservation(state.orderId)
                 }
 
                 is DetailReservationSideEffect.NavigateToOrderDetail -> onNavigateToOrderDetail(state.orderId)
