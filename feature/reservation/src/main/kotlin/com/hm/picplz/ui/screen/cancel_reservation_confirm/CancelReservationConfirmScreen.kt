@@ -1,7 +1,6 @@
 package com.hm.picplz.ui.screen.cancel_reservation_confirm
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -19,8 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.hm.picplz.common.model.CancelConfirmType
 import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonBottomOutlinedButton
@@ -46,11 +42,8 @@ fun CancelReservationConfirmScreen(
         }
     }
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
     CancelReservationConfirmScreenContent(
         modifier = modifier,
-        cancelType = state.cancelType,
         onNavigateBack = onNavigateBack,
         onHistoryClick = { viewModel.handleIntent(CancelReservationConfirmIntent.NavigateToHistory) },
         onHomeClick = { viewModel.handleIntent(CancelReservationConfirmIntent.NavigateToHome) },
@@ -59,7 +52,6 @@ fun CancelReservationConfirmScreen(
 
 @Composable
 private fun CancelReservationConfirmScreenContent(
-    cancelType: CancelConfirmType,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onHistoryClick: () -> Unit = {},
@@ -70,7 +62,7 @@ private fun CancelReservationConfirmScreenContent(
         containerColor = MainThemeColor.White,
         topBar = {
             CommonTopBar(
-                text = "예약 정보 확인",
+                text = stringResource(R.string.cancel_reservation_confirm_top_bar_title),
                 onClickBack = onNavigateBack,
             )
         },
@@ -87,7 +79,7 @@ private fun CancelReservationConfirmScreenContent(
 
             CancelReservationTitle()
 
-            CancelReservationDescription(cancelType = cancelType)
+            CancelReservationDescription()
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -128,21 +120,12 @@ private fun CancelReservationTitle(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CancelReservationDescription(
-    cancelType: CancelConfirmType,
-    modifier: Modifier = Modifier,
-) {
-    val descriptionText =
-        when (cancelType) {
-            CancelConfirmType.WITHOUT_REFUND -> stringResource(R.string.cancel_reservation_description)
-            CancelConfirmType.WITH_REFUND -> stringResource(R.string.cancel_reservation_description_with_refund)
-        }
-
+private fun CancelReservationDescription(modifier: Modifier = Modifier) {
     Text(
         modifier =
             modifier
                 .fillMaxWidth(),
-        text = descriptionText,
+        text = stringResource(R.string.cancel_reservation_description),
         style = pretendardTypography.bodyLarge,
         color = MainThemeColor.Black,
         textAlign = TextAlign.Center,
@@ -151,31 +134,14 @@ private fun CancelReservationDescription(
 
 @Composable
 private fun CancelReservationGuide(modifier: Modifier = Modifier) {
-    Column(
+    Text(
         modifier =
             modifier
                 .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(3.dp),
-    ) {
-        Text(
-            modifier = Modifier,
-            text = stringResource(R.string.cancel_reservation_guide),
-            style = pretendardTypography.bodyMedium,
-            color = MainThemeColor.Gray4,
-        )
-
-        Text(
-            text = stringResource(R.string.cancel_reservation_notice_prefix),
-            style = pretendardTypography.bodyMedium,
-            color = MainThemeColor.Gray4,
-        )
-
-        Text(
-            text = stringResource(R.string.cancel_reservation_notice_suffix),
-            style = pretendardTypography.bodyMedium,
-            color = MainThemeColor.Gray4,
-        )
-    }
+        text = stringResource(R.string.cancel_reservation_guide),
+        style = pretendardTypography.bodyMedium,
+        color = MainThemeColor.Gray4,
+    )
 }
 
 @Composable
@@ -208,21 +174,8 @@ private fun CancelReservationButtons(
 @Suppress("UnusedPrivateMember")
 @Preview
 @Composable
-private fun CancelReservationConfirmScreenWithRefundPreview() {
+private fun CancelReservationConfirmScreenPreview() {
     CancelReservationConfirmScreenContent(
-        cancelType = CancelConfirmType.WITH_REFUND,
-        onNavigateBack = { },
-        onHistoryClick = { },
-        onHomeClick = { },
-    )
-}
-
-@Suppress("UnusedPrivateMember")
-@Preview
-@Composable
-private fun CancelReservationConfirmScreenWithoutRefundPreview() {
-    CancelReservationConfirmScreenContent(
-        cancelType = CancelConfirmType.WITHOUT_REFUND,
         onNavigateBack = { },
         onHistoryClick = { },
         onHomeClick = { },
