@@ -59,6 +59,16 @@ class WriteReviewViewModel
                     _state.update { it.copy(contentText = intent.text.take(REVIEW_CONTENT_MAX_LENGTH)) }
                 }
 
+                WriteReviewIntent.OnAddPhotoClick -> {
+                    emitSideEffect(WriteReviewSideEffect.LaunchPhotoPicker)
+                }
+
+                is WriteReviewIntent.AddPhotos -> addPhotos(intent.uris)
+
+                is WriteReviewIntent.RemovePhoto -> {
+                    _state.update { it.copy(photoUris = it.photoUris - intent.uri) }
+                }
+
                 WriteReviewIntent.OnRatingSubmitClick -> {
                     _state.update { it.copy(currentStep = Step.CONTENT) }
                 }
@@ -80,6 +90,16 @@ class WriteReviewViewModel
                     // 퇴장 애니메이션 동안 문구가 남아 있어야 하므로 resId는 유지합니다.
                     _state.update { it.copy(showToast = false) }
                 }
+            }
+        }
+
+        /**
+         * 사진 선택기가 남은 장수보다 많이 돌려줄 수 있으므로 최대 장수로 잘라 담습니다.
+         * 같은 사진을 다시 고른 경우는 중복으로 쌓지 않습니다.
+         */
+        private fun addPhotos(uris: List<String>) {
+            _state.update { state ->
+                state.copy(photoUris = (state.photoUris + uris).distinct().take(REVIEW_PHOTO_MAX_COUNT))
             }
         }
 

@@ -4,6 +4,9 @@ package com.hm.picplz.ui.screen.write_review
 const val REVIEW_CONTENT_MIN_LENGTH = 10
 const val REVIEW_CONTENT_MAX_LENGTH = 600
 
+/** 첨부 가능한 촬영 사진 최대 장수 */
+const val REVIEW_PHOTO_MAX_COUNT = 10
+
 data class WriteReviewState(
     val orderId: String = "",
     val currentStep: Step = Step.RATING,
@@ -14,6 +17,8 @@ data class WriteReviewState(
     val negativeFeedbackText: String = "",
     /** "촬영 경험을 들려주세요" 입력값 (필수) */
     val contentText: String = "",
+    /** 첨부한 촬영 사진 URI (선택사항, 최대 [REVIEW_PHOTO_MAX_COUNT]장) */
+    val photoUris: List<String> = emptyList(),
     val showExitDialog: Boolean = false,
     /**
      * 마지막으로 띄운 토스트 문구. 퇴장 애니메이션이 끝날 때까지 문구가 남아 있어야 하므로
@@ -28,8 +33,11 @@ data class WriteReviewState(
     /** 부정 평가(1~2점)일 때만 아쉬운 점 입력란을 노출합니다. */
     fun showNegativeFeedback(): Boolean = selectedRating?.needsNegativeFeedback == true
 
-    /** 촬영 경험(2/2) 단계의 "리뷰 등록" 활성화 조건 */
+    /** 촬영 경험(2/2) 단계의 "리뷰 등록" 활성화 조건. 사진은 선택사항이라 조건에 넣지 않습니다. */
     fun isContentStepValid(): Boolean = contentText.length >= REVIEW_CONTENT_MIN_LENGTH
+
+    /** 최대 장수에 도달하면 사진 추가 타일을 숨깁니다. */
+    fun canAddPhoto(): Boolean = photoUris.size < REVIEW_PHOTO_MAX_COUNT
 
     enum class Step { RATING, CONTENT }
 
