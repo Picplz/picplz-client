@@ -1,6 +1,7 @@
 package com.hm.picplz.ui.screen.write_review
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,15 +18,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.ui.screen.common.CommonBottomButton
+import com.hm.picplz.ui.screen.common.CommonDestructiveConfirmDialog
+import com.hm.picplz.ui.screen.common.CommonToast
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.write_review.WriteReviewState.Step
+import com.hm.picplz.ui.screen.write_review.composable.WriteReviewExperienceContent
 import com.hm.picplz.ui.screen.write_review.composable.WriteReviewRatingContent
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.PicplzTheme
 
+/** 하단 버튼(높이 + 바깥 여백)을 피해 토스트를 띄우기 위한 오프셋 */
+private val toastBottomOffset = 120.dp
+
 @Composable
 fun WriteReviewScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToReviewDetail: (reviewId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: WriteReviewViewModel = hiltViewModel(),
 ) {
@@ -39,6 +47,7 @@ fun WriteReviewScreen(
         viewModel.sideEffect.collect { sideEffect ->
             when (sideEffect) {
                 WriteReviewSideEffect.NavigateBack -> onNavigateBack()
+                is WriteReviewSideEffect.NavigateToReviewDetail -> onNavigateToReviewDetail(sideEffect.reviewId)
             }
         }
     }
@@ -53,63 +62,128 @@ fun WriteReviewScreen(
         onNegativeFeedbackChange = { text ->
             viewModel.handleIntent(WriteReviewIntent.UpdateNegativeFeedback(text))
         },
+        onContentChange = { text ->
+            viewModel.handleIntent(WriteReviewIntent.UpdateContent(text))
+        },
         onRatingSubmitClick = { viewModel.handleIntent(WriteReviewIntent.OnRatingSubmitClick) },
+        onReviewSubmitClick = { viewModel.handleIntent(WriteReviewIntent.OnReviewSubmitClick) },
+        onExitDialogConfirm = { viewModel.handleIntent(WriteReviewIntent.OnExitDialogConfirm) },
+        onExitDialogDismiss = { viewModel.handleIntent(WriteReviewIntent.OnExitDialogDismiss) },
+        onToastDismiss = { viewModel.handleIntent(WriteReviewIntent.DismissToast) },
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun WriteReviewScreenContent(
     state: WriteReviewState,
     onBackClick: () -> Unit,
     onRatingSelect: (ReviewRating) -> Unit,
     onNegativeFeedbackChange: (String) -> Unit,
+    onContentChange: (String) -> Unit,
     onRatingSubmitClick: () -> Unit,
+    onReviewSubmitClick: () -> Unit,
+    onExitDialogConfirm: () -> Unit,
+    onExitDialogDismiss: () -> Unit,
+    onToastDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        modifier = modifier,
-        containerColor = MainThemeColor.White,
-        topBar = {
-            CommonTopBar(
-                text = stringResource(R.string.write_review_top_bar_title),
-                onClickBack = onBackClick,
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-        ) {
-            when (state.currentStep) {
-                Step.RATING -> {
-                    WriteReviewRatingContent(
-                        modifier = Modifier.weight(1f),
-                        customerNickname = state.customerNickname,
-                        photographerName = state.photographerName,
-                        selectedRating = state.selectedRating,
-                        negativeFeedbackText = state.negativeFeedbackText,
-                        onRatingSelect = onRatingSelect,
-                        onNegativeFeedbackChange = onNegativeFeedbackChange,
-                    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = modifier,
+            containerColor = MainThemeColor.White,
+            topBar = {
+                CommonTopBar(
+                    text = stringResource(R.string.write_review_top_bar_title),
+                    onClickBack = onBackClick,
+                )
+            },
+        ) { innerPadding ->
+            Column(
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
+            ) {
+                when (state.currentStep) {
+                    Step.RATING -> {
+                        WriteReviewRatingContent(
+                            modifier = Modifier.weight(1f),
+                            customerNickname = state.customerNickname,
+                            photographerName = state.photographerName,
+                            selectedRating = state.selectedRating,
+                            negativeFeedbackText = state.negativeFeedbackText,
+                            onRatingSelect = onRatingSelect,
+                            onNegativeFeedbackChange = onNegativeFeedbackChange,
+                        )
 
-                    CommonBottomButton(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 48.dp),
-                        text = stringResource(R.string.write_review_rating_button_submit),
-                        onClick = onRatingSubmitClick,
-                        enabled = state.isRatingStepValid(),
-                    )
+                        WriteReviewBottomButton(
+                            text = stringResource(R.string.write_review_rating_button_submit),
+                            onClick = onRatingSubmitClick,
+                            enabled = state.isRatingStepValid(),
+                        )
+                    }
+
+                    Step.CONTENT -> {
+                        WriteReviewExperienceContent(
+                            modifier = Modifier.weight(1f),
+                            contentText = state.contentText,
+                            onContentChange = onContentChange,
+                        )
+
+                        WriteReviewBottomButton(
+                            text = stringResource(R.string.write_review_content_button_submit),
+                            onClick = onReviewSubmitClick,
+                            enabled = state.isContentStepValid(),
+                            // 최소 글자 수 미달이어도 눌러서 안내 토스트를 받을 수 있어야 합니다.
+                            clickableWhenDisabled = true,
+                        )
+                    }
                 }
-
-                // TODO(#214): 촬영 경험 입력(2/2) 단계
-                Step.CONTENT -> Unit
             }
         }
+
+        if (state.showExitDialog) {
+            CommonDestructiveConfirmDialog(
+                title = stringResource(R.string.write_review_exit_dialog_title),
+                description = stringResource(R.string.write_review_exit_dialog_description),
+                cancelText = stringResource(R.string.write_review_exit_dialog_cancel),
+                confirmText = stringResource(R.string.write_review_exit_dialog_confirm),
+                onDismissRequest = onExitDialogDismiss,
+                onConfirm = onExitDialogConfirm,
+            )
+        }
+
+        state.toastMessageResId?.let { messageResId ->
+            CommonToast(
+                message = stringResource(messageResId, REVIEW_CONTENT_MIN_LENGTH),
+                isVisible = true,
+                onDismiss = onToastDismiss,
+                // 기본 오프셋(50dp)은 하단 버튼과 겹치므로 버튼 위로 띄웁니다.
+                bottomOffset = toastBottomOffset,
+            )
+        }
     }
+}
+
+@Composable
+private fun WriteReviewBottomButton(
+    text: String,
+    onClick: () -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+    clickableWhenDisabled: Boolean = false,
+) {
+    CommonBottomButton(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 48.dp),
+        text = text,
+        onClick = onClick,
+        enabled = enabled,
+        clickableWhenDisabled = clickableWhenDisabled,
+    )
 }
 
 @Suppress("UnusedPrivateMember")
@@ -127,7 +201,12 @@ private fun WriteReviewScreenRatingEmptyPreview() {
             onBackClick = {},
             onRatingSelect = {},
             onNegativeFeedbackChange = {},
+            onContentChange = {},
             onRatingSubmitClick = {},
+            onReviewSubmitClick = {},
+            onExitDialogConfirm = {},
+            onExitDialogDismiss = {},
+            onToastDismiss = {},
         )
     }
 }
@@ -135,20 +214,52 @@ private fun WriteReviewScreenRatingEmptyPreview() {
 @Suppress("UnusedPrivateMember")
 @Preview(showBackground = true)
 @Composable
-private fun WriteReviewScreenRatingSelectedPreview() {
+private fun WriteReviewScreenContentStepPreview() {
     PicplzTheme {
         WriteReviewScreenContent(
             state =
                 WriteReviewState(
                     orderId = "order123",
-                    customerNickname = "세연",
-                    photographerName = "유가영",
-                    selectedRating = ReviewRating.BAD,
+                    currentStep = Step.CONTENT,
+                    selectedRating = ReviewRating.EXCELLENT,
+                    contentText = "재밌었어요 사진도 잘찍으심",
                 ),
             onBackClick = {},
             onRatingSelect = {},
             onNegativeFeedbackChange = {},
+            onContentChange = {},
             onRatingSubmitClick = {},
+            onReviewSubmitClick = {},
+            onExitDialogConfirm = {},
+            onExitDialogDismiss = {},
+            onToastDismiss = {},
+        )
+    }
+}
+
+@Suppress("UnusedPrivateMember")
+@Preview(showBackground = true)
+@Composable
+private fun WriteReviewScreenExitDialogPreview() {
+    PicplzTheme {
+        WriteReviewScreenContent(
+            state =
+                WriteReviewState(
+                    orderId = "order123",
+                    currentStep = Step.CONTENT,
+                    selectedRating = ReviewRating.EXCELLENT,
+                    contentText = "재밌었어요 사진도 잘찍으심",
+                    showExitDialog = true,
+                ),
+            onBackClick = {},
+            onRatingSelect = {},
+            onNegativeFeedbackChange = {},
+            onContentChange = {},
+            onRatingSubmitClick = {},
+            onReviewSubmitClick = {},
+            onExitDialogConfirm = {},
+            onExitDialogDismiss = {},
+            onToastDismiss = {},
         )
     }
 }
