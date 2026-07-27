@@ -1,6 +1,14 @@
 package com.hm.picplz.navigation.graph
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -21,6 +29,7 @@ import com.hm.picplz.navigation.model.PhotographerMain
 import com.hm.picplz.navigation.model.PhotographerMainGraph
 import com.hm.picplz.navigation.model.QuickShoot
 import com.hm.picplz.navigation.model.ReviewPhotographer
+import com.hm.picplz.ui.screen.common.CommonToast
 import com.hm.picplz.ui.screen.detail_photographer.DetailPhotographerPhotoPortfoliosScreen
 import com.hm.picplz.ui.screen.detail_photographer.DetailPhotographerPhotoReviewsScreen
 import com.hm.picplz.ui.screen.detail_photographer.DetailPhotographerPortfoliosScreen
@@ -32,6 +41,7 @@ import com.hm.picplz.ui.screen.photographer_main.PhotographerMainViewModel
 import com.hm.picplz.ui.screen.photographer_main.composable.EquipmentSettingScreen
 import com.hm.picplz.ui.screen.photographer_main.composable.PhotographerAddDeviceScreen
 import com.hm.picplz.ui.screen.quick_shoot.QuickShootScreen
+import com.hm.picplz.core.ui.R as CoreUiR
 
 fun NavGraphBuilder.photographerNavGraph(navController: NavHostController) {
     composable<QuickShoot> {
@@ -60,11 +70,22 @@ fun NavGraphBuilder.photographerNavGraph(navController: NavHostController) {
 
     composable<DetailPhotographerSingleReview> { backStackEntry ->
         val args = backStackEntry.toRoute<DetailPhotographerSingleReview>()
-        DetailPhotographerSingleReviewScreen(
-            navController = navController,
-            reviewId = args.reviewId,
-            photoIndex = args.photoIndex,
-        )
+        // 리뷰 작성 직후 진입한 경우에만 등록 완료 토스트를 덮어서 띄웁니다.
+        var showRegisteredToast by rememberSaveable { mutableStateOf(args.showRegisteredToast) }
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            DetailPhotographerSingleReviewScreen(
+                navController = navController,
+                reviewId = args.reviewId,
+                photoIndex = args.photoIndex,
+            )
+
+            CommonToast(
+                message = stringResource(CoreUiR.string.review_registered_toast),
+                isVisible = showRegisteredToast,
+                onDismiss = { showRegisteredToast = false },
+            )
+        }
     }
 
     composable<DetailPhotographerPhotoPortfolios> { backStackEntry ->
