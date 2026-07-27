@@ -32,6 +32,9 @@
     <string name="reservation_button_review">리뷰 쓰기</string>
     <string name="reservation_button_reservation_approve">예약 승인</string>
 
+    <!-- 거래 완료 모달 -->
+    <string name="reservation_deal_complete_modal_message">거래 완료 되었습니다</string>
+
     <!-- 촬영 일시 미확정 -->
     <string name="reservation_schedule_tbd">작가와 협의</string>
 
