@@ -42,14 +42,14 @@ fun WriteReviewRatingContent(
         Text(
             text = stringResource(R.string.write_review_rating_title, customerNickname, photographerName),
             style = MainThemeFont.TitleSmall,
-            color = MainThemeColor.Black,
+            color = MainThemeColor.Gray5,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp),
         )
 
         Text(
             text = stringResource(R.string.write_review_rating_subtitle),
             style = MainThemeFont.Caption,
-            color = MainThemeColor.Gray3,
+            color = MainThemeColor.Gray4,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
         )
 
@@ -59,7 +59,7 @@ fun WriteReviewRatingContent(
             modifier =
                 Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 56.dp),
+                    .padding(top = 60.dp),
         )
 
         ReviewRatingMessage(
@@ -67,7 +67,7 @@ fun WriteReviewRatingContent(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 30.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 32.dp),
         )
 
         if (selectedRating?.needsNegativeFeedback == true) {
@@ -114,7 +114,7 @@ private fun ReviewRatingMessage(
             style = MainThemeFont.Body,
             color = MainThemeColor.Gray5,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = 12.dp),
         )
     }
 }
