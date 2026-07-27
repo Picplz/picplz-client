@@ -34,7 +34,7 @@ fun DetailReservationScreen(
     onNavigateBack: () -> Unit,
     onNavigateToCancelReservation: (orderId: String) -> Unit,
     onNavigateToOrderDetail: (orderId: String) -> Unit,
-    onNavigateToWriteReview: () -> Unit,
+    onNavigateToWriteReview: (orderId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailReservationViewModel = hiltViewModel(),
 ) {
@@ -51,7 +51,7 @@ fun DetailReservationScreen(
 
                 is DetailReservationSideEffect.NavigateToOrderDetail -> onNavigateToOrderDetail(state.orderId)
 
-                is DetailReservationSideEffect.NavigateToWriteReview -> onNavigateToWriteReview()
+                is DetailReservationSideEffect.NavigateToWriteReview -> onNavigateToWriteReview(state.orderId)
             }
         }
     }
