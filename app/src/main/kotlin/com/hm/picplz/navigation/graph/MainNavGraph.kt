@@ -43,6 +43,7 @@ import com.hm.picplz.navigation.model.OrderDetail
 import com.hm.picplz.navigation.model.PhotographerCancelReservation
 import com.hm.picplz.navigation.model.PhotographerChatRoom
 import com.hm.picplz.navigation.model.PhotographerDetailReservation
+import com.hm.picplz.navigation.model.PhotographerRejectReservation
 import com.hm.picplz.navigation.model.Reservation
 import com.hm.picplz.ui.screen.cancel_reservation.CancelReservationScreen
 import com.hm.picplz.ui.screen.cancel_reservation_confirm.CancelReservationConfirmScreen
@@ -76,6 +77,7 @@ import com.hm.picplz.ui.screen.photographer_detail_reservation.PhotographerDetai
 import com.hm.picplz.ui.screen.photographer_main.PhotographerMainViewModel
 import com.hm.picplz.ui.screen.photographer_main.composable.EquipmentSettingScreen
 import com.hm.picplz.ui.screen.photographer_main.composable.PhotographerAddDeviceScreen
+import com.hm.picplz.ui.screen.photographer_reject_reservation.PhotographerRejectReservationScreen
 import com.hm.picplz.ui.screen.reservation.ReservationScreen
 
 fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
@@ -327,8 +329,23 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             onNavigateBack = {
                 navController.popBackStack()
             },
+            onNavigateToRejectReason = { orderId ->
+                navController.navigate(PhotographerRejectReservation(orderId = orderId))
+            },
             onNavigateToCancelReservation = { orderId ->
                 navController.navigate(PhotographerCancelReservation(orderId = orderId))
+            },
+        )
+    }
+
+    composable<PhotographerRejectReservation> {
+        PhotographerRejectReservationScreen(
+            onNavigateBack = {
+                navController.popBackStack()
+            },
+            onNavigateToChat = {
+                // 예약이 시작된 채팅방으로 복귀 (거절 사유·예약 상세 화면 정리)
+                navController.popBackStack<PhotographerChatRoom>(inclusive = false)
             },
         )
     }

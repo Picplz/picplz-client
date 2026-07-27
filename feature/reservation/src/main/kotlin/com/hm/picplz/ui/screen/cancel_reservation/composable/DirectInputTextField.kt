@@ -30,6 +30,7 @@ fun DirectInputTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     maxLength: Int = CANCEL_REASON_INPUT_MAX_LENGTH,
+    placeholder: String = stringResource(R.string.cancel_reason_input_placeholder, maxLength),
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -63,7 +64,7 @@ fun DirectInputTextField(
                 ) {
                     if (value.isEmpty()) {
                         Text(
-                            text = stringResource(R.string.cancel_reason_input_placeholder, maxLength),
+                            text = placeholder,
                             style = MainThemeFont.Body,
                             color = MainThemeColor.Gray3,
                         )

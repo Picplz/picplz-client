@@ -30,6 +30,7 @@ import com.hm.picplz.ui.theme.MainThemeColor
 @Composable
 fun PhotographerDetailReservationScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToRejectReason: (orderId: String) -> Unit,
     onNavigateToCancelReservation: (orderId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PhotographerDetailReservationViewModel = hiltViewModel(),
@@ -40,6 +41,9 @@ fun PhotographerDetailReservationScreen(
         viewModel.sideEffect.collect { sideEffect ->
             when (sideEffect) {
                 is PhotographerDetailReservationSideEffect.NavigateToPrev -> onNavigateBack()
+
+                is PhotographerDetailReservationSideEffect.NavigateToRejectReason ->
+                    onNavigateToRejectReason(sideEffect.orderId)
 
                 is PhotographerDetailReservationSideEffect.NavigateToCancelReservation ->
                     onNavigateToCancelReservation(sideEffect.orderId)
@@ -60,7 +64,7 @@ fun PhotographerDetailReservationScreen(
             viewModel.handelIntent(PhotographerDetailReservationIntent.NavigateToCancelReservation)
         },
         onCancelReject = {
-            // TODO: 예약 거절 플로우 연결 (별도 작업)
+            viewModel.handelIntent(PhotographerDetailReservationIntent.RejectReservation)
         },
         onReservationApproveClick = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.ApproveReservation)
