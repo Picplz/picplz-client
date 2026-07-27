@@ -185,4 +185,7 @@ data class CancelReservation(val orderId: String) : NavigationRoute
 data class PhotographerCancelReservation(val orderId: String) : NavigationRoute
 
 @Serializable
+data class WriteReview(val orderId: String) : NavigationRoute
+
+@Serializable
 data class PhotographerChatRoom(val roomId: String) : NavigationRoute
