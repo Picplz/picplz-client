@@ -156,7 +156,17 @@ private fun PhotographerAvailability(photographer: Photographer) {
             )
             Spacer(modifier = Modifier.width(5.dp))
         }
-        val areasText = formatActiveAreas(photographer.activeAreas)
+        val remainingAreaCount = (photographer.activeAreas.size - DISPLAY_AREA_COUNT).coerceAtLeast(0)
+        val overflowText =
+            if (remainingAreaCount > 0) {
+                stringResource(
+                    PhotographerR.string.quick_shoot_area_overflow_format,
+                    remainingAreaCount,
+                )
+            } else {
+                null
+            }
+        val areasText = formatActiveAreas(photographer.activeAreas, overflowText)
         if (areasText.isNotEmpty()) {
             Text(
                 text = areasText,
@@ -176,15 +186,13 @@ private fun PhotographerAvailability(photographer: Photographer) {
     }
 }
 
-private fun formatActiveAreas(areas: List<String>): String {
+private fun formatActiveAreas(
+    areas: List<String>,
+    overflowText: String?,
+): String {
     if (areas.isEmpty()) return ""
     val displayed = areas.take(DISPLAY_AREA_COUNT).joinToString(", ", transform = ::formatAreaName)
-    val remaining = areas.size - DISPLAY_AREA_COUNT
-    return if (remaining > 0) {
-        "$displayed 외 ${remaining}개"
-    } else {
-        displayed
-    }
+    return listOfNotNull(displayed, overflowText).joinToString(" ")
 }
 
 private fun formatAreaName(area: String): String {
