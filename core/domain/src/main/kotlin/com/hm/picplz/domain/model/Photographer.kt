@@ -16,3 +16,9 @@ data class FilteredPhotographers(
     val active: List<Photographer> = emptyList(),
     val inactive: List<Photographer> = emptyList(),
 )
+
+data class PhotographerPage(
+    val photographers: List<Photographer>,
+    val page: Int,
+    val hasNext: Boolean,
+)
