@@ -6,6 +6,7 @@ data class CameraInfoDto(
     @SerializedName("type") val type: String,
     @SerializedName("brand") val brand: String,
     @SerializedName("name") val name: String,
+    @SerializedName("cameraType") val cameraType: String? = null,
 )
 
 data class CameraListData(

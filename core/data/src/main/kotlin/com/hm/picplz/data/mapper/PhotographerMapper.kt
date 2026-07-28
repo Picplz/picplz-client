@@ -23,9 +23,10 @@ fun NearbyPhotographerCard.toDomain(): Photographer {
         profileImageUri = profileImage,
         isActive = active == "Y",
         distance = distance,
-        photoMoods = photoMoods?.mapNotNull { it?.takeUnless(String::isBlank) } ?: emptyList(),
+        photoMoods = photoMoods.toNormalizedPhotoMoods(),
         activeAreas = activeAreas ?: emptyList(),
         instagram = null,
+        equipment = emptyList(),
         portfolioPhotos = emptyList(),
     )
 }
@@ -46,11 +47,27 @@ fun PhotographerDetailDto.toPhotographerInfo(): PhotographerInfo {
         followCount = followers ?: 0,
         profileImageUri = profileImage ?: "",
         workingArea = area?.mapNotNull { it.name } ?: emptyList(),
-        keyword = photoMoods?.mapNotNull { it?.takeUnless(String::isBlank) } ?: emptyList(),
-        equipment = emptyList(),
+        keyword = photoMoods.toNormalizedPhotoMoods(),
+        equipment =
+            cameras
+                .orEmpty()
+                .map { "${it.brand} ${it.name}".trim() }
+                .filter(String::isNotBlank)
+                .distinct(),
         photoPortfolios = emptyList(),
     )
 }
+
+private fun List<String?>?.toNormalizedPhotoMoods(): List<String> =
+    orEmpty()
+        .mapNotNull { mood ->
+            mood
+                ?.trim()
+                ?.trimStart('#')
+                ?.trim()
+                ?.takeUnless(String::isBlank)
+        }
+        .distinct()
 
 fun ReviewPhotoDto.toPhotoReview(reviewId: Long): PhotoReview {
     return PhotoReview(

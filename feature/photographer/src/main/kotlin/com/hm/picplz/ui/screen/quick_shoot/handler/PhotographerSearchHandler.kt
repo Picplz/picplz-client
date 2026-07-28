@@ -1,8 +1,10 @@
 package com.hm.picplz.ui.screen.quick_shoot.handler
 
 import androidx.compose.ui.geometry.Offset
+import com.hm.picplz.domain.model.FilteredPhotographers
 import com.hm.picplz.ui.screen.quick_shoot.QuickShootIntent
 import com.hm.picplz.ui.screen.quick_shoot.QuickShootState
+import com.hm.picplz.ui.screen.quick_shoot.composable.QuickShootSortType
 import com.hm.picplz.ui.screen.quick_shoot.util.OffsetGenerator
 
 class PhotographerSearchHandler(
@@ -17,18 +19,14 @@ class PhotographerSearchHandler(
                 state.copy(isSearchingPhotographer = intent.isSearchingPhotographer)
             }
 
-            is QuickShootIntent.SetNearbyPhotographers -> {
-                state.copy(nearbyPhotographers = intent.nearbyPhotographers)
+            is QuickShootIntent.SetNearbyPhotographerLoadFailed -> {
+                state.copy(nearbyPhotographerLoadFailed = intent.failed)
             }
 
-            is QuickShootIntent.SetSelectedPhotographerId -> {
+            is QuickShootIntent.SetNearbyPhotographers -> {
                 state.copy(
-                    selectedPhotographerId =
-                        if (state.selectedPhotographerId == intent.photographerId) {
-                            null
-                        } else {
-                            intent.photographerId
-                        },
+                    nearbyPhotographers =
+                        intent.nearbyPhotographers.sortedBy(state.selectedSortType),
                 )
             }
 
@@ -51,10 +49,26 @@ class PhotographerSearchHandler(
             }
 
             is QuickShootIntent.SelectSortType -> {
-                state.copy(selectedSortType = intent.sortType)
+                state.copy(
+                    selectedSortType = intent.sortType,
+                    nearbyPhotographers = state.nearbyPhotographers.sortedBy(intent.sortType),
+                )
             }
 
             else -> null
         }
     }
 }
+
+private fun FilteredPhotographers.sortedBy(sortType: QuickShootSortType) =
+    when (sortType) {
+        QuickShootSortType.DISTANCE ->
+            copy(
+                active = active.sortedBy { it.distance },
+                inactive = inactive.sortedBy { it.distance },
+            )
+
+        QuickShootSortType.REVIEW_COUNT,
+        QuickShootSortType.RATING,
+        -> this
+    }

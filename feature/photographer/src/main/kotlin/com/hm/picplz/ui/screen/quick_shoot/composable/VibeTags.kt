@@ -20,7 +20,7 @@ fun VibeTags(
         modifier =
             modifier
                 .height(30.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         itemsIndexed(tags) { index, vibeTag ->
             CommonChip(
@@ -29,7 +29,7 @@ fun VibeTags(
                 initialMode = ChipMode.DEFAULT,
                 isEditable = false,
                 height = ChipHeight.MEDIUM,
-                backgroundColor = MainThemeColor.Gray2,
+                backgroundColor = MainThemeColor.Gray1,
                 unselectedBorderColor = MainThemeColor.Gray2,
             )
         }

@@ -9,6 +9,7 @@ data class PhotographerDetailDto(
     val active: String,
     val instagram: String?,
     val photoMoods: List<String?>?,
+    val cameras: List<CameraInfoDto>? = null,
     val followers: Int?,
     val isFollowing: String?,
 )

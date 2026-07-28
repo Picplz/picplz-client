@@ -1,5 +1,6 @@
 package com.hm.picplz.data.api
 
+import com.hm.picplz.data.model.ApiResponse
 import com.hm.picplz.data.model.CreateProductRequest
 import com.hm.picplz.data.model.ProductDto
 import com.hm.picplz.data.model.ProductIdResponse
@@ -13,7 +14,7 @@ interface ProductApi {
     @GET("api/v1/photographers/{photographerId}/products")
     suspend fun getPhotographerProducts(
         @Path("photographerId") photographerId: Long,
-    ): Response<List<ProductDto>>
+    ): Response<ApiResponse<List<ProductDto>>>
 
     @POST("api/v1/products")
     suspend fun createProduct(

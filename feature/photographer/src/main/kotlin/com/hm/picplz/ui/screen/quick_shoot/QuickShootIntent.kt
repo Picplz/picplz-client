@@ -24,6 +24,8 @@ sealed interface QuickShootIntent {
 
     data class SetIsSearchingPhotographer(val isSearchingPhotographer: Boolean) : QuickShootIntent
 
+    data class SetNearbyPhotographerLoadFailed(val failed: Boolean) : QuickShootIntent
+
     data class SetNearbyPhotographers(val nearbyPhotographers: FilteredPhotographers) : QuickShootIntent
 
     data object FetchNearbyPhotographers : QuickShootIntent
