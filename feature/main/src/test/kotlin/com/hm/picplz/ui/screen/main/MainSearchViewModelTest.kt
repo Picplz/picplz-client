@@ -60,6 +60,30 @@ class MainSearchViewModelTest {
         }
 
     @Test
+    fun `refocusing after preview cancellation restarts request`() =
+        runTest {
+            val repository = FakeSearchPhotographerRepository()
+            val viewModel = createViewModel(repository)
+
+            viewModel.handleIntent(MainSearchIntent.FocusChanged(true))
+            viewModel.handleIntent(MainSearchIntent.QueryChanged("유가"))
+            advanceTimeBy(100)
+            viewModel.handleIntent(MainSearchIntent.FocusChanged(false))
+
+            assertFalse(viewModel.state.value.isPreviewLoading)
+            assertTrue(repository.requests.isEmpty())
+
+            viewModel.handleIntent(MainSearchIntent.FocusChanged(true))
+            assertTrue(viewModel.state.value.isPreviewLoading)
+            advanceTimeBy(300)
+            advanceUntilIdle()
+
+            assertEquals(listOf(SearchRequest("유가", "REVIEW", 0, 5)), repository.requests)
+            assertEquals("유가영", viewModel.state.value.suggestions.single().name)
+            assertFalse(viewModel.state.value.isPreviewLoading)
+        }
+
+    @Test
     fun `search submit loads first page from API`() =
         runTest {
             val repository = FakeSearchPhotographerRepository()

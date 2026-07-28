@@ -36,7 +36,26 @@ class MainSearchViewModel
 
                 is MainSearchIntent.FocusChanged -> {
                     _state.reduce(intent)
-                    if (!intent.isFocused) previewJob?.cancel()
+                    val currentState = _state.value
+                    if (intent.isFocused) {
+                        if (
+                            !currentState.hasSearched &&
+                            currentState.query.isNotBlank() &&
+                            currentState.suggestions.isEmpty() &&
+                            !currentState.isPreviewLoading
+                        ) {
+                            val query = currentState.query.trim()
+                            _state.reduce(MainSearchIntent.PreviewLoading(query))
+                            requestPreview(query)
+                        }
+                    } else {
+                        val wasPreviewLoading = previewJob?.isActive == true
+                        previewJob?.cancel()
+                        previewJob = null
+                        if (wasPreviewLoading) {
+                            _state.reduce(MainSearchIntent.PreviewLoadFailed(currentState.query.trim()))
+                        }
+                    }
                 }
 
                 is MainSearchIntent.SearchSubmitted -> {
