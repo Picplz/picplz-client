@@ -77,7 +77,8 @@ class WriteReviewViewModel
                 }
 
                 WriteReviewIntent.DismissToast -> {
-                    _state.update { it.copy(toastMessageResId = null) }
+                    // 퇴장 애니메이션 동안 문구가 남아 있어야 하므로 resId는 유지합니다.
+                    _state.update { it.copy(showToast = false) }
                 }
             }
         }
@@ -88,7 +89,12 @@ class WriteReviewViewModel
          */
         private fun submitReview() {
             if (!_state.value.isContentStepValid()) {
-                _state.update { it.copy(toastMessageResId = R.string.write_review_content_too_short) }
+                _state.update {
+                    it.copy(
+                        toastMessageResId = R.string.write_review_content_too_short,
+                        showToast = true,
+                    )
+                }
                 return
             }
 

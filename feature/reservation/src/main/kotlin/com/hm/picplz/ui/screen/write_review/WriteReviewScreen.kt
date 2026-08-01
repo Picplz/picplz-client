@@ -154,15 +154,19 @@ private fun WriteReviewScreenContent(
             )
         }
 
-        state.toastMessageResId?.let { messageResId ->
-            CommonToast(
-                message = stringResource(messageResId, REVIEW_CONTENT_MIN_LENGTH),
-                isVisible = true,
-                onDismiss = onToastDismiss,
-                // 기본 오프셋(50dp)은 하단 버튼과 겹치므로 버튼 위로 띄웁니다.
-                bottomOffset = toastBottomOffset,
-            )
-        }
+        // CommonToast는 항상 컴포즈해 두고 isVisible만 토글합니다.
+        // 조건부로 컴포즈하면 사라질 때 노드가 즉시 제거되어 퇴장 애니메이션이 재생되지 않고,
+        // isVisible을 상수 true로 넘기면 최초 컴포지션부터 visible이라 진입 애니메이션도 생략됩니다.
+        CommonToast(
+            message =
+                state.toastMessageResId
+                    ?.let { stringResource(it, REVIEW_CONTENT_MIN_LENGTH) }
+                    .orEmpty(),
+            isVisible = state.showToast,
+            onDismiss = onToastDismiss,
+            // 기본 오프셋(50dp)은 하단 버튼과 겹치므로 버튼 위로 띄웁니다.
+            bottomOffset = toastBottomOffset,
+        )
     }
 }
 
