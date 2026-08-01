@@ -3,6 +3,7 @@ package com.hm.picplz.navigation.graph
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -71,7 +72,16 @@ fun NavGraphBuilder.photographerNavGraph(navController: NavHostController) {
     composable<DetailPhotographerSingleReview> { backStackEntry ->
         val args = backStackEntry.toRoute<DetailPhotographerSingleReview>()
         // 리뷰 작성 직후 진입한 경우에만 등록 완료 토스트를 덮어서 띄웁니다.
-        var showRegisteredToast by rememberSaveable { mutableStateOf(args.showRegisteredToast) }
+        // 최초 컴포지션부터 visible이면 진입 애니메이션이 생략되므로 false로 시작해 다음 프레임에 켭니다.
+        var showRegisteredToast by rememberSaveable { mutableStateOf(false) }
+        var registeredToastShown by rememberSaveable { mutableStateOf(false) }
+
+        LaunchedEffect(Unit) {
+            if (args.showRegisteredToast && !registeredToastShown) {
+                registeredToastShown = true
+                showRegisteredToast = true
+            }
+        }
 
         Box(modifier = Modifier.fillMaxSize()) {
             DetailPhotographerSingleReviewScreen(
