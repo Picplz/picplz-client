@@ -20,7 +20,7 @@ class ProductSourceImpl
         private val productApi: ProductApi,
     ) : ProductSource {
         override suspend fun getPhotographerProducts(photographerId: Long): AppResult<List<ProductDto>> =
-            safeApiCall { productApi.getPhotographerProducts(photographerId) }
+            safeApiCall({ productApi.getPhotographerProducts(photographerId) }) { it.data }
 
         override suspend fun createProduct(request: CreateProductRequest): AppResult<ProductIdResponse> =
             safeApiCall { productApi.createProduct(request) }

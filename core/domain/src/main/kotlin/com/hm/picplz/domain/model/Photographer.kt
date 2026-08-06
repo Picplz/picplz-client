@@ -9,6 +9,7 @@ data class Photographer(
     val photoMoods: List<String>,
     val activeAreas: List<String> = emptyList(),
     val instagram: String? = null,
+    val equipment: List<String> = emptyList(),
     val portfolioPhotos: List<String> = emptyList(),
 )
 

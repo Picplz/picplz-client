@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 빠른촬영 - 공통 -->
+    <string name="quick_shoot_active_status">바로촬영</string>
+    <string name="quick_shoot_area_overflow_format">외 %1$d개</string>
+    <string name="quick_shoot_instagram_format">@%s</string>
+    <string name="quick_shoot_photographer_profile_image">작가 프로필 이미지</string>
+    <string name="quick_shoot_portfolio_image">포트폴리오 사진</string>
     <string name="quick_shoot_loading_location">위치 정보 로딩</string>
+    <string name="quick_shoot_loading_photographers">주변 작가 찾는 중...</string>
+    <string name="quick_shoot_loading_me">나</string>
     <string name="quick_shoot_range_image_desc">범위 지정 이미지</string>
     <string name="quick_shoot_center_char_desc">작가 탐색 중앙 캐릭터</string>
 
@@ -28,6 +35,8 @@
     <string name="quick_shoot_empty_char_desc">주변 작가 없음 캐릭터</string>
     <string name="quick_shoot_empty_guide_prefix">다른 지역으로</string>
     <string name="quick_shoot_empty_guide_suffix">이동해 보는 건 어때요?</string>
+    <string name="quick_shoot_load_error_title">주변 작가 정보를 불러오지 못했어요</string>
+    <string name="quick_shoot_load_error_guide">내 위치 새로고침으로 다시 시도해주세요</string>
 
     <!-- 작가 상세 - 차단 배너 -->
     <string name="blocked_account_message">차단된 계정입니다.</string>

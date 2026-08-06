@@ -62,6 +62,7 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
 
     debugImplementation(libs.androidx.ui.tooling)
 }
