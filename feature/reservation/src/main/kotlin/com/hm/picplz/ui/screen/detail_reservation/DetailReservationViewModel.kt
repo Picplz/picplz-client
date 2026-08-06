@@ -6,6 +6,7 @@ import com.hm.picplz.common.util.DateTimeUtil
 import com.hm.picplz.ui.screen.detail_reservation.model.RefundCondition
 import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -13,6 +14,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/** 거래 완료 모달을 보여주고 리뷰 작성 화면으로 넘어가기까지의 시간 */
+private const val DEAL_COMPLETE_MODAL_DURATION_MS = 1500L
 
 @HiltViewModel
 class DetailReservationViewModel @Inject constructor() : ViewModel() {
@@ -40,11 +44,11 @@ class DetailReservationViewModel @Inject constructor() : ViewModel() {
     fun handelIntent(intent: DetailReservationIntent) {
         when (intent) {
             // 상태 변경 확인 테스트를 위한 코드입니다.
-            is DetailReservationIntent.NavigateToChat,
-            is DetailReservationIntent.ConfirmReservation,
-            -> {
+            is DetailReservationIntent.NavigateToChat -> {
                 _state.update { it.copy(reservationStatus = it.reservationStatus.next()) }
             }
+
+            is DetailReservationIntent.ConfirmReservation -> confirmReservation()
 
             is DetailReservationIntent.NavigateToWriteReview -> {
                 viewModelScope.launch {
@@ -116,6 +120,28 @@ class DetailReservationViewModel @Inject constructor() : ViewModel() {
                     _sideEffect.emit(DetailReservationSideEffect.NavigateToPrev)
                 }
             }
+        }
+    }
+
+    /**
+     * "거래 완료하기" → 거래 완료 처리 → 완료 모달 → 리뷰 작성 화면.
+     *
+     * 리뷰를 쓰지 않고 나와도 거래는 이미 완료된 상태이므로,
+     * 예약 상세에 다시 들어오면 "리뷰 쓰기" 버튼이 노출됩니다.
+     */
+    private fun confirmReservation() {
+        // TODO: 거래 완료 API 연동 (성공 응답을 받은 뒤 아래 처리를 수행해야 합니다)
+        _state.update {
+            it.copy(
+                reservationStatus = ReservationStatus.COMPLETED,
+                showDealCompleteModal = true,
+            )
+        }
+
+        viewModelScope.launch {
+            delay(DEAL_COMPLETE_MODAL_DURATION_MS)
+            _state.update { it.copy(showDealCompleteModal = false) }
+            _sideEffect.emit(DetailReservationSideEffect.NavigateToWriteReview)
         }
     }
 

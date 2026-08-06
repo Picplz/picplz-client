@@ -45,6 +45,7 @@ import com.hm.picplz.navigation.model.PhotographerChatRoom
 import com.hm.picplz.navigation.model.PhotographerDetailReservation
 import com.hm.picplz.navigation.model.PhotographerRejectReservation
 import com.hm.picplz.navigation.model.Reservation
+import com.hm.picplz.navigation.model.WriteReview
 import com.hm.picplz.ui.screen.cancel_reservation.CancelReservationScreen
 import com.hm.picplz.ui.screen.cancel_reservation_confirm.CancelReservationConfirmScreen
 import com.hm.picplz.ui.screen.chat.ChatScreen
@@ -79,6 +80,7 @@ import com.hm.picplz.ui.screen.photographer_main.composable.EquipmentSettingScre
 import com.hm.picplz.ui.screen.photographer_main.composable.PhotographerAddDeviceScreen
 import com.hm.picplz.ui.screen.photographer_reject_reservation.PhotographerRejectReservationScreen
 import com.hm.picplz.ui.screen.reservation.ReservationScreen
+import com.hm.picplz.ui.screen.write_review.WriteReviewScreen
 
 fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
     composable<Dev> {
@@ -318,8 +320,16 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             onNavigateToOrderDetail = { orderId ->
                 navController.navigate(OrderDetail(orderId = orderId))
             },
-            onNavigateToWriteReview = {
-                // TODO: 리뷰 작성 화면 구현 후 네비게이션 연결
+            onNavigateToWriteReview = { orderId ->
+                navController.navigate(WriteReview(orderId = orderId))
+            },
+        )
+    }
+
+    composable<WriteReview> {
+        WriteReviewScreen(
+            onNavigateBack = {
+                navController.popBackStack()
             },
         )
     }

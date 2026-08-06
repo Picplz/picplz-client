@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hm.picplz.common.util.DateTimeUtil
 import com.hm.picplz.feature.reservation.R
+import com.hm.picplz.ui.screen.common.CommonSuccessModal
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationMap
 import com.hm.picplz.ui.screen.detail_reservation.composable.ReservationCancelDialog
@@ -34,7 +35,7 @@ fun DetailReservationScreen(
     onNavigateBack: () -> Unit,
     onNavigateToCancelReservation: (orderId: String) -> Unit,
     onNavigateToOrderDetail: (orderId: String) -> Unit,
-    onNavigateToWriteReview: () -> Unit,
+    onNavigateToWriteReview: (orderId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailReservationViewModel = hiltViewModel(),
 ) {
@@ -51,7 +52,7 @@ fun DetailReservationScreen(
 
                 is DetailReservationSideEffect.NavigateToOrderDetail -> onNavigateToOrderDetail(state.orderId)
 
-                is DetailReservationSideEffect.NavigateToWriteReview -> onNavigateToWriteReview()
+                is DetailReservationSideEffect.NavigateToWriteReview -> onNavigateToWriteReview(state.orderId)
             }
         }
     }
@@ -122,6 +123,15 @@ private fun DetailReservationScreen(
         if (state.showRefundPolicyTooltip) {
             ReservationRefundPolicyDialog(
                 onDismissRequest = onRefundPolicyDismiss,
+            )
+        }
+
+        if (state.showDealCompleteModal) {
+            // 잠시 뒤 리뷰 작성 화면으로 자동 이동하므로 사용자가 닫지 않도록 합니다.
+            CommonSuccessModal(
+                message = stringResource(R.string.reservation_deal_complete_modal_message),
+                onDismissRequest = {},
+                dismissible = false,
             )
         }
 

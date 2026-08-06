@@ -39,6 +39,7 @@ import com.hm.picplz.navigation.model.PhotographerDetailReservation
 import com.hm.picplz.navigation.model.PhotographerMainGraph
 import com.hm.picplz.navigation.model.PhotographerRejectReservation
 import com.hm.picplz.navigation.model.Reservation
+import com.hm.picplz.navigation.model.WriteReview
 import com.hm.picplz.ui.main.MainActivityUiState
 import kotlin.reflect.KClass
 
@@ -68,6 +69,7 @@ private val authRequiredRoutes: List<KClass<out Any>> =
         OrderDetail::class,
         CancelReservation::class,
         PhotographerCancelReservation::class,
+        WriteReview::class,
     )
 
 @Composable

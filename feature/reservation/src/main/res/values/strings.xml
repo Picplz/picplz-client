@@ -32,6 +32,9 @@
     <string name="reservation_button_review">리뷰 쓰기</string>
     <string name="reservation_button_reservation_approve">예약 승인</string>
 
+    <!-- 거래 완료 모달 -->
+    <string name="reservation_deal_complete_modal_message">거래 완료 되었습니다</string>
+
     <!-- 촬영 일시 미확정 -->
     <string name="reservation_schedule_tbd">작가와 협의</string>
 
@@ -153,6 +156,28 @@
     <string name="photographer_cancel_dialog_desc">예약 취소 후에는 이를 변경할 수 없으며,\n취소 규정에 따라 패널티가 부여될 수 있습니다.</string>
     <string name="photographer_cancel_dialog_button_no">아니오</string>
     <string name="photographer_cancel_dialog_button_yes">취소할게요</string>
+
+    <!-- 리뷰 작성 - 공통 -->
+    <string name="write_review_top_bar_title">리뷰 작성</string>
+
+    <!-- 리뷰 작성 - 별점 선택 (1/2) -->
+    <string name="write_review_rating_title">%1$s님,\n%2$s 작가님과 촬영이 어떠셨나요?</string>
+    <string name="write_review_rating_subtitle">촬영 만족도는 나만 볼 수 있어요</string>
+    <string name="write_review_rating_empty_main">별점을 매겨주세요</string>
+    <string name="write_review_rating_empty_sub">주관적으로 평가해도 괜찮아요.</string>
+    <string name="write_review_rating_main_1">별로에요</string>
+    <string name="write_review_rating_sub_1">이 작가님과 다시 촬영하고 싶지 않아요.</string>
+    <string name="write_review_rating_main_2">아쉬워요</string>
+    <string name="write_review_rating_sub_2">만족스럽지 못한 촬영이었어요.</string>
+    <string name="write_review_rating_main_3">괜찮았어요</string>
+    <string name="write_review_rating_sub_3">무난했지만, 조금 아쉬운 부분이 있었어요.</string>
+    <string name="write_review_rating_main_4">만족스러워요</string>
+    <string name="write_review_rating_sub_4">전반적으로 만족스러운 촬영이었어요.</string>
+    <string name="write_review_rating_main_5">최고였어요</string>
+    <string name="write_review_rating_sub_5">완벽한 촬영이었어요. 다음에 또 함께하고 싶어요!</string>
+    <string name="write_review_negative_feedback_label">어떤점이 아쉬웠나요?</string>
+    <string name="write_review_negative_feedback_placeholder">여기에 적어주세요. (선택사항)</string>
+    <string name="write_review_rating_button_submit">별점 등록</string>
 
     <!-- 포맷 문자열 -->
     <string name="amount_format">%,d원</string>
