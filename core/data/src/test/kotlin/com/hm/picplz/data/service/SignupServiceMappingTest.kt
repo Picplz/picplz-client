@@ -144,6 +144,15 @@ class SignupServiceMappingTest {
             throw NotImplementedError("Not used in test")
         }
 
+        override suspend fun searchPhotographers(
+            keyword: String,
+            sortType: String,
+            page: Int,
+            size: Int,
+        ): AppResult<com.hm.picplz.data.model.PhotographerSearchPageDto> {
+            throw NotImplementedError("Not used in test")
+        }
+
         override suspend fun getPhotographerInfo(photographerId: Long): AppResult<PhotographerDetailDto> {
             throw NotImplementedError("Not used in test")
         }

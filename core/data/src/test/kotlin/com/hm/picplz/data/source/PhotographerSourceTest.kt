@@ -6,6 +6,8 @@ import com.hm.picplz.data.model.CreatePhotographerRequest
 import com.hm.picplz.data.model.NearbyPhotographerCard
 import com.hm.picplz.data.model.PhotoMoodRequest
 import com.hm.picplz.data.model.PhotographerDetailDto
+import com.hm.picplz.data.model.PhotographerSearchItemDto
+import com.hm.picplz.data.model.PhotographerSearchPageDto
 import com.hm.picplz.data.model.ReviewListDto
 import com.hm.picplz.data.model.UpdateActiveAreaRequest
 import com.hm.picplz.data.model.UpdateActiveAreaResponse
@@ -53,10 +55,56 @@ class PhotographerSourceTest {
             assertEquals(7L, cards.first().photographerId)
             assertEquals("유가영 작가", cards.first().nickname)
         }
+
+    @Test
+    fun `photographer search unwraps paged runtime response`() =
+        runTest {
+            val api =
+                FakePhotographerApi(
+                    searchResponse =
+                        Response.success(
+                            ApiResponse(
+                                timestamp = "2026-07-20T20:00:00",
+                                statusCode = 200,
+                                message = "success",
+                                data =
+                                    PhotographerSearchPageDto(
+                                        content =
+                                            listOf(
+                                                PhotographerSearchItemDto(
+                                                    photographerId = 7L,
+                                                    nickname = "유가영 작가",
+                                                    profileImage = "profile.jpg",
+                                                    isActive = "Y",
+                                                    photoMoods = listOf("필름"),
+                                                ),
+                                            ),
+                                        number = 0,
+                                        totalPages = 2,
+                                        last = false,
+                                    ),
+                            ),
+                        ),
+                )
+            val source = PhotographerSourceImpl(api)
+
+            val page =
+                source.searchPhotographers(
+                    keyword = "",
+                    sortType = "RATING",
+                    page = 0,
+                    size = 5,
+                ).getOrThrow()
+
+            assertEquals(0, page.number)
+            assertEquals(false, page.last)
+            assertEquals(7L, page.content?.single()?.photographerId)
+        }
 }
 
 private class FakePhotographerApi(
-    private val nearbyResponse: Response<ApiResponse<List<NearbyPhotographerCard>>>,
+    private val nearbyResponse: Response<ApiResponse<List<NearbyPhotographerCard>>>? = null,
+    private val searchResponse: Response<ApiResponse<PhotographerSearchPageDto>>? = null,
 ) : PhotographerApi {
     override suspend fun createPhotographer(request: CreatePhotographerRequest): Response<Unit> = error("Not used")
 
@@ -71,7 +119,14 @@ private class FakePhotographerApi(
         longitude: Double,
         latitude: Double,
         distance: Long,
-    ): Response<ApiResponse<List<NearbyPhotographerCard>>> = nearbyResponse
+    ): Response<ApiResponse<List<NearbyPhotographerCard>>> = checkNotNull(nearbyResponse)
+
+    override suspend fun searchPhotographers(
+        keyword: String,
+        sortType: String,
+        page: Int,
+        size: Int,
+    ): Response<ApiResponse<PhotographerSearchPageDto>> = checkNotNull(searchResponse)
 
     override suspend fun getPhotographerInfo(
         photographerId: Long,

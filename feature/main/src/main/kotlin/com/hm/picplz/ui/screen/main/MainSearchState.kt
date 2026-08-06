@@ -6,11 +6,17 @@ data class MainSearchState(
     val query: String = "",
     val isFocused: Boolean = false,
     val hasSearched: Boolean = false,
+    val isPreviewLoading: Boolean = false,
     val isLoading: Boolean = false,
+    val searchFailed: Boolean = false,
+    val isLoadingMore: Boolean = false,
+    val hasNextPage: Boolean = false,
+    val nextPage: Int = 0,
+    val loadMoreFailed: Boolean = false,
     val recentSearchQueries: List<String> = defaultRecentSearchQueries,
     val popularSpots: List<String> = defaultPopularSpots,
     val selectedSortType: SortType = SortType.POPULAR,
-    val nearbyPhotographers: List<MainSearchPhotographerItem> = emptyList(),
+    val suggestions: List<MainSearchPhotographerItem> = emptyList(),
     val results: List<MainSearchPhotographerItem> = emptyList(),
 ) {
     val uiState: SearchUiState

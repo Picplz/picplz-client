@@ -92,7 +92,7 @@ internal fun PhotographerListItem(
                     verticalArrangement = Arrangement.spacedBy(PhotographerListItemDefaults.TitleAreaGap),
                 ) {
                     Text(
-                        text = item.name,
+                        text = stringResource(R.string.main_photographer_name_format, item.name),
                         style = MainThemeFont.BodyLarge.copy(fontWeight = FontWeight.SemiBold),
                         color = MainThemeColor.Black,
                         maxLines = 1,
