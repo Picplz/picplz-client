@@ -25,6 +25,7 @@
     <string name="shooting_satisfaction">촬영 만족도</string>
     <string name="star_rating">별점</string>
     <string name="star_rating_score_format">%1$d점</string>
+    <string name="review_registered_toast">리뷰가 등록되었습니다.</string>
     <string name="no_reviews">아직 리뷰가\n없어요</string>
     <string name="review_empty_title">아직 작성한 리뷰가 없어요</string>
     <string name="review_empty_description">촬영 후 남긴 리뷰가 이곳에 모여 보여요</string>

@@ -18,6 +18,7 @@ import com.hm.picplz.navigation.model.CancelReservation
 import com.hm.picplz.navigation.model.CancelReservationConfirm
 import com.hm.picplz.navigation.model.Chat
 import com.hm.picplz.navigation.model.ChatRoom
+import com.hm.picplz.navigation.model.DetailPhotographerSingleReview
 import com.hm.picplz.navigation.model.DetailReservation
 import com.hm.picplz.navigation.model.Dev
 import com.hm.picplz.navigation.model.DevMainSearchResultPreview
@@ -330,6 +331,18 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
         WriteReviewScreen(
             onNavigateBack = {
                 navController.popBackStack()
+            },
+            onNavigateToReviewDetail = { reviewId ->
+                // 리뷰 작성 화면은 백스택에서 정리하고 작가 리뷰 상세로 이동
+                navController.navigate(
+                    DetailPhotographerSingleReview(
+                        reviewId = reviewId,
+                        photoIndex = 0,
+                        showRegisteredToast = true,
+                    ),
+                ) {
+                    popUpTo<WriteReview> { inclusive = true }
+                }
             },
         )
     }

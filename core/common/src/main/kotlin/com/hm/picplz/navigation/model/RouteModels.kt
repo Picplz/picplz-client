@@ -157,7 +157,12 @@ data class DetailPhotographerPhotoPortfolios(val photographerId: Int) : Navigati
 data class ChatRoom(val roomId: String) : NavigationRoute
 
 @Serializable
-data class DetailPhotographerSingleReview(val reviewId: Int, val photoIndex: Int) : NavigationRoute
+data class DetailPhotographerSingleReview(
+    val reviewId: Int,
+    val photoIndex: Int,
+    /** 리뷰 작성 직후 진입한 경우 "리뷰가 등록되었습니다." 토스트를 띄웁니다. */
+    val showRegisteredToast: Boolean = false,
+) : NavigationRoute
 
 @Serializable
 data class DetailPhotographerPortfolioDetail(val portfolioId: Int, val photoIndex: Int) : NavigationRoute

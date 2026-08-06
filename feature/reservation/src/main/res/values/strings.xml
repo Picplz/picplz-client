@@ -179,6 +179,19 @@
     <string name="write_review_negative_feedback_placeholder">여기에 적어주세요. (선택사항)</string>
     <string name="write_review_rating_button_submit">별점 등록</string>
 
+    <!-- 리뷰 작성 - 촬영 경험 입력 (2/2) -->
+    <string name="write_review_content_title">촬영 경험을 들려주세요</string>
+    <string name="write_review_content_subtitle">촬영 과정과 작가에 대한 솔직한 의견을 작성해주세요.</string>
+    <string name="write_review_content_placeholder">어떤 부분이 만족스러우셨나요? 촬영 과정, 작가의 특징 등 생생한 경험을 들려주세요.\n(최소 %1$d자 이상)</string>
+    <string name="write_review_content_too_short">최소 %1$d자 이상 작성해주세요.</string>
+    <string name="write_review_content_button_submit">리뷰 등록</string>
+
+    <!-- 리뷰 작성 - 중단 다이얼로그 -->
+    <string name="write_review_exit_dialog_title">리뷰 등록을 중단하시겠어요?</string>
+    <string name="write_review_exit_dialog_description">나가기를 누르면\n입력한 내용이 저장되지 않아요.</string>
+    <string name="write_review_exit_dialog_cancel">취소</string>
+    <string name="write_review_exit_dialog_confirm">나가기</string>
+
     <!-- 포맷 문자열 -->
     <string name="amount_format">%,d원</string>
 </resources>
