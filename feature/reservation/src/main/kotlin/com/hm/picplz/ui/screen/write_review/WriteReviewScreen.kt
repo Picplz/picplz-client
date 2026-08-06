@@ -1,6 +1,10 @@
 package com.hm.picplz.ui.screen.write_review
 
+import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,6 +43,16 @@ fun WriteReviewScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    // Android Photo Picker. 시스템 선택기를 쓰므로 저장소 권한이 필요 없습니다.
+    val photoPickerLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickMultipleVisualMedia(REVIEW_PHOTO_MAX_COUNT),
+        ) { uris ->
+            if (uris.isNotEmpty()) {
+                viewModel.handleIntent(WriteReviewIntent.AddPhotos(uris.map(Uri::toString)))
+            }
+        }
+
     BackHandler {
         viewModel.handleIntent(WriteReviewIntent.OnBackClick)
     }
@@ -48,6 +62,11 @@ fun WriteReviewScreen(
             when (sideEffect) {
                 WriteReviewSideEffect.NavigateBack -> onNavigateBack()
                 is WriteReviewSideEffect.NavigateToReviewDetail -> onNavigateToReviewDetail(sideEffect.reviewId)
+                WriteReviewSideEffect.LaunchPhotoPicker -> {
+                    photoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                    )
+                }
             }
         }
     }
@@ -65,6 +84,10 @@ fun WriteReviewScreen(
         onContentChange = { text ->
             viewModel.handleIntent(WriteReviewIntent.UpdateContent(text))
         },
+        onAddPhotoClick = { viewModel.handleIntent(WriteReviewIntent.OnAddPhotoClick) },
+        onRemovePhotoClick = { uri ->
+            viewModel.handleIntent(WriteReviewIntent.RemovePhoto(uri))
+        },
         onRatingSubmitClick = { viewModel.handleIntent(WriteReviewIntent.OnRatingSubmitClick) },
         onReviewSubmitClick = { viewModel.handleIntent(WriteReviewIntent.OnReviewSubmitClick) },
         onExitDialogConfirm = { viewModel.handleIntent(WriteReviewIntent.OnExitDialogConfirm) },
@@ -81,6 +104,8 @@ private fun WriteReviewScreenContent(
     onRatingSelect: (ReviewRating) -> Unit,
     onNegativeFeedbackChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
+    onAddPhotoClick: () -> Unit,
+    onRemovePhotoClick: (String) -> Unit,
     onRatingSubmitClick: () -> Unit,
     onReviewSubmitClick: () -> Unit,
     onExitDialogConfirm: () -> Unit,
@@ -128,7 +153,11 @@ private fun WriteReviewScreenContent(
                         WriteReviewExperienceContent(
                             modifier = Modifier.weight(1f),
                             contentText = state.contentText,
+                            photoUris = state.photoUris,
+                            canAddPhoto = state.canAddPhoto(),
                             onContentChange = onContentChange,
+                            onAddPhotoClick = onAddPhotoClick,
+                            onRemovePhotoClick = onRemovePhotoClick,
                         )
 
                         WriteReviewBottomButton(
@@ -206,6 +235,8 @@ private fun WriteReviewScreenRatingEmptyPreview() {
             onRatingSelect = {},
             onNegativeFeedbackChange = {},
             onContentChange = {},
+            onAddPhotoClick = {},
+            onRemovePhotoClick = {},
             onRatingSubmitClick = {},
             onReviewSubmitClick = {},
             onExitDialogConfirm = {},
@@ -232,6 +263,8 @@ private fun WriteReviewScreenContentStepPreview() {
             onRatingSelect = {},
             onNegativeFeedbackChange = {},
             onContentChange = {},
+            onAddPhotoClick = {},
+            onRemovePhotoClick = {},
             onRatingSubmitClick = {},
             onReviewSubmitClick = {},
             onExitDialogConfirm = {},
@@ -259,6 +292,8 @@ private fun WriteReviewScreenExitDialogPreview() {
             onRatingSelect = {},
             onNegativeFeedbackChange = {},
             onContentChange = {},
+            onAddPhotoClick = {},
+            onRemovePhotoClick = {},
             onRatingSubmitClick = {},
             onReviewSubmitClick = {},
             onExitDialogConfirm = {},

@@ -186,6 +186,14 @@
     <string name="write_review_content_too_short">최소 %1$d자 이상 작성해주세요.</string>
     <string name="write_review_content_button_submit">리뷰 등록</string>
 
+    <!-- 리뷰 작성 - 촬영 사진 첨부 -->
+    <string name="write_review_photo_title">촬영 사진을 올려주세요</string>
+    <string name="write_review_photo_subtitle">최종 결과물 사진, 사진 이미지 일부 혹은 촬영과 관련된 사진을 공유해주세요. 다른 고객님들께 큰 도움이 됩니다. (선택사항)</string>
+    <string name="write_review_photo_add">사진 추가</string>
+    <string name="write_review_photo_count_format">%1$d/%2$d</string>
+    <string name="write_review_photo_thumbnail">촬영 사진</string>
+    <string name="write_review_photo_remove">사진 삭제</string>
+
     <!-- 리뷰 작성 - 중단 다이얼로그 -->
     <string name="write_review_exit_dialog_title">리뷰 등록을 중단하시겠어요?</string>
     <string name="write_review_exit_dialog_description">나가기를 누르면\n입력한 내용이 저장되지 않아요.</string>

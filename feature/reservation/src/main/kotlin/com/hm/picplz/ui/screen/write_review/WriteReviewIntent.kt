@@ -7,6 +7,13 @@ sealed interface WriteReviewIntent {
 
     data class UpdateContent(val text: String) : WriteReviewIntent
 
+    /** "사진 추가" 타일 탭 → 사진 선택기 실행 */
+    data object OnAddPhotoClick : WriteReviewIntent
+
+    data class AddPhotos(val uris: List<String>) : WriteReviewIntent
+
+    data class RemovePhoto(val uri: String) : WriteReviewIntent
+
     /** 별점 선택(1/2)의 "별점 등록" */
     data object OnRatingSubmitClick : WriteReviewIntent
 

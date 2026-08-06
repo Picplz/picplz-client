@@ -22,7 +22,11 @@ import com.hm.picplz.ui.theme.PicplzTheme
 @Composable
 fun WriteReviewExperienceContent(
     contentText: String,
+    photoUris: List<String>,
+    canAddPhoto: Boolean,
     onContentChange: (String) -> Unit,
+    onAddPhotoClick: () -> Unit,
+    onRemovePhotoClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -52,6 +56,14 @@ fun WriteReviewExperienceContent(
             placeholder = stringResource(R.string.write_review_content_placeholder, REVIEW_CONTENT_MIN_LENGTH),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
         )
+
+        ReviewPhotoAttachment(
+            photoUris = photoUris,
+            canAddPhoto = canAddPhoto,
+            onAddClick = onAddPhotoClick,
+            onRemoveClick = onRemovePhotoClick,
+            modifier = Modifier.padding(top = 36.dp),
+        )
     }
 }
 
@@ -61,7 +73,11 @@ private fun WriteReviewExperienceContentPreviewEmpty() {
     PicplzTheme {
         WriteReviewExperienceContent(
             contentText = "",
+            photoUris = emptyList(),
+            canAddPhoto = true,
             onContentChange = {},
+            onAddPhotoClick = {},
+            onRemovePhotoClick = {},
         )
     }
 }
@@ -72,7 +88,11 @@ private fun WriteReviewExperienceContentPreviewFilled() {
     PicplzTheme {
         WriteReviewExperienceContent(
             contentText = "재밌었어요 사진도 잘찍으심",
+            photoUris = listOf("photo1", "photo2"),
+            canAddPhoto = true,
             onContentChange = {},
+            onAddPhotoClick = {},
+            onRemovePhotoClick = {},
         )
     }
 }
