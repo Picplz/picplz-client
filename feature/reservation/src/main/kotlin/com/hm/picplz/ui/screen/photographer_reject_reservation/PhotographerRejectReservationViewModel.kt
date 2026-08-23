@@ -4,7 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.hm.picplz.data.service.ReservationService
+import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.navigation.model.PhotographerRejectReservation
+import com.hm.picplz.ui.screen.model.toServerReason
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,10 +24,12 @@ class PhotographerRejectReservationViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
+        private val reservationService: ReservationService,
     ) : ViewModel() {
-        private val orderId: String = savedStateHandle.toRoute<PhotographerRejectReservation>().orderId
+        private val reservationId: Long =
+            savedStateHandle.toRoute<PhotographerRejectReservation>().reservationId
 
-        private val _state = MutableStateFlow(PhotographerRejectReservationState.idle(orderId))
+        private val _state = MutableStateFlow(PhotographerRejectReservationState.idle(reservationId))
         val state: StateFlow<PhotographerRejectReservationState> = _state.asStateFlow()
 
         private val _sideEffect = MutableSharedFlow<PhotographerRejectReservationSideEffect>()
@@ -50,13 +55,42 @@ class PhotographerRejectReservationViewModel
 
                 PhotographerRejectReservationIntent.OnConfirmDialogConfirm -> {
                     _state.update { it.copy(showConfirmDialog = false) }
-                    // TODO: 거절 사유 전송 API 연동
-                    emitSideEffect(PhotographerRejectReservationSideEffect.NavigateToChat)
+                    submitReject()
                 }
 
                 PhotographerRejectReservationIntent.OnBackClick -> {
                     emitSideEffect(PhotographerRejectReservationSideEffect.NavigateBack)
                 }
+
+                PhotographerRejectReservationIntent.OnToastDismiss -> {
+                    _state.update { it.copy(showToast = false) }
+                }
+            }
+        }
+
+        private fun submitReject() {
+            val current = _state.value
+            if (current.isLoading) return
+
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                reservationService
+                    .rejectReservation(
+                        reservationId = current.reservationId,
+                        reasons = listOfNotNull(current.selectedReason?.toServerReason()),
+                        reasonDetail = current.directInputText,
+                    ).onSuccess {
+                        _state.update { it.copy(isLoading = false) }
+                        emitSideEffect(PhotographerRejectReservationSideEffect.NavigateToChat)
+                    }.onFailure {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                toastMessageResId = R.string.reservation_error_reject_failed,
+                                showToast = true,
+                            )
+                        }
+                    }
             }
         }
 

@@ -4,7 +4,7 @@ sealed interface PhotographerDetailReservationSideEffect {
     data object NavigateToPrev : PhotographerDetailReservationSideEffect
 
     /** "예약 거절" → 거절 사유 입력 화면으로 이동 */
-    data class NavigateToRejectReason(val orderId: String) : PhotographerDetailReservationSideEffect
+    data class NavigateToRejectReason(val reservationId: Long) : PhotographerDetailReservationSideEffect
 
-    data class NavigateToCancelReservation(val orderId: String) : PhotographerDetailReservationSideEffect
+    data class NavigateToCancelReservation(val reservationId: Long) : PhotographerDetailReservationSideEffect
 }

@@ -23,4 +23,7 @@ sealed interface PhotographerCancelReservationIntent {
 
     /** 상단 뒤로가기 (2단계면 1단계로, 1단계면 화면 종료) */
     data object OnBackClick : PhotographerCancelReservationIntent
+
+    /** 실패 토스트 표시 시간이 끝남 */
+    data object OnToastDismiss : PhotographerCancelReservationIntent
 }

@@ -4,7 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.hm.picplz.data.service.ReservationService
+import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.navigation.model.PhotographerCancelReservation
+import com.hm.picplz.ui.screen.model.toServerReasons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,10 +26,12 @@ class PhotographerCancelReservationViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
+        private val reservationService: ReservationService,
     ) : ViewModel() {
-        private val orderId: String = savedStateHandle.toRoute<PhotographerCancelReservation>().orderId
+        private val reservationId: Long =
+            savedStateHandle.toRoute<PhotographerCancelReservation>().reservationId
 
-        private val _state = MutableStateFlow(PhotographerCancelReservationState.idle(orderId))
+        private val _state = MutableStateFlow(PhotographerCancelReservationState.idle(reservationId))
         val state: StateFlow<PhotographerCancelReservationState> = _state.asStateFlow()
 
         private val _sideEffect = MutableSharedFlow<PhotographerCancelReservationSideEffect>()
@@ -70,8 +75,11 @@ class PhotographerCancelReservationViewModel
 
                 PhotographerCancelReservationIntent.OnConfirmDialogConfirm -> {
                     _state.update { it.copy(showConfirmDialog = false) }
-                    // TODO: 취소 사유·사전 합의 여부 전송 API 연동
-                    emitSideEffect(PhotographerCancelReservationSideEffect.NavigateToCancelConfirm)
+                    submitCancel()
+                }
+
+                PhotographerCancelReservationIntent.OnToastDismiss -> {
+                    _state.update { it.copy(showToast = false) }
                 }
 
                 PhotographerCancelReservationIntent.OnBackClick -> {
@@ -82,6 +90,36 @@ class PhotographerCancelReservationViewModel
                         emitSideEffect(PhotographerCancelReservationSideEffect.NavigateBack)
                     }
                 }
+            }
+        }
+
+        /**
+         * 화면의 "고객과 사전 합의" 체크(`agreedWithCustomer`)는 서버 요청에 담을 필드가 없어
+         * 아직 전송하지 못합니다. 백엔드에 필드 추가를 요청해 둔 상태입니다.
+         */
+        private fun submitCancel() {
+            val current = _state.value
+            if (current.isLoading) return
+
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                reservationService
+                    .cancelReservation(
+                        reservationId = current.reservationId,
+                        reasons = current.selectedReasons.toServerReasons(),
+                        reasonDetail = current.directInputText,
+                    ).onSuccess {
+                        _state.update { it.copy(isLoading = false) }
+                        emitSideEffect(PhotographerCancelReservationSideEffect.NavigateToCancelConfirm)
+                    }.onFailure {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                toastMessageResId = R.string.reservation_error_cancel_failed,
+                                showToast = true,
+                            )
+                        }
+                    }
             }
         }
 

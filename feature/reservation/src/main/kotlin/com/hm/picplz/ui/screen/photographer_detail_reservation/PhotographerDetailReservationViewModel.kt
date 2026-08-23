@@ -1,9 +1,15 @@
 package com.hm.picplz.ui.screen.photographer_detail_reservation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hm.picplz.common.util.DateTimeUtil
+import androidx.navigation.toRoute
+import com.hm.picplz.data.service.ReservationService
+import com.hm.picplz.domain.model.ReservationDetail
+import com.hm.picplz.feature.reservation.R
+import com.hm.picplz.navigation.model.PhotographerDetailReservation
 import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
+import com.hm.picplz.ui.screen.model.toUiStatusOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,72 +20,122 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PhotographerDetailReservationViewModel @Inject constructor() : ViewModel() {
-    private val _state = MutableStateFlow(PhotographerDetailReservationState())
-    val state: StateFlow<PhotographerDetailReservationState> get() = _state
+class PhotographerDetailReservationViewModel
+    @Inject
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        private val reservationService: ReservationService,
+    ) : ViewModel() {
+        private val reservationId: Long =
+            savedStateHandle.toRoute<PhotographerDetailReservation>().reservationId
 
-    private val _sideEffect = MutableSharedFlow<PhotographerDetailReservationSideEffect>()
-    val sideEffect: SharedFlow<PhotographerDetailReservationSideEffect> get() = _sideEffect
+        private val _state = MutableStateFlow(PhotographerDetailReservationState(reservationId = reservationId))
+        val state: StateFlow<PhotographerDetailReservationState> get() = _state
 
-    init {
-        // TODO: API에서 촬영 일시 데이터를 받아와야 합니다.
-        // 임시로 더미 데이터 설정 (촬영일: 4일 후)
-        val currentTimeMillis = System.currentTimeMillis()
-        val dummyShootingDateTimeMillis = DateTimeUtil.plusDays(currentTimeMillis, 4)
-        val dummyConfirmedDateTimeMillis = currentTimeMillis - (12 * 60 * 60 * 1000) // 12시간 전
+        private val _sideEffect = MutableSharedFlow<PhotographerDetailReservationSideEffect>()
+        val sideEffect: SharedFlow<PhotographerDetailReservationSideEffect> get() = _sideEffect
 
-        _state.update {
-            it.copy(
-                shootingDateTimeMillis = dummyShootingDateTimeMillis,
-                confirmedDateTimeMillis = dummyConfirmedDateTimeMillis,
-            )
+        init {
+            loadReservation()
         }
-    }
 
-    fun handelIntent(intent: PhotographerDetailReservationIntent) {
-        when (intent) {
-            // 상태 변경 확인 테스트를 위한 코드입니다.
-            is PhotographerDetailReservationIntent.NavigateToChat,
-            is PhotographerDetailReservationIntent.ApproveReservation,
-            is PhotographerDetailReservationIntent.ConfirmReservation,
-            -> {
-                _state.update { it.copy(reservationStatus = it.reservationStatus.next()) }
-            }
+        fun handelIntent(intent: PhotographerDetailReservationIntent) {
+            when (intent) {
+                is PhotographerDetailReservationIntent.ApproveReservation -> approveReservation()
 
-            is PhotographerDetailReservationIntent.RejectReservation -> {
-                viewModelScope.launch {
-                    _sideEffect.emit(
+                // 거래 완료로 전환하는 서버 API가 없어(상태 enum에도 없음) 화면에서만 진행시킵니다.
+                // 백엔드에 전환 API 추가를 요청해 둔 상태입니다.
+                is PhotographerDetailReservationIntent.ConfirmReservation -> {
+                    _state.update { it.copy(reservationStatus = ReservationStatus.COMPLETED) }
+                }
+
+                // TODO: 채팅방 이동 연결 (현재 대응하는 SideEffect가 없습니다)
+                is PhotographerDetailReservationIntent.NavigateToChat -> Unit
+
+                is PhotographerDetailReservationIntent.RejectReservation -> {
+                    emitSideEffect(
                         PhotographerDetailReservationSideEffect.NavigateToRejectReason(
-                            orderId = _state.value.orderId,
+                            reservationId = _state.value.reservationId,
                         ),
                     )
                 }
-            }
 
-            is PhotographerDetailReservationIntent.NavigateToCancelReservation -> {
-                viewModelScope.launch {
-                    _sideEffect.emit(
+                is PhotographerDetailReservationIntent.NavigateToCancelReservation -> {
+                    emitSideEffect(
                         PhotographerDetailReservationSideEffect.NavigateToCancelReservation(
-                            orderId = _state.value.orderId,
+                            reservationId = _state.value.reservationId,
                         ),
                     )
                 }
-            }
 
-            is PhotographerDetailReservationIntent.NavigateBack -> {
-                viewModelScope.launch {
-                    _sideEffect.emit(PhotographerDetailReservationSideEffect.NavigateToPrev)
+                is PhotographerDetailReservationIntent.NavigateBack -> {
+                    emitSideEffect(PhotographerDetailReservationSideEffect.NavigateToPrev)
                 }
+
+                is PhotographerDetailReservationIntent.OnToastDismiss -> {
+                    _state.update { it.copy(showToast = false) }
+                }
+            }
+        }
+
+        private fun loadReservation() {
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                reservationService
+                    .getReservation(reservationId)
+                    .onSuccess { detail -> _state.update { it.applyDetail(detail) } }
+                    .onFailure {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                toastMessageResId = R.string.reservation_error_load_failed,
+                                showToast = true,
+                            )
+                        }
+                    }
+            }
+        }
+
+        private fun approveReservation() {
+            if (_state.value.isLoading) return
+
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                reservationService
+                    .acceptReservation(reservationId)
+                    .onSuccess { loadReservation() }
+                    .onFailure {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                toastMessageResId = R.string.reservation_error_accept_failed,
+                                showToast = true,
+                            )
+                        }
+                    }
+            }
+        }
+
+        private fun emitSideEffect(sideEffect: PhotographerDetailReservationSideEffect) {
+            viewModelScope.launch {
+                _sideEffect.emit(sideEffect)
             }
         }
     }
 
-    // 상태 변경 확인 테스트를 위한 코드입니다.
-    private fun ReservationStatus.next(): ReservationStatus =
-        when (this) {
-            ReservationStatus.WAITING_APPROVAL -> ReservationStatus.WAITING_SCHEDULE
-            ReservationStatus.WAITING_SCHEDULE -> ReservationStatus.RESERVED
-            ReservationStatus.RESERVED -> ReservationStatus.COMPLETED
-            ReservationStatus.COMPLETED -> ReservationStatus.COMPLETED
-        }
-}
+/**
+ * 서버에서 받은 값만 덮어씁니다.
+ *
+ * 응답에 없는 확정 시각·고객 이름은 기존 값을 유지하고, `REJECTED`/`CANCELED` 처럼
+ * 대응하는 화면 상태가 없는 경우에도 직전 상태를 그대로 둡니다.
+ */
+private fun PhotographerDetailReservationState.applyDetail(
+    detail: ReservationDetail,
+): PhotographerDetailReservationState =
+    copy(
+        isLoading = false,
+        reservationStatus = detail.status?.toUiStatusOrNull() ?: reservationStatus,
+        shootingDateTimeMillis = detail.shootingDateTimeMillis ?: shootingDateTimeMillis,
+        packageName = detail.packageName,
+        place = detail.place,
+    )

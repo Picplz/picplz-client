@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hm.picplz.common.util.DateTimeUtil
 import com.hm.picplz.feature.reservation.R
+import com.hm.picplz.ui.screen.common.CommonToast
 import com.hm.picplz.ui.screen.detail_reservation.composable.DetailReservationMap
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerDetailReservationBottomButtons
 import com.hm.picplz.ui.screen.detail_reservation.composable.PhotographerReservationStatusHeader
@@ -30,8 +31,8 @@ import com.hm.picplz.ui.theme.MainThemeColor
 @Composable
 fun PhotographerDetailReservationScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToRejectReason: (orderId: String) -> Unit,
-    onNavigateToCancelReservation: (orderId: String) -> Unit,
+    onNavigateToRejectReason: (reservationId: Long) -> Unit,
+    onNavigateToCancelReservation: (reservationId: Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PhotographerDetailReservationViewModel = hiltViewModel(),
 ) {
@@ -43,10 +44,10 @@ fun PhotographerDetailReservationScreen(
                 is PhotographerDetailReservationSideEffect.NavigateToPrev -> onNavigateBack()
 
                 is PhotographerDetailReservationSideEffect.NavigateToRejectReason ->
-                    onNavigateToRejectReason(sideEffect.orderId)
+                    onNavigateToRejectReason(sideEffect.reservationId)
 
                 is PhotographerDetailReservationSideEffect.NavigateToCancelReservation ->
-                    onNavigateToCancelReservation(sideEffect.orderId)
+                    onNavigateToCancelReservation(sideEffect.reservationId)
             }
         }
     }
@@ -72,6 +73,9 @@ fun PhotographerDetailReservationScreen(
         onCloseClick = {
             viewModel.handelIntent(PhotographerDetailReservationIntent.NavigateBack)
         },
+        onToastDismiss = {
+            viewModel.handelIntent(PhotographerDetailReservationIntent.OnToastDismiss)
+        },
     )
 }
 
@@ -85,6 +89,7 @@ private fun PhotographerDetailReservationScreen(
     onCancelReject: () -> Unit,
     onReservationApproveClick: () -> Unit,
     onCloseClick: () -> Unit,
+    onToastDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -125,9 +130,11 @@ private fun PhotographerDetailReservationScreen(
 
                 item {
                     ReservationInfoSection(
+                        packageName = state.packageName,
+                        place = state.place,
                         modifier = Modifier.padding(top = 28.dp, bottom = 24.dp),
                         customerName = state.customerName,
-                        shootingDateText = state.reservationStatus.shootingDateText(state.confirmedDateTimeMillis),
+                        shootingDateText = state.reservationStatus.shootingDateText(state.shootingDateTimeMillis),
                     )
                 }
             }
@@ -146,6 +153,14 @@ private fun PhotographerDetailReservationScreen(
                 )
             }
         }
+
+        // CommonToast는 항상 컴포즈해 두고 isVisible만 토글합니다(퇴장 애니메이션 유지).
+        CommonToast(
+            modifier = Modifier.padding(innerPadding),
+            message = state.toastMessageResId?.let { stringResource(it) }.orEmpty(),
+            isVisible = state.showToast,
+            onDismiss = onToastDismiss,
+        )
     }
 }
 
@@ -154,11 +169,11 @@ private fun PhotographerDetailReservationScreen(
  * 일시 미확정(예약 대기) 단계는 "작가와 협의", 확정 이후(촬영 진행/거래 완료)는 확정된 일시를 표시합니다.
  */
 @Composable
-private fun ReservationStatus.shootingDateText(confirmedDateTimeMillis: Long): String =
+private fun ReservationStatus.shootingDateText(shootingDateTimeMillis: Long): String =
     when (this) {
         ReservationStatus.RESERVED,
         ReservationStatus.COMPLETED,
-        -> DateTimeUtil.getFormattedReservationDateTime(confirmedDateTimeMillis)
+        -> DateTimeUtil.getFormattedReservationDateTime(shootingDateTimeMillis)
 
         ReservationStatus.WAITING_APPROVAL,
         ReservationStatus.WAITING_SCHEDULE,
@@ -177,5 +192,6 @@ private fun PhotographerDetailReservationScreenPreview() {
         onCancelReject = {},
         onReservationApproveClick = {},
         onCloseClick = {},
+        onToastDismiss = {},
     )
 }
