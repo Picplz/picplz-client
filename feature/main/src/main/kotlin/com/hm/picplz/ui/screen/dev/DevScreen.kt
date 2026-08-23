@@ -68,11 +68,14 @@ import com.hm.picplz.ui.theme.MainThemeColor
 /**
  * Dev 화면에서 예약 관련 화면으로 바로 진입할 때 쓰는 예약 id.
  *
- * dev 서버에 상태별 고정 예약을 만들어 뒀습니다 — **16=PENDING**, 17=ACCEPTED, 18=CONFIRMED.
+ * dev 서버에 상태별 고정 예약을 만들어 뒀습니다 — **22=PENDING**, 17=ACCEPTED, 18=CONFIRMED.
  * 기본값은 승인/거절 버튼을 확인할 수 있는 PENDING 이고, 다른 상태를 보려면 값만 바꾸면 됩니다.
- * (예약 상세 조회는 작가 전용 API라 작가 토큰으로 로그인해야 데이터가 뜹니다.)
+ * 승인·거절·취소는 상태를 실제로 바꾸므로, 다 쓴 예약은 새로 만들어 값을 갱신해야 합니다.
+ *
+ * 예약 상세 조회는 작가 전용 API라 `local.properties` 의 `dev_user_token` 을
+ * 작가 토큰(socialCode `test_social_001`)으로 두고 "개발 유저 로그인" 을 눌러야 데이터가 뜹니다.
  */
-private const val DEV_RESERVATION_ID = 16L
+private const val DEV_RESERVATION_ID = 22L
 
 @Composable
 fun DevScreen(

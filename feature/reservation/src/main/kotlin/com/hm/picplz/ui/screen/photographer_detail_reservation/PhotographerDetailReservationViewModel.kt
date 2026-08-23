@@ -49,8 +49,11 @@ class PhotographerDetailReservationViewModel
                     _state.update { it.copy(reservationStatus = ReservationStatus.COMPLETED) }
                 }
 
-                // TODO: 채팅방 이동 연결 (현재 대응하는 SideEffect가 없습니다)
-                is PhotographerDetailReservationIntent.NavigateToChat -> Unit
+                // 이 화면은 채팅방에서 진입하므로 뒤로 가면 채팅방으로 돌아간다.
+                // 채팅방을 거치지 않은 경로(Dev 메뉴 등)에서는 그냥 이전 화면으로 간다.
+                is PhotographerDetailReservationIntent.NavigateToChat -> {
+                    emitSideEffect(PhotographerDetailReservationSideEffect.NavigateToPrev)
+                }
 
                 is PhotographerDetailReservationIntent.RejectReservation -> {
                     emitSideEffect(
@@ -78,7 +81,16 @@ class PhotographerDetailReservationViewModel
             }
         }
 
+        /**
+         * 유효한 id 가 없으면 조회하지 않습니다.
+         *
+         * 채팅방의 예약 카드가 아직 더미라 id 0 으로 진입하는 경로가 있는데,
+         * 그대로 호출하면 404 를 받아 "불러오지 못했어요" 토스트만 뜹니다.
+         * 서버에 물어볼 게 없는 상황이므로 기존처럼 기본값 화면을 보여줍니다.
+         */
         private fun loadReservation() {
+            if (reservationId <= 0L) return
+
             viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
                 reservationService

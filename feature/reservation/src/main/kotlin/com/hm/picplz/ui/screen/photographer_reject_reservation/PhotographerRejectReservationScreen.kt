@@ -28,6 +28,9 @@ import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.MainThemeFont
 import com.hm.picplz.ui.theme.PicplzTheme
 
+/** 하단 버튼(높이 + 바깥 여백)을 피해 토스트를 띄우기 위한 오프셋 */
+private val toastBottomOffset = 120.dp
+
 @Composable
 fun PhotographerRejectReservationScreen(
     onNavigateBack: () -> Unit,
@@ -128,6 +131,8 @@ private fun PhotographerRejectReservationScreenContent(
             message = state.toastMessageResId?.let { stringResource(it) }.orEmpty(),
             isVisible = state.showToast,
             onDismiss = onToastDismiss,
+            // 기본 오프셋(50dp)은 하단 버튼과 겹치므로 버튼 위로 띄웁니다.
+            bottomOffset = toastBottomOffset,
         )
     }
 }
