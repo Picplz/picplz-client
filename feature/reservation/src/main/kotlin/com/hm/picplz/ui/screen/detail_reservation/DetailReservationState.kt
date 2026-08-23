@@ -4,7 +4,7 @@ import com.hm.picplz.ui.screen.detail_reservation.model.RefundCondition
 import com.hm.picplz.ui.screen.detail_reservation.model.ReservationStatus
 
 data class DetailReservationState(
-    val orderId: String = "",
+    val reservationId: Long = 0L,
     val reservationStatus: ReservationStatus = ReservationStatus.WAITING_APPROVAL,
     val hasWrittenReview: Boolean = false,
     val showCancelDialog: Boolean = false,
