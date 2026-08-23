@@ -168,27 +168,29 @@ data class DetailPhotographerSingleReview(
 data class DetailPhotographerPortfolioDetail(val portfolioId: Int, val photoIndex: Int) : NavigationRoute
 
 // === Reservation Screens ===
+// 예약 id는 서버 계약(integer)에 맞춰 Long 을 씁니다.
 @Serializable
-data object DetailReservation : NavigationRoute
+data class DetailReservation(val reservationId: Long) : NavigationRoute
 
 @Serializable
-data object PhotographerDetailReservation : NavigationRoute
+data class PhotographerDetailReservation(val reservationId: Long) : NavigationRoute
 
 @Serializable
-data class PhotographerRejectReservation(val orderId: String) : NavigationRoute
+data class PhotographerRejectReservation(val reservationId: Long) : NavigationRoute
 
 @Serializable
 data class CancelReservationConfirm(val isPhotographer: Boolean = false) : NavigationRoute
 
 @Serializable
-data class OrderDetail(val orderId: String) : NavigationRoute
+data class OrderDetail(val reservationId: Long) : NavigationRoute
 
 @Serializable
-data class CancelReservation(val orderId: String) : NavigationRoute
+data class CancelReservation(val reservationId: Long) : NavigationRoute
 
 @Serializable
-data class PhotographerCancelReservation(val orderId: String) : NavigationRoute
+data class PhotographerCancelReservation(val reservationId: Long) : NavigationRoute
 
+/** 리뷰 작성은 #217에서 다루므로 String 파라미터를 유지합니다. */
 @Serializable
 data class WriteReview(val orderId: String) : NavigationRoute
 

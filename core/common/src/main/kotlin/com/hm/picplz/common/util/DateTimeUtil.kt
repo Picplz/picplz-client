@@ -1,9 +1,12 @@
 package com.hm.picplz.common.util
 
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
+private const val SERVER_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss"
 
 object DateTimeUtil {
     private val timeFormat = SimpleDateFormat("a h:mm", Locale.KOREA)
@@ -131,5 +134,30 @@ object DateTimeUtil {
                 add(Calendar.DAY_OF_MONTH, days)
             }
             .timeInMillis
+    }
+
+    /**
+     * 서버가 내려주는 ISO-8601 local date-time 문자열을 millisecond 로 변환합니다.
+     *
+     * 예: `"2026-09-01T14:00:00"` · 초 단위 소수점(`.123456`)이 붙어 오는 응답도 있어 잘라냅니다.
+     * 타임존 정보가 없는 값이라 기기 로컬 타임존 기준으로 해석합니다.
+     *
+     * minSdk 24 + core library desugaring 미사용이라 `java.time` 을 쓸 수 없어
+     * [SimpleDateFormat] 으로 파싱합니다. 스레드 안전을 위해 호출마다 인스턴스를 만듭니다.
+     * 서버 계약이 바뀌어 형식이 어긋나면 화면이 죽는 대신 null 로 떨어집니다.
+     *
+     * @return 파싱 실패 시 null
+     */
+    fun parseServerDateTime(raw: String?): Long? {
+        val trimmed = raw?.substringBefore('.')?.trim().orEmpty()
+        if (trimmed.isEmpty()) return null
+        return try {
+            SimpleDateFormat(SERVER_DATE_TIME_PATTERN, Locale.US)
+                .apply { isLenient = false }
+                .parse(trimmed)
+                ?.time
+        } catch (error: ParseException) {
+            null
+        }
     }
 }

@@ -8,4 +8,6 @@ sealed interface CancelReservationIntent {
     data object OnBackClick : CancelReservationIntent
 
     data object OnSubmitClick : CancelReservationIntent
+
+    data object OnToastDismiss : CancelReservationIntent
 }

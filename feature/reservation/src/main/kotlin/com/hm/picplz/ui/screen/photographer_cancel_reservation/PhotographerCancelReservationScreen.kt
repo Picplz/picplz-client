@@ -22,6 +22,7 @@ import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.ui.screen.cancel_reservation.composable.CheckboxWithLabel
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonButtonModal
+import com.hm.picplz.ui.screen.common.CommonToast
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.photographer_cancel_reservation.PhotographerCancelReservationState.Step
 import com.hm.picplz.ui.screen.photographer_cancel_reservation.composable.PhotographerCancelPolicyContent
@@ -30,6 +31,9 @@ import com.hm.picplz.ui.screen.photographer_cancel_reservation.composable.Photog
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.MainThemeFont
 import com.hm.picplz.ui.theme.PicplzTheme
+
+/** 하단 버튼(높이 + 바깥 여백)을 피해 토스트를 띄우기 위한 오프셋 */
+private val toastBottomOffset = 120.dp
 
 @Composable
 fun PhotographerCancelReservationScreen(
@@ -73,6 +77,7 @@ fun PhotographerCancelReservationScreen(
         onSubmitClick = { viewModel.handleIntent(PhotographerCancelReservationIntent.OnSubmitClick) },
         onDialogConfirm = { viewModel.handleIntent(PhotographerCancelReservationIntent.OnConfirmDialogConfirm) },
         onDialogDismiss = { viewModel.handleIntent(PhotographerCancelReservationIntent.OnConfirmDialogDismiss) },
+        onToastDismiss = { viewModel.handleIntent(PhotographerCancelReservationIntent.OnToastDismiss) },
     )
 }
 
@@ -89,6 +94,7 @@ private fun PhotographerCancelReservationScreenContent(
     onSubmitClick: () -> Unit,
     onDialogConfirm: () -> Unit,
     onDialogDismiss: () -> Unit,
+    onToastDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -171,6 +177,16 @@ private fun PhotographerCancelReservationScreenContent(
                 onDismiss = onDialogDismiss,
             )
         }
+
+        // CommonToast는 항상 컴포즈해 두고 isVisible만 토글합니다(퇴장 애니메이션 유지).
+        CommonToast(
+            modifier = Modifier.padding(innerPadding),
+            message = state.toastMessageResId?.let { stringResource(it) }.orEmpty(),
+            isVisible = state.showToast,
+            onDismiss = onToastDismiss,
+            // 기본 오프셋(50dp)은 하단 버튼과 겹치므로 버튼 위로 띄웁니다.
+            bottomOffset = toastBottomOffset,
+        )
     }
 }
 
@@ -218,7 +234,7 @@ private fun PhotographerCancelReservationReasonPreview() {
         PhotographerCancelReservationScreenContent(
             state =
                 PhotographerCancelReservationState(
-                    orderId = "order123",
+                    reservationId = 15L,
                     currentStep = Step.REASON,
                     selectedReasons = setOf(PhotographerCancelReason.SCHEDULE),
                 ),
@@ -231,6 +247,7 @@ private fun PhotographerCancelReservationReasonPreview() {
             onSubmitClick = {},
             onDialogConfirm = {},
             onDialogDismiss = {},
+            onToastDismiss = {},
         )
     }
 }
@@ -243,7 +260,7 @@ private fun PhotographerCancelReservationPolicyPreview() {
         PhotographerCancelReservationScreenContent(
             state =
                 PhotographerCancelReservationState(
-                    orderId = "order123",
+                    reservationId = 15L,
                     currentStep = Step.POLICY,
                     agreedToPolicy = true,
                 ),
@@ -256,6 +273,7 @@ private fun PhotographerCancelReservationPolicyPreview() {
             onSubmitClick = {},
             onDialogConfirm = {},
             onDialogDismiss = {},
+            onToastDismiss = {},
         )
     }
 }

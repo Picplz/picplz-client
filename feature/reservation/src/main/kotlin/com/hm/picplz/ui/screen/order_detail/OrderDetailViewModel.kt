@@ -17,7 +17,7 @@ import javax.inject.Inject
 class OrderDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val orderId: String = savedStateHandle.toRoute<OrderDetail>().orderId
+    private val reservationId: Long = savedStateHandle.toRoute<OrderDetail>().reservationId
 
     private val _state = MutableStateFlow(OrderDetailState.idle())
     val state: StateFlow<OrderDetailState> = _state
@@ -26,7 +26,7 @@ class OrderDetailViewModel @Inject constructor(
     val sideEffect: SharedFlow<OrderDetailSideEffect> = _sideEffect
 
     init {
-        loadOrderDetail(orderId)
+        loadOrderDetail(reservationId)
     }
 
     fun handleIntent(intent: OrderDetailIntent) {
@@ -44,13 +44,13 @@ class OrderDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadOrderDetail(bookingId: String) {
+    fun loadOrderDetail(bookingId: Long) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
             try {
                 _state.value =
                     OrderDetailState(
-                        orderNumber = bookingId,
+                        orderNumber = bookingId.toString(),
                         orderTime = "2025-03-09 19:09:14",
                         customerName = "가나다",
                         phoneNumber = "01023293185",

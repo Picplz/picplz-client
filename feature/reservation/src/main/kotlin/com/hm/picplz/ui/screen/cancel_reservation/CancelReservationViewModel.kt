@@ -4,7 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.hm.picplz.data.service.ReservationService
+import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.navigation.model.CancelReservation
+import com.hm.picplz.ui.screen.model.toServerReasons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,10 +26,11 @@ class CancelReservationViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
+        private val reservationService: ReservationService,
     ) : ViewModel() {
-        private val orderId: String = savedStateHandle.toRoute<CancelReservation>().orderId
+        private val reservationId: Long = savedStateHandle.toRoute<CancelReservation>().reservationId
 
-        private val _state = MutableStateFlow(CancelReservationState.idle(orderId))
+        private val _state = MutableStateFlow(CancelReservationState.idle(reservationId))
         val state: StateFlow<CancelReservationState> = _state.asStateFlow()
 
         private val _sideEffect = MutableSharedFlow<CancelReservationSideEffect>()
@@ -52,10 +56,37 @@ class CancelReservationViewModel
                     emitSideEffect(CancelReservationSideEffect.NavigateBack)
                 }
 
-                CancelReservationIntent.OnSubmitClick -> {
-                    // TODO: 취소 사유 전송 API 연동
-                    emitSideEffect(CancelReservationSideEffect.NavigateToCancelReservationConfirm)
+                CancelReservationIntent.OnSubmitClick -> submitCancel()
+
+                CancelReservationIntent.OnToastDismiss -> {
+                    _state.update { it.copy(showToast = false) }
                 }
+            }
+        }
+
+        private fun submitCancel() {
+            val current = _state.value
+            if (current.isLoading) return
+
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                reservationService
+                    .cancelReservation(
+                        reservationId = current.reservationId,
+                        reasons = current.selectedReasons.toServerReasons(),
+                        reasonDetail = current.directInputText,
+                    ).onSuccess {
+                        _state.update { it.copy(isLoading = false) }
+                        emitSideEffect(CancelReservationSideEffect.NavigateToCancelReservationConfirm)
+                    }.onFailure {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                toastMessageResId = R.string.reservation_error_cancel_failed,
+                                showToast = true,
+                            )
+                        }
+                    }
             }
         }
 

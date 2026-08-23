@@ -14,4 +14,7 @@ sealed interface PhotographerDetailReservationIntent {
     data object NavigateToCancelReservation : PhotographerDetailReservationIntent
 
     data object NavigateBack : PhotographerDetailReservationIntent
+
+    /** 실패 토스트 표시 시간이 끝남 */
+    data object OnToastDismiss : PhotographerDetailReservationIntent
 }

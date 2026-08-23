@@ -61,4 +61,6 @@ dependencies {
     implementation(libs.kakao.maps)
 
     debugImplementation(libs.androidx.ui.tooling)
+
+    testImplementation(libs.junit)
 }

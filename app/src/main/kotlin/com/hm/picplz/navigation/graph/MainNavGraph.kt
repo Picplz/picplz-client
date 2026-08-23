@@ -83,6 +83,14 @@ import com.hm.picplz.ui.screen.photographer_reject_reservation.PhotographerRejec
 import com.hm.picplz.ui.screen.reservation.ReservationScreen
 import com.hm.picplz.ui.screen.write_review.WriteReviewScreen
 
+/**
+ * 채팅방의 "예약 정보 확인" 카드가 아직 더미 메시지라 실제 예약 id를 넘겨주지 못합니다.
+ * 화면 진입 자체는 막지 않도록 임시 값을 씁니다.
+ *
+ * TODO: 채팅 메시지에 reservationId가 실리면 제거 (#169, #196)
+ */
+private const val FALLBACK_RESERVATION_ID = 0L
+
 fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
     composable<Dev> {
         val tokenManager = (LocalContext.current.applicationContext as MyApplication).tokenManager
@@ -138,7 +146,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 navController.popBackStack()
             },
             onNavigatePhotographerDetailReservation = {
-                navController.navigate(PhotographerDetailReservation)
+                navController.navigate(PhotographerDetailReservation(reservationId = FALLBACK_RESERVATION_ID))
             },
             _roomId = args.roomId,
         )
@@ -315,14 +323,15 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             onNavigateBack = {
                 navController.popBackStack()
             },
-            onNavigateToCancelReservation = { orderId ->
-                navController.navigate(CancelReservation(orderId = orderId))
+            onNavigateToCancelReservation = { reservationId ->
+                navController.navigate(CancelReservation(reservationId = reservationId))
             },
-            onNavigateToOrderDetail = { orderId ->
-                navController.navigate(OrderDetail(orderId = orderId))
+            onNavigateToOrderDetail = { reservationId ->
+                navController.navigate(OrderDetail(reservationId = reservationId))
             },
-            onNavigateToWriteReview = { orderId ->
-                navController.navigate(WriteReview(orderId = orderId))
+            // 리뷰 작성은 #217 범위라 라우트 파라미터가 아직 String 입니다.
+            onNavigateToWriteReview = { reservationId ->
+                navController.navigate(WriteReview(orderId = reservationId.toString()))
             },
         )
     }
@@ -352,11 +361,11 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
             onNavigateBack = {
                 navController.popBackStack()
             },
-            onNavigateToRejectReason = { orderId ->
-                navController.navigate(PhotographerRejectReservation(orderId = orderId))
+            onNavigateToRejectReason = { reservationId ->
+                navController.navigate(PhotographerRejectReservation(reservationId = reservationId))
             },
-            onNavigateToCancelReservation = { orderId ->
-                navController.navigate(PhotographerCancelReservation(orderId = orderId))
+            onNavigateToCancelReservation = { reservationId ->
+                navController.navigate(PhotographerCancelReservation(reservationId = reservationId))
             },
         )
     }
@@ -406,7 +415,7 @@ fun NavGraphBuilder.mainNavGraph(navController: NavHostController) {
                 navController.popBackStack()
             },
             onNavigateNextStep = {
-                navController.navigate(CancelReservation(orderId = args.orderId))
+                navController.navigate(CancelReservation(reservationId = args.reservationId))
             },
         )
     }

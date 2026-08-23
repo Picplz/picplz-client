@@ -18,4 +18,7 @@ sealed interface PhotographerRejectReservationIntent {
 
     /** 상단 뒤로가기 */
     data object OnBackClick : PhotographerRejectReservationIntent
+
+    /** 실패 토스트 표시 시간이 끝남 */
+    data object OnToastDismiss : PhotographerRejectReservationIntent
 }

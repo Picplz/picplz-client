@@ -21,11 +21,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hm.picplz.feature.reservation.R
 import com.hm.picplz.ui.screen.common.CommonBottomButton
 import com.hm.picplz.ui.screen.common.CommonButtonModal
+import com.hm.picplz.ui.screen.common.CommonToast
 import com.hm.picplz.ui.screen.common.CommonTopBar
 import com.hm.picplz.ui.screen.photographer_reject_reservation.composable.PhotographerRejectReasonContent
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.MainThemeFont
 import com.hm.picplz.ui.theme.PicplzTheme
+
+/** 하단 버튼(높이 + 바깥 여백)을 피해 토스트를 띄우기 위한 오프셋 */
+private val toastBottomOffset = 120.dp
 
 @Composable
 fun PhotographerRejectReservationScreen(
@@ -62,6 +66,7 @@ fun PhotographerRejectReservationScreen(
         onNextClick = { viewModel.handleIntent(PhotographerRejectReservationIntent.OnNextClick) },
         onDialogConfirm = { viewModel.handleIntent(PhotographerRejectReservationIntent.OnConfirmDialogConfirm) },
         onDialogDismiss = { viewModel.handleIntent(PhotographerRejectReservationIntent.OnConfirmDialogDismiss) },
+        onToastDismiss = { viewModel.handleIntent(PhotographerRejectReservationIntent.OnToastDismiss) },
     )
 }
 
@@ -75,6 +80,7 @@ private fun PhotographerRejectReservationScreenContent(
     onNextClick: () -> Unit,
     onDialogConfirm: () -> Unit,
     onDialogDismiss: () -> Unit,
+    onToastDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -118,6 +124,16 @@ private fun PhotographerRejectReservationScreenContent(
                 onDismiss = onDialogDismiss,
             )
         }
+
+        // CommonToast는 항상 컴포즈해 두고 isVisible만 토글합니다(퇴장 애니메이션 유지).
+        CommonToast(
+            modifier = Modifier.padding(innerPadding),
+            message = state.toastMessageResId?.let { stringResource(it) }.orEmpty(),
+            isVisible = state.showToast,
+            onDismiss = onToastDismiss,
+            // 기본 오프셋(50dp)은 하단 버튼과 겹치므로 버튼 위로 띄웁니다.
+            bottomOffset = toastBottomOffset,
+        )
     }
 }
 
@@ -158,7 +174,7 @@ private fun PhotographerRejectReservationReasonPreview() {
         PhotographerRejectReservationScreenContent(
             state =
                 PhotographerRejectReservationState(
-                    orderId = "order123",
+                    reservationId = 15L,
                     selectedReason = PhotographerRejectReason.AREA,
                 ),
             onBackClick = {},
@@ -167,6 +183,7 @@ private fun PhotographerRejectReservationReasonPreview() {
             onNextClick = {},
             onDialogConfirm = {},
             onDialogDismiss = {},
+            onToastDismiss = {},
         )
     }
 }
@@ -179,7 +196,7 @@ private fun PhotographerRejectReservationDialogPreview() {
         PhotographerRejectReservationScreenContent(
             state =
                 PhotographerRejectReservationState(
-                    orderId = "order123",
+                    reservationId = 15L,
                     selectedReason = PhotographerRejectReason.DIRECT_INPUT,
                     directInputText = "다른 지역 일정과 겹쳤어요",
                     showConfirmDialog = true,
@@ -190,6 +207,7 @@ private fun PhotographerRejectReservationDialogPreview() {
             onNextClick = {},
             onDialogConfirm = {},
             onDialogDismiss = {},
+            onToastDismiss = {},
         )
     }
 }

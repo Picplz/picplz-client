@@ -15,10 +15,18 @@ import com.hm.picplz.ui.theme.MainFontFamily.bodyLarge
 import com.hm.picplz.ui.theme.MainThemeColor
 import com.hm.picplz.ui.theme.MainThemeFont.Body
 
+/**
+ * 고객·작가 예약 상세가 공유하는 정보 섹션.
+ *
+ * [packageName]/[place] 는 작가 화면만 실데이터를 넘깁니다.
+ * 고객 화면은 예약 상세 조회 API가 작가 전용이라 아직 값을 구할 수 없어 기본값(더미)을 씁니다.
+ */
 @Composable
 fun ReservationInfoSection(
     modifier: Modifier = Modifier,
     customerName: String = "",
+    packageName: String = DUMMY_PACKAGE_NAME,
+    place: String = DUMMY_PLACE,
     shootingDateText: String = "작가와 협의",
 ) {
     Column(
@@ -33,11 +41,11 @@ fun ReservationInfoSection(
         }
         ReservationInfoItem(
             title = "촬영 상품명",
-            description = "프로필 패키지",
+            description = packageName.ifBlank { DUMMY_PACKAGE_NAME },
         )
         ReservationInfoItem(
             title = "촬영 장소",
-            description = "서울특별시 종로구 효자로 3, 네번째 테이블 창문 앞",
+            description = place.ifBlank { DUMMY_PLACE },
         )
         ReservationInfoItem(
             title = "촬영 일시",
@@ -45,6 +53,9 @@ fun ReservationInfoSection(
         )
     }
 }
+
+private const val DUMMY_PACKAGE_NAME = "프로필 패키지"
+private const val DUMMY_PLACE = "서울특별시 종로구 효자로 3, 네번째 테이블 창문 앞"
 
 @Composable
 private fun ReservationInfoItem(

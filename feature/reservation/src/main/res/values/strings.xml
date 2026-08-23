@@ -202,4 +202,10 @@
 
     <!-- 포맷 문자열 -->
     <string name="amount_format">%,d원</string>
+
+    <!-- 예약 API 실패 안내 -->
+    <string name="reservation_error_cancel_failed">예약 취소에 실패했어요. 잠시 후 다시 시도해주세요.</string>
+    <string name="reservation_error_reject_failed">예약 거절에 실패했어요. 잠시 후 다시 시도해주세요.</string>
+    <string name="reservation_error_accept_failed">예약 승인에 실패했어요. 잠시 후 다시 시도해주세요.</string>
+    <string name="reservation_error_load_failed">예약 정보를 불러오지 못했어요.</string>
 </resources>
